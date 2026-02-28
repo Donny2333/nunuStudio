@@ -104,7 +104,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	uniforms.topColor.value.copy(this.hemisphere.color);
 
 	// Sky
-	var geometry = new SphereBufferGeometry(1500, 16, 16);
+	var geometry = new SphereBufferGeometry(1.5e4, 16, 16);
 	var material = new ShaderMaterial(
 		{
 			vertexShader: SkyVertexShader,

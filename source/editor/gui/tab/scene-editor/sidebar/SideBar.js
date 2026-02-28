@@ -43,6 +43,7 @@ import {Text} from "../../../../components/Text.js";
 import {Component} from "../../../../components/Component.js";
 import {ButtonDrawer} from "../../../../components/buttons/ButtonDrawer.js";
 import {PythonScript} from "../../../../../core/objects/script/PythonScript.js";
+import {UICanvas} from "../../../../../core/objects/ui/UICanvas.js";
 
 /**
  * Side bar is presented in the editor to add more objects to the scene.
@@ -585,7 +586,7 @@ return target.set(x, y, z);`;
 	{
 		effects.addOption(Global.FILE_PATH + "icons/platform/web.png", function()
 		{
-			Editor.addObject(new HTMLView("https://www.google.com/"), self.editor.scene);
+			Editor.addObject(new HTMLView("http://localhost/nunu-html/demo/index.html"), self.editor.scene);
 		}, Locale.htmlView);
 	}
 
@@ -663,6 +664,19 @@ return target.set(x, y, z);`;
 	}, Locale.firstPersonControls);
 
 	controls.updateOptions();
+
+	// // Add UI
+	// var ui = new ButtonDrawer(this);
+	// ui.setImage(Global.FILE_PATH + "icons/ui/ui.png");
+	// this.buttons.push(ui);
+
+	// // Canvas UI
+	// ui.addOption(Global.FILE_PATH + "icons/ui/canvas.png", function()
+	// {
+	// 	Editor.addObject(new UICanvas(), self.editor.scene);
+	// }, Locale.canvasUI);
+
+	// ui.updateOptions();
 };
 
 export {SideBar};

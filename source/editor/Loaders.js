@@ -744,17 +744,17 @@ Loaders.loadModel = function(file, parent)
 						scene.type = "Group";
 						scene.name = FileSystem.getNameWithoutExtension(name);
 
-						var animations = gltf.animations;
-						if (animations.length > 0)
-						{
-							scene.traverse(function(child)
-							{
-								if (child instanceof SkinnedMesh)
-								{
-									child.animations = animations;
-								}
-							});
-						}
+						// var animations = gltf.animations;
+						// if (animations.length > 0)
+						// {
+						// 	scene.traverse(function(child)
+						// 	{
+						// 		if (child instanceof SkinnedMesh)
+						// 		{
+						// 			child.animations = animations;
+						// 		}
+						// 	});
+						// }
 
 						Editor.addObject(scene, parent);
 						modal.destroy();

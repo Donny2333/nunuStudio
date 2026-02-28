@@ -73,8 +73,8 @@ function HTMLView(url)
 		}
 		});
 
-	this.width = 512;
-	this.height = 512;
+	this.width = 1920;
+	this.height = 1080;
 	this.url = url !== undefined ? url : "";
 }
 

@@ -1263,11 +1263,11 @@ SceneEditor.prototype.setCameraMode = function(mode)
 
 	if (this.cameraMode === SceneEditor.ORTHOGRAPHIC)
 	{
-		this.camera = new OrthographicCamera(10, aspect, OrthographicCamera.RESIZE_HORIZONTAL);
+		this.camera = new OrthographicCamera(10, aspect, OrthographicCamera.RESIZE_HORIZONTAL, 0.1, 1e5);
 	}
 	else if (this.cameraMode === SceneEditor.PERSPECTIVE)
 	{
-		this.camera = new PerspectiveCamera(60, aspect);
+		this.camera = new PerspectiveCamera(60, aspect, 0.1, 1e5);
 	}
 
 	if (this.scene !== null)

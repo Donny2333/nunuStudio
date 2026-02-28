@@ -100,7 +100,7 @@ Settings.prototype.loadDefault = function()
 		snap: false,
 		snapAngle: 0.1,
 		keepTransformMove: true,
-		gridSize: 500,
+		gridSize: 10000,
 		gridSpacing: 5,
 		gridEnabled: true,
 		gridFixed: false,

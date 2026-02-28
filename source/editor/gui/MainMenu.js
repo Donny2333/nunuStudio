@@ -48,16 +48,16 @@ function MainMenu(parent)
 	this.preventDragEvents();
 
 	// Editor Logo
-	var logo = document.createElement("img");
-	logo.style.display = "block";
-	logo.style.position = "absolute";
-	logo.style.pointerEvents = "none";
-	logo.style.width = "108px";
-	logo.style.height = "18px";
-	logo.style.top = "3px";
-	logo.style.right = "3px";
-	logo.src = Global.FILE_PATH + "logo.png";
-	this.element.appendChild(logo);
+	// var logo = document.createElement("img");
+	// logo.style.display = "block";
+	// logo.style.position = "absolute";
+	// logo.style.pointerEvents = "none";
+	// logo.style.width = "108px";
+	// logo.style.height = "18px";
+	// logo.style.top = "3px";
+	// logo.style.right = "3px";
+	// logo.src = Global.FILE_PATH + "logo.png";
+	// this.element.appendChild(logo);
 
 	// File
 	var fileMenu = new DropdownMenu(this);
