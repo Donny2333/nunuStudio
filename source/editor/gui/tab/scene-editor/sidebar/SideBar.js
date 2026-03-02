@@ -43,6 +43,7 @@ import {Text} from "../../../../components/Text.js";
 import {Component} from "../../../../components/Component.js";
 import {ButtonDrawer} from "../../../../components/buttons/ButtonDrawer.js";
 import {PythonScript} from "../../../../../core/objects/script/PythonScript.js";
+import {Scene} from "../../../../../core/objects/Scene.js";
 import {UICanvas} from "../../../../../core/objects/ui/UICanvas.js";
 
 /**
@@ -665,18 +666,26 @@ return target.set(x, y, z);`;
 
 	controls.updateOptions();
 
-	// // Add UI
-	// var ui = new ButtonDrawer(this);
-	// ui.setImage(Global.FILE_PATH + "icons/ui/ui.png");
-	// this.buttons.push(ui);
+	// Add UI
+	var ui = new ButtonDrawer(this);
+	ui.setImage(Global.FILE_PATH + "icons/ui/ui.png");
+	this.buttons.push(ui);
 
-	// // Canvas UI
-	// ui.addOption(Global.FILE_PATH + "icons/ui/canvas.png", function()
-	// {
-	// 	Editor.addObject(new UICanvas(), self.editor.scene);
-	// }, Locale.canvasUI);
+	// Canvas UI
+	ui.addOption(Global.FILE_PATH + "icons/ui/canvas.png", function()
+	{
+		var ui = self.editor.scene.ui;
+		if (ui === undefined)
+		{
+			ui = new Scene();
+			ui.name = "UI";
+			Editor.addObject(ui, self.editor.scene);
+		}
 
-	// ui.updateOptions();
+		Editor.addObject(new UICanvas(), ui);
+	}, Locale.canvasUI);
+
+	ui.updateOptions();
 };
 
 export {SideBar};
