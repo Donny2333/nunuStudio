@@ -35,6 +35,17 @@ function RunProject(parent, closeable, container, index)
 		if (self.program !== null)
 		{
 			self.program.resize(width, height);
+
+			// render UI
+			var webview = self.program.scene.getObjectByName("webview");
+
+			if (webview)
+			{
+				var parent = self.canvas.canvas.parentElement;
+				var iframe = parent.children[1].querySelector("iframe");
+				var {width, height} = parent.getBoundingClientRect();
+				iframe.style.transform = `scaleX(${width / webview.width}) scaleY(${height / webview.height})`;
+			}
 		}
 	};
 
@@ -243,6 +254,27 @@ RunProject.prototype.runProgram = function()
 		this.program.setRenderer(this.canvas.renderer);
 		this.program.initialize();
 		this.program.resize(this.canvas.canvas.width, this.canvas.canvas.height);
+
+		// render UI
+		var webview = this.program.scene.getObjectByName("webview");
+
+		if (webview)
+		{
+			var parent = this.canvas.canvas.parentElement;
+			var {width, height} = parent.getBoundingClientRect();
+
+			var iframe = document.createElement("iframe");
+			iframe.src = webview.url;
+			iframe.style.position = "absolute";
+			iframe.style.left = "0px";
+			iframe.style.top = "0px";
+			iframe.style.width = webview.width + "px";
+			iframe.style.height = webview.height + "px";
+			iframe.style.transformOrigin = '0 0';
+			iframe.style.transform = `scaleX(${width / webview.width}) scaleY(${height / webview.height})`;
+			iframe.style.border = "none";
+			parent.children[1].appendChild(iframe);
+		}
 	}
 	catch (error)
 	{

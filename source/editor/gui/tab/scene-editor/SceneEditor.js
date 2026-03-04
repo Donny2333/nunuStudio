@@ -677,14 +677,14 @@ function SceneEditor(parent, closeable, container, index)
 				{
 					self.selectTool(SceneEditor.SCALE);
 				}
-                                else if (key === Keyboard.NUM4)
-                                {
-                                        self.selectTool(SceneEditor.ROTATE);
-                                }
-                                else if (key === Keyboard.NUM5)
-                                {
-                                        self.selectTool(SceneEditor.MEASURE);
-                                }
+				else if (key === Keyboard.NUM4)
+				{
+					self.selectTool(SceneEditor.ROTATE);
+				}
+				else if (key === Keyboard.NUM5)
+				{
+					self.selectTool(SceneEditor.MEASURE);
+				}
 				else if (key === Keyboard.F)
 				{
 					self.focusObject();
@@ -902,67 +902,67 @@ SceneEditor.prototype.update = function()
 	var isEditingObject = this.transform.update();
 
 	// Check if mouse is inside canvas
-        if (this.mouse.insideCanvas())
-        {
-                if (this.mode === SceneEditor.MEASURE)
-                {
-                        this.measurementPlane.constant = -this.gridHelper.position.y;
-                        this.updateRaycasterFromMouse();
+	if (this.mouse.insideCanvas())
+	{
+		if (this.mode === SceneEditor.MEASURE)
+		{
+			this.measurementPlane.constant = -this.gridHelper.position.y;
+			this.updateRaycasterFromMouse();
 
-                        var hoverPoint = this.getMeasurementPoint();
+			var hoverPoint = this.getMeasurementPoint();
 
-                        if (this.mouse.buttonJustPressed(Mouse.RIGHT))
-                        {
-                                this.measurementPoints.length = 0;
-                        	this.measurementPreview.visible = false;
-                        }
+			if (this.mouse.buttonJustPressed(Mouse.RIGHT))
+			{
+				this.measurementPoints.length = 0;
+				this.measurementPreview.visible = false;
+			}
 
-                        if (this.measurementPoints.length === 1 && hoverPoint !== null)
-                        {
-                                this.updateMeasurementPreview(this.measurementPoints[0], hoverPoint);
-                        }
-                        else
-                        {
-                        	this.measurementPreview.visible = false;
-                        }
+			if (this.measurementPoints.length === 1 && hoverPoint !== null)
+			{
+				this.updateMeasurementPreview(this.measurementPoints[0], hoverPoint);
+			}
+			else
+			{
+				this.measurementPreview.visible = false;
+			}
 
-                        if (hoverPoint !== null && this.mouse.buttonJustPressed(Mouse.LEFT))
-                        {
-                                this.measurementPoints.push(hoverPoint.clone());
+			if (hoverPoint !== null && this.mouse.buttonJustPressed(Mouse.LEFT))
+			{
+				this.measurementPoints.push(hoverPoint.clone());
 
-                                if (this.measurementPoints.length === 2)
-                                {
-                                        this.createMeasurement(this.measurementPoints[0], this.measurementPoints[1]);
-                                        this.measurementPoints.length = 0;
-                                	this.measurementPreview.visible = false;
-                                }
-                        }
+				if (this.measurementPoints.length === 2)
+				{
+					this.createMeasurement(this.measurementPoints[0], this.measurementPoints[1]);
+					this.measurementPoints.length = 0;
+					this.measurementPreview.visible = false;
+				}
+			}
 
-                        if (this.mouse.buttonDoubleClicked(Mouse.LEFT))
-                        {
-                                this.selectObjectWithMouse();
-                        }
-                }
-                else if (this.mode === SceneEditor.SELECT)
-                {
-                        if (this.mouse.buttonJustPressed(Mouse.LEFT))
-                        {
-                                this.selectObjectWithMouse();
-                        }
-                }
-                else
-                {
-                        // If mouse double clicked select object
-                        if (this.mouse.buttonDoubleClicked(Mouse.LEFT))
-                        {
-                                this.selectObjectWithMouse();
-                        }
-                }
+			if (this.mouse.buttonDoubleClicked(Mouse.LEFT))
+			{
+				this.selectObjectWithMouse();
+			}
+		}
+		else if (this.mode === SceneEditor.SELECT)
+		{
+			if (this.mouse.buttonJustPressed(Mouse.LEFT))
+			{
+				this.selectObjectWithMouse();
+			}
+		}
+		else
+		{
+			// If mouse double clicked select object
+			if (this.mouse.buttonDoubleClicked(Mouse.LEFT))
+			{
+				this.selectObjectWithMouse();
+			}
+		}
 
-                // Lock mouse when camera is moving
-                if (Editor.settings.editor.lockMouse && Nunu.runningOnDesktop())
-                {
-                        if (!isEditingObject && (this.mouse.buttonJustPressed(Mouse.LEFT) || this.mouse.buttonJustPressed(Mouse.RIGHT) || this.mouse.buttonJustPressed(Mouse.MIDDLE)))
+		// Lock mouse when camera is moving
+		if (Editor.settings.editor.lockMouse && Nunu.runningOnDesktop())
+		{
+			if (!isEditingObject && (this.mouse.buttonJustPressed(Mouse.LEFT) || this.mouse.buttonJustPressed(Mouse.RIGHT) || this.mouse.buttonJustPressed(Mouse.MIDDLE)))
 			{
 				this.mouse.setLock(true);
 			}
@@ -1006,52 +1006,52 @@ SceneEditor.prototype.update = function()
 		});
 	}
 
-        this.render();
+	this.render();
 
 };
 
 SceneEditor.prototype.updateMeasurementPreview = function(start, end)
 {
-        var position = this.measurementPreview.geometry.attributes.position;
-        position.setXYZ(0, start.x, start.y, start.z);
-        position.setXYZ(1, end.x, end.y, end.z);
-        position.needsUpdate = true;
-        this.measurementPreview.geometry.computeBoundingSphere();
-        this.measurementPreview.visible = true;
+	var position = this.measurementPreview.geometry.attributes.position;
+	position.setXYZ(0, start.x, start.y, start.z);
+	position.setXYZ(1, end.x, end.y, end.z);
+	position.needsUpdate = true;
+	this.measurementPreview.geometry.computeBoundingSphere();
+	this.measurementPreview.visible = true;
 };
 
 SceneEditor.prototype.getMeasurementPoint = function()
 {
-        if (this.scene === null)
-        {
-                return null;
-        }
+	if (this.scene === null)
+	{
+		return null;
+	}
 
-        var intersects = this.raycaster.intersectObjects(this.scene.children, true);
+	var intersects = this.raycaster.intersectObjects(this.scene.children, true);
 
-        if (intersects.length > 0)
-        {
-                return intersects[0].point.clone();
-        }
+	if (intersects.length > 0)
+	{
+		return intersects[0].point.clone();
+	}
 
-        if (this.raycaster.ray.intersectPlane(this.measurementPlane, this.measurementIntersection) !== null)
-        {
-                return this.measurementIntersection.clone();
-        }
+	if (this.raycaster.ray.intersectPlane(this.measurementPlane, this.measurementIntersection) !== null)
+	{
+		return this.measurementIntersection.clone();
+	}
 
-        return null;
+	return null;
 };
 
 SceneEditor.prototype.createMeasurement = function(start, end)
 {
-        if (this.scene === null)
-        {
-                return;
-        }
+	if (this.scene === null)
+	{
+		return;
+	}
 
-        var measurement = new Measurement();
-        measurement.setPoints(start, end);
-        Editor.addObject(measurement, this.scene);
+	var measurement = new Measurement();
+	measurement.setPoints(start, end);
+	Editor.addObject(measurement, this.scene);
 };
 
 /**
@@ -1295,55 +1295,55 @@ SceneEditor.prototype.setCameraMode = function(mode)
  */
 SceneEditor.prototype.selectTool = function(tool)
 {
-        var previousMode = this.mode;
+	var previousMode = this.mode;
 
-        if (tool !== undefined)
-        {
-                this.mode = tool;
-        }
+	if (tool !== undefined)
+	{
+		this.mode = tool;
+	}
 
-        if (this.mode === SceneEditor.MOVE)
-        {
-                this.transform.setMode(TransformControls.TRANSLATE);
-                this.transform.space = Editor.settings.editor.transformationSpace;
-        }
-        else if (this.mode === SceneEditor.SCALE)
-        {
-                this.transform.setMode(TransformControls.SCALE);
-        }
-        else if (this.mode === SceneEditor.ROTATE)
-        {
-                this.transform.setMode(TransformControls.ROTATE);
-                this.transform.space = Editor.settings.editor.transformationSpace;
-        }
-        else if (this.mode === SceneEditor.SELECT)
-        {
-                this.transform.setMode(TransformControls.NONE);
-        }
-        else if (this.mode === SceneEditor.MEASURE)
-        {
-                this.transform.setMode(TransformControls.NONE);
-                this.measurementPoints.length = 0;
-                this.measurementPreview.visible = false;
+	if (this.mode === SceneEditor.MOVE)
+	{
+		this.transform.setMode(TransformControls.TRANSLATE);
+		this.transform.space = Editor.settings.editor.transformationSpace;
+	}
+	else if (this.mode === SceneEditor.SCALE)
+	{
+		this.transform.setMode(TransformControls.SCALE);
+	}
+	else if (this.mode === SceneEditor.ROTATE)
+	{
+		this.transform.setMode(TransformControls.ROTATE);
+		this.transform.space = Editor.settings.editor.transformationSpace;
+	}
+	else if (this.mode === SceneEditor.SELECT)
+	{
+		this.transform.setMode(TransformControls.NONE);
+	}
+	else if (this.mode === SceneEditor.MEASURE)
+	{
+		this.transform.setMode(TransformControls.NONE);
+		this.measurementPoints.length = 0;
+		this.measurementPreview.visible = false;
 
-                if (tool === SceneEditor.MEASURE)
-                {
-                        Editor.alert(Locale.selectMeasurementPoints);
-                }
-        }
-        else
-        {
-                this.measurementPoints.length = 0;
-                this.measurementPreview.visible = false;
-        }
+		if (tool === SceneEditor.MEASURE)
+		{
+			Editor.alert(Locale.selectMeasurementPoints);
+		}
+	}
+	else
+	{
+		this.measurementPoints.length = 0;
+		this.measurementPreview.visible = false;
+	}
 
-        if (previousMode === SceneEditor.MEASURE && this.mode !== SceneEditor.MEASURE)
-        {
-                this.measurementPoints.length = 0;
-                this.measurementPreview.visible = false;
-        }
+	if (previousMode === SceneEditor.MEASURE && this.mode !== SceneEditor.MEASURE)
+	{
+		this.measurementPoints.length = 0;
+		this.measurementPreview.visible = false;
+	}
 
-        this.toolBar.selectTool(this.mode);
+	this.toolBar.selectTool(this.mode);
 };
 
 /**

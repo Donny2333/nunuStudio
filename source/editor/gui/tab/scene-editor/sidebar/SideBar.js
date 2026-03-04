@@ -45,6 +45,7 @@ import {ButtonDrawer} from "../../../../components/buttons/ButtonDrawer.js";
 import {PythonScript} from "../../../../../core/objects/script/PythonScript.js";
 import {Scene} from "../../../../../core/objects/Scene.js";
 import {UICanvas} from "../../../../../core/objects/ui/UICanvas.js";
+import {UIImage} from "../../../../../core/objects/ui/UIImage.js";
 
 /**
  * Side bar is presented in the editor to add more objects to the scene.
@@ -672,18 +673,29 @@ return target.set(x, y, z);`;
 	this.buttons.push(ui);
 
 	// Canvas UI
-	ui.addOption(Global.FILE_PATH + "icons/ui/canvas.png", function()
-	{
-		var ui = self.editor.scene.ui;
-		if (ui === undefined)
-		{
-			ui = new Scene();
-			ui.name = "UI";
-			Editor.addObject(ui, self.editor.scene);
-		}
+	// ui.addOption(Global.FILE_PATH + "icons/ui/canvas.png", function()
+	// {
+	// 	var ui = self.editor.scene.ui;
+	// 	if (ui === undefined)
+	// 	{
+	// 		ui = new Group();
+	// 		ui.name = "UI";
+	// 		Editor.addObject(ui, self.editor.scene);
+	// 	}
 
-		Editor.addObject(new UICanvas(), ui);
-	}, Locale.canvasUI);
+	// 	Editor.addObject(new UICanvas(), ui);
+	// }, Locale.canvasUI);
+
+	// // Image UI
+	// ui.addOption(Global.FILE_PATH + "icons/ui/image.png", function()
+	// {
+	// 	var canvas = self.editor.scene.getObjectByName("canvas");
+
+	// 	if (canvas !== undefined)
+	// 	{
+	// 		Editor.addObject(new UIImage(), canvas);
+	// 	}
+	// }, Locale.imageUI);
 
 	ui.updateOptions();
 };
