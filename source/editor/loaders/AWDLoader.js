@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import {Loader, Object3D, FileLoader, Mesh, MeshPhongMaterial, Texture, ImageLoader, Bone, Matrix4, BufferGeometry, BufferAttribute} from "three";
+import {Loader, DefaultLoadingManager, Object3D, FileLoader, Mesh, MeshPhongMaterial, Texture, ImageLoader, Bone, Matrix4, BufferGeometry, BufferAttribute} from "three";
 
 var UNCOMPRESSED = 0,
 	DEFLATE = 1,
@@ -73,7 +73,13 @@ var AWDLoader = (function()
 	};
 	var AWDLoader = function(manager)
 	{
-		Loader.call(this, manager);
+		this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+		this.crossOrigin = 'anonymous';
+		this.withCredentials = false;
+		this.path = '';
+		this.resourcePath = '';
+		this.requestHeader = {};
+
 		this.trunk = new Object3D();
 		this.materialFactory = undefined;
 		this._url = '';
@@ -652,7 +658,7 @@ var AWDLoader = (function()
 					return;
 				}
 				geom = mesh.geometry;
-				geom.morphTargets = [];
+				var morphTargets = [];
 				if (!poseOnly) {numFrames = this.readU16();}
 				numSubmeshes = this.readU16();
 				numStreams = this.readU16();
@@ -686,11 +692,7 @@ var AWDLoader = (function()
 						{
 							if (streamtypes[streamsParsed] === 1)
 							{
-							// geom.addAttribute( 'morphTarget'+framesParsed, Float32Array, strLen/12, 3 );
 								var buffer = new Float32Array(strLen / 4);
-								geom.morphTargets.push(
-									{array: buffer});
-								// buffer = geom.attributes['morphTarget'+framesParsed].array
 								idx = 0;
 								while (this._ptr < strEnd)
 								{
@@ -699,6 +701,7 @@ var AWDLoader = (function()
 									buffer[idx + 2] = this.readF32();
 									idx += 3;
 								}
+								morphTargets.push(new BufferAttribute(buffer, 3));
 								subMeshParsed++;
 							}
 							else {this._ptr = strEnd;}
@@ -706,6 +709,11 @@ var AWDLoader = (function()
 						}
 					}
 					framesParsed++;
+				}
+				if (morphTargets.length > 0)
+				{
+					geom.morphAttributes.position = morphTargets;
+					geom.morphTargetsRelative = false;
 				}
 				this.parseUserAttributes();
 				return null;

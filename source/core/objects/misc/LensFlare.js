@@ -35,14 +35,14 @@ function LensFlare()
 	var positionScreen = new Vector3();
 
 	// textures
-	var tempMap = new DataTexture(new Uint8Array(16 * 16 * 3), 16, 16, RGBAFormat);
+	var tempMap = new DataTexture(new Uint8Array(16 * 16 * 4), 16, 16, RGBAFormat);
 	tempMap.minFilter = NearestFilter;
 	tempMap.magFilter = NearestFilter;
 	tempMap.wrapS = ClampToEdgeWrapping;
 	tempMap.wrapT = ClampToEdgeWrapping;
 	tempMap.needsUpdate = true;
 
-	var occlusionMap = new DataTexture(new Uint8Array(16 * 16 * 3), 16, 16, RGBAFormat);
+	var occlusionMap = new DataTexture(new Uint8Array(16 * 16 * 4), 16, 16, RGBAFormat);
 	occlusionMap.minFilter = NearestFilter;
 	occlusionMap.magFilter = NearestFilter;
 	occlusionMap.wrapS = ClampToEdgeWrapping;
