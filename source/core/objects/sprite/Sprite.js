@@ -19,9 +19,11 @@ import {Sprite as TSprite, Object3D} from "three";
  */
 function Sprite(material)
 {
-	TSprite.call(this, material);
+	var instance = Reflect.construct(TSprite, [material], new.target || Sprite);
 
-	this.name = "sprite";
+	instance.name = "sprite";
+
+	return instance;
 }
 
 Sprite.prototype = Object.create(TSprite.prototype);

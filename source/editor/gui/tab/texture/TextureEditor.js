@@ -1,4 +1,4 @@
-import {Scene, RepeatWrapping, NearestFilter, PlaneBufferGeometry, Mesh, MeshBasicMaterial, ClampToEdgeWrapping, MirroredRepeatWrapping, LinearFilter, NearestMipMapNearestFilter, NearestMipMapLinearFilter, LinearMipMapNearestFilter, LinearMipMapLinearFilter} from "three";
+import {Scene, RepeatWrapping, NearestFilter, PlaneGeometry, Mesh, MeshBasicMaterial, ClampToEdgeWrapping, MirroredRepeatWrapping, LinearFilter, NearestMipMapNearestFilter, NearestMipMapLinearFilter, LinearMipMapNearestFilter, LinearMipMapLinearFilter} from "three";
 import {Locale} from "../../../locale/LocaleManager.js";
 import {Texture} from "../../../../core/texture/Texture.js";
 import {OrthographicCamera} from "../../../../core/objects/cameras/OrthographicCamera.js";
@@ -46,7 +46,7 @@ function TextureEditor(parent, closeable, container, index)
 	alpha.minFilter = NearestFilter;
 	alpha.repeat.set(400, 400);
 	
-	var geometry = new PlaneBufferGeometry(1, 1);
+	var geometry = new PlaneGeometry(1, 1);
 
 	this.background = new Mesh(geometry, new MeshBasicMaterial({map: alpha}));
 	this.background.position.set(0, 0, -2);

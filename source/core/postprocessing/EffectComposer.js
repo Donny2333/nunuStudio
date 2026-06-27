@@ -1,4 +1,4 @@
-import {Math as TMath, WebGLRenderTarget, LinearFilter, RGBAFormat} from "three";
+import {MathUtils as TMath, WebGLRenderTarget, LinearFilter, RGBAFormat} from "three";
 import {CopyShader} from "three/examples/jsm/shaders/CopyShader";
 import {ClearMaskPass, MaskPass} from "three/examples/jsm/postprocessing/MaskPass";
 import {RendererState} from "../renderer/RendererState.js";
@@ -236,10 +236,10 @@ EffectComposer.prototype.render = function(renderer, scene, camera, delta)
 			{
 				if (maskActive)
 				{
-					renderer.context.stencilFunc(renderer.context.NOTEQUAL, 1, 0xFFFFFFff);
+					renderer.getContext().stencilFunc(renderer.getContext().NOTEQUAL, 1, 0xFFFFFFff);
 					this.copyPass.renderToScreen = false;
 					this.copyPass.render(renderer, this.writeBuffer, this.readBuffer, delta);
-					renderer.context.stencilFunc(renderer.context.EQUAL, 1, 0xFFFFFFff);
+					renderer.getContext().stencilFunc(renderer.getContext().EQUAL, 1, 0xFFFFFFff);
 				}
 
 				this.swapBuffers();

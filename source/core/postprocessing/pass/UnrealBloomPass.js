@@ -218,7 +218,7 @@ UnrealBloomPass.prototype.render = function(renderer, writeBuffer, readBuffer, d
 
 	if (maskActive)
 	{
-		renderer.context.disable(renderer.context.STENCIL_TEST);
+		renderer.getContext().disable(renderer.getContext().STENCIL_TEST);
 	}
 
 	// Clear screen
@@ -273,7 +273,7 @@ UnrealBloomPass.prototype.render = function(renderer, writeBuffer, readBuffer, d
 
 	if (maskActive)
 	{
-		renderer.context.enable(renderer.context.STENCIL_TEST);
+		renderer.getContext().enable(renderer.getContext().STENCIL_TEST);
 	}
 
 	renderer.setRenderTarget(this.renderToScreen ? null : readBuffer);

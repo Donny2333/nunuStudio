@@ -17,11 +17,11 @@ import {Image} from "../resources/Image.js";
  */
 function TerrainBufferGeometry(width, height, widthSegments, heightSegments, scale, image)
 {
-	BufferGeometry.call(this);
+	var instance = Reflect.construct(BufferGeometry, [], new.target || TerrainBufferGeometry);
 
-	this.type = "TerrainBufferGeometry";
+	instance.type = "TerrainBufferGeometry";
 
-	this.parameters =
+	instance.parameters =
 	{
 		width: width || 1,
 		height: height || 1,
@@ -30,10 +30,12 @@ function TerrainBufferGeometry(width, height, widthSegments, heightSegments, sca
 		scale: scale || 1
 	};
 
-	this.image = image;
+	instance.image = image;
 
 
-	this.generate();
+	instance.generate();
+
+	return instance;
 };
 
 TerrainBufferGeometry.prototype = Object.create(BufferGeometry.prototype);

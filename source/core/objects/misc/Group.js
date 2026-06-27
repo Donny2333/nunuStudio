@@ -11,10 +11,10 @@ import {Group as TGroup} from "three";
  */
 function Group()
 {
-	TGroup.call(this);
-
-	this.name = "group";
-	this.type = "Group";
+	var instance = Reflect.construct(TGroup, [], new.target || Group);
+	instance.name = "group";
+	instance.type = "Group";
+	return instance;
 }
 
 Group.prototype = Object.create(TGroup.prototype);

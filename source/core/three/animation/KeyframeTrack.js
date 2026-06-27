@@ -42,15 +42,3 @@ THREE.KeyframeTrack.toJSON = function(track)
 	return data;
 };
 
-THREE.KeyframeTrack._parse = THREE.KeyframeTrack.parse;
-THREE.KeyframeTrack.parse = function(json)
-{
-	var track = THREE.KeyframeTrack._parse.call(this, json);
-
-	if (json.color !== undefined)
-	{
-		track.color = json.color;
-	}
-
-	return track;
-};

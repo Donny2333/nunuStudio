@@ -1,4 +1,4 @@
-import {RepeatWrapping, LinearFilter, RGBFormat, RGBAFormat} from "three";
+import {RepeatWrapping, LinearFilter, RGBAFormat} from "three";
 import {Image} from "../resources/Image.js";
 import {Texture} from "./Texture.js";
 
@@ -22,13 +22,13 @@ import {Texture} from "./Texture.js";
  */
 function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrames, mapping, type, anisotropy)
 {
-	Texture.call(this, source, mapping, RepeatWrapping, RepeatWrapping, LinearFilter, LinearFilter, RGBFormat, type, anisotropy);
+	var instance = Reflect.construct(Texture, [source, mapping, RepeatWrapping, RepeatWrapping, LinearFilter, LinearFilter, RGBAFormat, type, anisotropy], new.target || SpriteSheetTexture);
 
-	this.name = "animation";
-	this.category = "SpriteSheet";
-	this.disposed = false;
-	this.format = this.source.hasTransparency() ? RGBAFormat : RGBFormat;
-	this.repeat.set(1 / framesHorizontal, 1 / framesVertical);
+	instance.name = "animation";
+	instance.category = "SpriteSheet";
+	instance.disposed = false;
+	instance.format = instance.imageResource.hasTransparency() ? RGBAFormat : RGBAFormat;
+	instance.repeat.set(1 / framesHorizontal, 1 / framesVertical);
 
 	/**
 	 * If true the animation plays in loop.
@@ -37,7 +37,7 @@ function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrame
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.loop = true;
+	instance.loop = true;
 
 	/**
 	 * Animation speed in seconds.
@@ -46,27 +46,16 @@ function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrame
 	 * @default 0.1
 	 * @type {number}
 	 */
-	this.animationSpeed = 0.1;
+	instance.animationSpeed = 0.1;
 
-	this._totalFrames = totalFrames;
-	this._beginFrame = 0;
-	this._endFrame = 0;
-	this._framesHorizontal = framesHorizontal;
-	this._framesVertical = framesVertical;
+	instance._totalFrames = totalFrames;
+	instance._beginFrame = 0;
+	instance._endFrame = 0;
+	instance._framesHorizontal = framesHorizontal;
+	instance._framesVertical = framesVertical;
 
-	var self = this;
-
-	Object.defineProperties(this,
+	Object.defineProperties(instance,
 		{
-		/**
-		 * Spritesheet number of frames horizontally.
-		 *
-		 * When this values is changed the totalFrames value is automatically updated to framesHorizontal * framesVertical.
-		 *
-		 * @property framesHorizontal
-		 * @default 1.0
-		 * @type {number}
-		 */
 			framesHorizontal:
 		{
 			get: function()
@@ -81,15 +70,6 @@ function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrame
 			}
 		},
 
-			/**
-			 * Spritesheet number of frames vertically.
-			 *
-			 * When this values is changed the totalFrames value is automatically updated to framesHorizontal * framesVertical.
-			 *
-			 * @property framesVertical
-			 * @default 1.0
-			 * @type {number}
-			 */
 			framesVertical:
 		{
 			get: function()
@@ -104,12 +84,6 @@ function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrame
 			}
 		},
 
-			/**
-			 * The offset frame can be ajusted to control in which frame the animation ends.
-			 * 
-			 * @property endFrame
-			 * @type {number}
-			 */
 			endFrame:
 		{
 			get: function()
@@ -126,13 +100,6 @@ function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrame
 			}
 		},
 
-			/**
-			 * The offset frame can be ajusted to control in which frame the animation starts.
-			 * 
-			 * @property beginFrame
-			 * @default 0
-			 * @type {number}
-			 */
 			beginFrame:
 		{
 			get: function()
@@ -150,15 +117,6 @@ function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrame
 			}
 		},
 
-			/**
-			 * Total number of frames present in the texture.
-			 * 
-			 * Sometimes a NxM spritesheet does not have all spaces filled, this parameter is used to take care of those cases.
-			 *
-			 * @property totalFrames
-			 * @default 1
-			 * @type {number}
-			 */
 			totalFrames:
 		{
 			get: function()
@@ -174,24 +132,20 @@ function SpriteSheetTexture(source, framesHorizontal, framesVertical, totalFrame
 		}
 		});
 
-	/**
-	 * Indicates the current frame of the animation.
-	 *
-	 * @property currentFrame
-	 * @type {number}
-	 */
-	this.currentFrame = 0;
+	instance.currentFrame = 0;
 
 	function update()
 	{
-		if (!self.disposed)
+		if (!instance.disposed)
 		{
-			self.step();
-			setTimeout(update, self.animationSpeed * 1e3);
+			instance.step();
+			setTimeout(update, instance.animationSpeed * 1e3);
 		}
 	};
 
 	update();
+
+	return instance;
 }
 
 SpriteSheetTexture.prototype = Object.create(Texture.prototype);
@@ -282,7 +236,7 @@ SpriteSheetTexture.prototype.dispose = function()
 SpriteSheetTexture.prototype.toJSON = function(meta)
 {
 	var data = Texture.prototype.toJSON.call(this, meta);
-	var image = this.source.toJSON(meta);
+	var image = this.imageResource.toJSON(meta);
 
 	data.image = image.uuid;
 	data.loop = this.loop;

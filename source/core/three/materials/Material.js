@@ -1,4 +1,4 @@
-import {NormalBlending, FrontSide, NoColors} from "three";
+import {NormalBlending, FrontSide} from "three";
 
 /**
  * Materials describe the appearance of objects. They are defined in a (mostly) renderer-independent way, so you don"t have to rewrite materials if you decide to use a different renderer.
@@ -280,9 +280,9 @@ THREE.Material.prototype.toJSON = function(meta)
 	{
 		data.side = this.side;
 	}
-	if (this.vertexColors !== NoColors)
+	if (this.vertexColors === true)
 	{
-		data.vertexColors = this.vertexColors;
+		data.vertexColors = true;
 	}
 
 	data.flatShading = this.flatShading;
@@ -332,18 +332,6 @@ THREE.Material.prototype.toJSON = function(meta)
 		data.wireframeLinejoin = this.wireframeLinejoin;
 	}
 
-	// Skinning
-	data.skinning = this.skinning;
-
-	// Morph targets
-	data.morphTargets = this.morphTargets;
-
-	// Morph normals
-	if (this.morphNormals !== undefined)
-	{
-		data.morphNormals = this.morphNormals;
-	}
-
 	// Copied from Object3D.toJSON
 	function extractFromCache(cache)
 	{
@@ -359,26 +347,23 @@ THREE.Material.prototype.toJSON = function(meta)
 		return values;
 	}
 
-	if (meta === undefined)
+	var textures = extractFromCache(meta.textures);
+	var images = extractFromCache(meta.images);
+	var videos = extractFromCache(meta.videos);
+
+	if (textures.length > 0)
 	{
-		var textures = extractFromCache(meta.textures);
-		var images = extractFromCache(meta.images);
-		var videos = extractFromCache(meta.videos);
+		data.textures = textures;
+	}
 
-		if (textures.length > 0)
-		{
-			data.textures = textures;
-		}
-		
-		if (images.length > 0)
-		{
-			data.images = images;
-		}
+	if (images.length > 0)
+	{
+		data.images = images;
+	}
 
-		if (videos.length > 0)
-		{
-			data.videos = videos;
-		}
+	if (videos.length > 0)
+	{
+		data.videos = videos;
 	}
 
 	return data;

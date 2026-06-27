@@ -1,9 +1,7 @@
-import {BufferGeometry, Color, Float32BufferAttribute, LineSegments, LineBasicMaterial, VertexColors, Matrix4, Vector3} from "three";
+import {BufferGeometry, Color, Float32BufferAttribute, LineSegments, LineBasicMaterial, Matrix4, Vector3} from "three";
 
-function SkeletonHelper(object) 
+function SkeletonHelper(object)
 {
-	this.object = object;
-
 	var bones = SkeletonHelper.getBoneList(object);
 	var geometry = new BufferGeometry();
 
@@ -29,19 +27,22 @@ function SkeletonHelper(object)
 	geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
 	geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
 
-	LineSegments.call(this, geometry, new LineBasicMaterial(
+	var instance = Reflect.construct(LineSegments, [geometry, new LineBasicMaterial(
 		{
-			vertexColors: VertexColors,
+			vertexColors: true,
 			depthTest: false,
 			depthWrite: false,
 			transparent: false
-		}));
+		})], new.target || SkeletonHelper);
 
-	this.root = object;
-	this.bones = bones;
-	this.matrixAutoUpdate = false;
+	instance.object = object;
+	instance.root = object;
+	instance.bones = bones;
+	instance.matrixAutoUpdate = false;
 
-	this.update();
+	instance.update();
+
+	return instance;
 }
 
 SkeletonHelper.prototype = Object.create(LineSegments.prototype);
@@ -70,7 +71,7 @@ SkeletonHelper.prototype.update = function()
 	var position = geometry.getAttribute("position");
 
 	var matrixWorldInv = new Matrix4();
-	matrixWorldInv.getInverse(this.root.matrixWorld);
+	matrixWorldInv.copy(this.root.matrixWorld).invert();
 
 	var boneMatrix = new Matrix4();
 	var vector = new Vector3();

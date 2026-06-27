@@ -1,4 +1,4 @@
-import {Mesh, MeshBasicMaterial, Vector3, DataTexture, RGBFormat, NearestFilter, ClampToEdgeWrapping, RawShaderMaterial, Color, Vector2, AdditiveBlending, Box2, Vector4, Object3D} from "three";
+import {Mesh, MeshBasicMaterial, Vector3, DataTexture, RGBAFormat, NearestFilter, ClampToEdgeWrapping, RawShaderMaterial, Color, Vector2, AdditiveBlending, Box2, Vector4, Object3D} from "three";
 import {Lensflare as TLensflare, LensflareElement} from "three/examples/jsm/objects/Lensflare";
 import {Texture} from "../../texture/Texture.js";
 
@@ -19,30 +19,30 @@ import {Texture} from "../../texture/Texture.js";
  */
 function LensFlare()
 {
-	Mesh.call(this, TLensflare.Geometry, new MeshBasicMaterial({opacity: 0, transparent: true}));
+	var instance = Reflect.construct(Mesh, [TLensflare.Geometry, new MeshBasicMaterial({opacity: 0, transparent: true})], new.target || LensFlare);
 
-	this.name = "lensflare";
-	this.type = "LensFlare";
+	instance.name = "lensflare";
+	instance.type = "LensFlare";
 
-	this.renderOrder = Infinity;
-	this.frustumCulled = false;
+	instance.renderOrder = Infinity;
+	instance.frustumCulled = false;
 
-	this.receiveShadow = false;
-	this.castShadow = false;
-	
-	this.elements = [];
+	instance.receiveShadow = false;
+	instance.castShadow = false;
+
+	instance.elements = [];
 
 	var positionScreen = new Vector3();
 
 	// textures
-	var tempMap = new DataTexture(new Uint8Array(16 * 16 * 3), 16, 16, RGBFormat);
+	var tempMap = new DataTexture(new Uint8Array(16 * 16 * 3), 16, 16, RGBAFormat);
 	tempMap.minFilter = NearestFilter;
 	tempMap.magFilter = NearestFilter;
 	tempMap.wrapS = ClampToEdgeWrapping;
 	tempMap.wrapT = ClampToEdgeWrapping;
 	tempMap.needsUpdate = true;
 
-	var occlusionMap = new DataTexture(new Uint8Array(16 * 16 * 3), 16, 16, RGBFormat);
+	var occlusionMap = new DataTexture(new Uint8Array(16 * 16 * 3), 16, 16, RGBAFormat);
 	occlusionMap.minFilter = NearestFilter;
 	occlusionMap.magFilter = NearestFilter;
 	occlusionMap.wrapS = ClampToEdgeWrapping;
@@ -138,7 +138,7 @@ function LensFlare()
 	var validArea = new Box2();
 	var viewport = new Vector4();
 
-	this.onBeforeRender = function(renderer, scene, camera)
+	instance.onBeforeRender = function(renderer, scene, camera)
 	{
 		renderer.getCurrentViewport(viewport);
 
@@ -153,7 +153,7 @@ function LensFlare()
 		validArea.max.set(viewport.x + (viewport.z - 16), viewport.y + (viewport.w - 16));
 
 		// Calculate position in screen space
-		positionScreen.setFromMatrixPosition(this.matrixWorld);
+		positionScreen.setFromMatrixPosition(instance.matrixWorld);
 
 		positionScreen.applyMatrix4(camera.matrixWorldInverse);
 		positionScreen.applyMatrix4(camera.projectionMatrix);
@@ -189,7 +189,7 @@ function LensFlare()
 			var vecX = - positionScreen.x * 2;
 			var vecY = - positionScreen.y * 2;
 
-			for (var i = 0, l = this.elements.length; i < l; i++)
+			for (var i = 0, l = instance.elements.length; i < l; i++)
 			{
 				var element = this.elements[i];
 
@@ -212,7 +212,7 @@ function LensFlare()
 		}
 	};
 
-	this.dispose = function()
+	instance.dispose = function()
 	{
 		material1a.dispose();
 		material1b.dispose();
@@ -220,11 +220,13 @@ function LensFlare()
 		tempMap.dispose();
 		occlusionMap.dispose();
 
-		for (var i = 0; i < this.elements.length; i++)
+		for (var i = 0; i < instance.elements.length; i++)
 		{
-			this.elements[i].texture.dispose();
+			instance.elements[i].texture.dispose();
 		}
 	};
+
+	return instance;
 }
 
 LensFlare.prototype = Object.create(Mesh.prototype);

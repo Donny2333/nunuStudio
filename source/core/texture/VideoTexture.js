@@ -1,4 +1,4 @@
-import {Texture, LinearFilter, RGBFormat} from "three";
+import {Texture, LinearFilter, RGBAFormat} from "three";
 import {Video} from "../resources/Video.js";
 
 /**
@@ -18,7 +18,7 @@ import {Video} from "../resources/Video.js";
  */
 function VideoTexture(video, mapping, wrapS, wrapT, type, anisotropy)
 {
-	Texture.call(this, document.createElement("video"), mapping, wrapS, wrapT, LinearFilter, LinearFilter, RGBFormat, type, anisotropy);
+	Texture.call(this, document.createElement("video"), mapping, wrapS, wrapT, LinearFilter, LinearFilter, RGBAFormat, type, anisotropy);
 
 	this.disposed = false;
 	this.generateMipmaps = false;

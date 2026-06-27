@@ -12,10 +12,12 @@ import {LightProbeGenerator} from "three/examples/jsm/lights/LightProbeGenerator
  */
 function LightProbe(sh, intensity)
 {
-	TLightProbe.call(this, sh, intensity);
+	var instance = Reflect.construct(TLightProbe, [sh, intensity], new.target || LightProbe);
 
-	this.type = "LightProbe";
-	this.name = "probe";
+	instance.type = "LightProbe";
+	instance.name = "probe";
+
+	return instance;
 }
 
 LightProbe.prototype = Object.create(TLightProbe.prototype);
@@ -48,8 +50,7 @@ LightProbe.prototype.generate = function()
 	cubeCamera.matrix.copy(this.matrix);
 	cubeCamera.matrixWorld.copy(this.matrixWorld);
 
-	// Since gamma is applied during rendering, the cubeCamera renderTarget texture encoding must be sRGBEncoding
-	cubeCamera.renderTarget.texture.encoding = THREE.sRGBEncoding;
+	cubeCamera.renderTarget.texture.colorSpace = THREE.SRGBColorSpace;
 	cubeCamera.update(renderer, scene);
 
 	// Calculate probe from cube camera result

@@ -15,8 +15,8 @@ function ImageAsset(parent)
 {
 	Asset.call(this, parent);
 
-        this.preview = document.createElement("img");
-        this.preview.draggable = false;
+	this.preview = document.createElement("img");
+	this.preview.draggable = false;
 	this.preview.style.position = "absolute";
 	this.preview.style.top = "5%";
 	this.preview.style.left = "17%";

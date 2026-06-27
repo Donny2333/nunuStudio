@@ -1,4 +1,4 @@
-import {Object3D, PlaneBufferGeometry, MeshBasicMaterial, DoubleSide, Mesh, Matrix4, Euler, Eurler, Vector3} from "three";
+import {Object3D, PlaneGeometry, MeshBasicMaterial, DoubleSide, Mesh, Matrix4, Euler, Vector3} from "three";
 import {TransformControls} from "../TransformControls.js";
 import {GizmoMaterial} from "../GizmoMaterial.js";
 
@@ -11,18 +11,18 @@ import {GizmoMaterial} from "../GizmoMaterial.js";
  */
 function TransformGizmo()
 {
-	Object3D.call(this);
+	var instance = Reflect.construct(Object3D, [], new.target || TransformGizmo);
 
-	this.handles = new Object3D();
-	this.pickers = new Object3D();
-	this.planes = new Object3D();
+	instance.handles = new Object3D();
+	instance.pickers = new Object3D();
+	instance.planes = new Object3D();
 
-	this.add(this.handles);
-	this.add(this.pickers);
-	this.add(this.planes);
+	instance.add(instance.handles);
+	instance.add(instance.pickers);
+	instance.add(instance.planes);
 
 	// Planes
-	var planeGeometry = new PlaneBufferGeometry(50, 50, 2, 2);
+	var planeGeometry = new PlaneGeometry(50, 50, 2, 2);
 	var planeMaterial = new MeshBasicMaterial({visible: false, side: DoubleSide});
 	var planes =
 	{
@@ -32,7 +32,7 @@ function TransformGizmo()
 		"XYZE": new Mesh(planeGeometry, planeMaterial)
 	};
 
-	this.activePlane = planes["XYZE"];
+	instance.activePlane = planes["XYZE"];
 
 	planes["YZ"].rotation.set(0, Math.PI / 2, 0);
 	planes["XZ"].rotation.set(-Math.PI / 2, 0, 0);
@@ -40,16 +40,20 @@ function TransformGizmo()
 	for (var i in planes)
 	{
 		planes[i].name = i;
-		this.planes.add(planes[i]);
-		this.planes[i] = planes[i];
+		instance.planes.add(planes[i]);
+		instance.planes[i] = planes[i];
 	}
 
-	// Handlers and pickers
-	function setupGizmos(gizmoMap, parent)
+	return instance;
+}
+
+TransformGizmo.setupGizmos = function(instance)
+{
+	function addGizmos(gizmoMap, parent)
 	{
 		for (var name in gizmoMap)
 		{
-			for (i = gizmoMap[name].length; i--;)
+			for (var i = gizmoMap[name].length; i--;)
 			{
 				var object = gizmoMap[name][i][0];
 				var position = gizmoMap[name][i][1];
@@ -61,7 +65,7 @@ function TransformGizmo()
 				{
 					object.position.set(position[0], position[1], position[2]);
 				}
-				
+
 				if (rotation)
 				{
 					object.rotation.set(rotation[0], rotation[1], rotation[2]);
@@ -72,28 +76,25 @@ function TransformGizmo()
 		}
 	}
 
-	setupGizmos(this.handleGizmos, this.handles);
-	setupGizmos(this.pickerGizmos, this.pickers);
+	addGizmos(instance.handleGizmos, instance.handles);
+	addGizmos(instance.pickerGizmos, instance.pickers);
 
-	// Reset transformations
-	this.traverse(function(child)
+	instance.traverse(function(child)
 	{
 		if (child.geometry !== undefined)
 		{
 			child.updateMatrix();
 
-			// Move geometry to origin
 			var tempGeometry = child.geometry.clone();
 			tempGeometry.applyMatrix4(child.matrix);
 			child.geometry = tempGeometry;
 
-			// Reset pose
 			child.position.set(0, 0, 0);
 			child.rotation.set(0, 0, 0);
 			child.scale.set(1, 1, 1);
 		}
 	});
-}
+};
 
 TransformGizmo.prototype = Object.create(Object3D.prototype);
 

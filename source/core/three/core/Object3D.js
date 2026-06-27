@@ -140,7 +140,7 @@ THREE.Object3D.prototype.addAbove = function(object, children)
 		return this;
 	}
 
-	if (object && object.isTHREE.Object3D)
+	if (object && object.isObject3D)
 	{
 		if (object.parent !== null)
 		{
@@ -177,7 +177,7 @@ THREE.Object3D.prototype.addBellow = function(object, children)
 		return this;
 	}
 
-	if (object && object.isTHREE.Object3D)
+	if (object && object.isObject3D)
 	{
 		if (object.parent !== null)
 		{

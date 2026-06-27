@@ -1,4 +1,6 @@
-THREE.LightShadow.prototype.toJSON = function()
+import {LightShadow} from "three/src/lights/LightShadow.js";
+
+LightShadow.prototype.toJSON = function()
 {
 	var data = {};
 
@@ -10,7 +12,7 @@ THREE.LightShadow.prototype.toJSON = function()
 		x: this.mapSize.x,
 		y: this.mapSize.y
 	};
-	
+
 	data.camera =
 	{
 		top: this.camera.top,
@@ -24,14 +26,14 @@ THREE.LightShadow.prototype.toJSON = function()
 	return data;
 };
 
-THREE.LightShadow.prototype.fromJSON = function(data)
+LightShadow.prototype.fromJSON = function(data)
 {
 	if (data.bias !== undefined)
 	{
 		this.bias = data.bias;
 	}
 	if (data.radius !== undefined)
-	{	
+	{
 		this.radius = data.radius;
 	}
 	if (data.mapSize !== undefined)

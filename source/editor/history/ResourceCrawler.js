@@ -1,4 +1,4 @@
-import {Texture, Object3D, Material, MultiMaterial, Mesh, SkinnedMesh, BufferGeometry, Geometry} from "three";
+import {Texture, Object3D, Material, Mesh, SkinnedMesh, BufferGeometry} from "three";
 import {Video} from "../../core/resources/Video.js";
 import {ResourceManager} from "../../core/resources/ResourceManager.js";
 import {ResourceContainer} from "../../core/resources/ResourceContainer.js";
@@ -272,7 +272,7 @@ ResourceCrawler.searchObject = function(object, manager, target)
 					addMaterial(child.materials[j]);
 				}
 			}
-			else if (child.material instanceof MultiMaterial)
+			else if (child.material && child.material.materials)
 			{
 				var materials = child.material.materials;
 				for (var j = 0; j < materials.length; j++)
@@ -285,7 +285,7 @@ ResourceCrawler.searchObject = function(object, manager, target)
 		// Geometries
 		if ((child instanceof Mesh || child instanceof SkinnedMesh) && !(child instanceof TextBitmap))
 		{
-			if (child.geometry instanceof BufferGeometry || child.geometry instanceof Geometry)
+			if (child.geometry instanceof BufferGeometry)
 			{
 				if (manager.geometries[child.geometry.uuid] === undefined)
 				{
@@ -356,9 +356,9 @@ ResourceCrawler.searchObject = function(object, manager, target)
 	function addResourcesTexture(texture)
 	{
 		// Image
-		if (texture.source instanceof Image)
+		if (texture.imageResource instanceof Image)
 		{
-			addImage(texture.source);
+			addImage(texture.imageResource);
 		}
 		// Video
 		if (texture.video instanceof Video)

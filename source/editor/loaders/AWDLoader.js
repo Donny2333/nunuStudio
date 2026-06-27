@@ -211,7 +211,7 @@ var AWDLoader = (function()
 					parId = this.readU32(),
 					mtx = this.parseMatrix4();
 				ctr.name = this.readUTF();
-				ctr.applyMatrix(mtx);
+				ctr.applyMatrix4(mtx);
 				parent = this._blocks[parId].data || this.trunk;
 				parent.add(ctr);
 				this.parseProperties(
@@ -266,7 +266,7 @@ var AWDLoader = (function()
 					mesh = new Mesh(geometries[0]);
 					meshes.push(mesh);
 				}
-				mesh.applyMatrix(mtx);
+				mesh.applyMatrix4(mtx);
 				mesh.name = name;
 				parent = this.getBlock(parId) || this.trunk;
 				parent.add(mesh);
@@ -560,7 +560,7 @@ var AWDLoader = (function()
 						// VERTICES
 							buffer = new Float32Array(strLen / 12 * 3);
 							attrib = new BufferAttribute(buffer, 3);
-							geom.addAttribute('position', attrib);
+							geom.setAttribute('position', attrib);
 							idx = 0;
 							while (this._ptr < strEnd)
 							{
@@ -590,7 +590,7 @@ var AWDLoader = (function()
 						// UVS
 							buffer = new Float32Array(strLen / 8 * 2);
 							attrib = new BufferAttribute(buffer, 2);
-							geom.addAttribute('uv', attrib);
+							geom.setAttribute('uv', attrib);
 							idx = 0;
 							while (this._ptr < strEnd)
 							{
@@ -604,7 +604,7 @@ var AWDLoader = (function()
 						// NORMALS
 							buffer = new Float32Array(strLen / 12 * 3);
 							attrib = new BufferAttribute(buffer, 3);
-							geom.addAttribute('normal', attrib);
+							geom.setAttribute('normal', attrib);
 							idx = 0;
 							while (this._ptr < strEnd)
 							{

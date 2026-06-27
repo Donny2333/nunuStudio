@@ -1,4 +1,4 @@
-import {Texture as TTexture, RGBAFormat, RGBFormat, LinearFilter} from "three";
+import {Texture as TTexture, RGBAFormat, LinearFilter, SRGBColorSpace} from "three";
 import {Image} from "../resources/Image.js";
 
 /**
@@ -22,70 +22,49 @@ import {Image} from "../resources/Image.js";
  */
 function Texture(source, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding)
 {
-	/**
-	 * Source image of the texture.
-	 * 
-	 * @property source
-	 * @type {Image}
-	 */
+	var _source;
 	if (typeof source === "string")
 	{
-		this.source = new Image(source);
+		_source = new Image(source);
 	}
 	else if (source === undefined)
 	{
-		this.source = new Image();
+		_source = new Image();
 	}
 	else
 	{
-		this.source = source;
+		_source = source;
 	}
 
-	TTexture.call(this, document.createElement("img"), mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding);
-	
-	var self = this;
+	var instance = Reflect.construct(TTexture, [document.createElement("img"), mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding], new.target || Texture);
 
-	/**
-	 * Name of the texture (doesn't need to be unique).
-	 *
-	 * @property name
-	 * @type {string}
-	 */
-	this.name = "texture";
-	this.category = "Image";
+	instance.colorSpace = SRGBColorSpace;
+	instance.imageResource = _source;
+	instance.name = "texture";
+	instance.category = "Image";
+	instance.disposed = false;
+	instance.format = RGBAFormat;
 
-	/**
-	 * Flag used to know is the texture has been disposed.
-	 * 
-	 * Is used to control animation when using a gif as a texture.
-	 * 
-	 * @property disposed
-	 * @type {boolean}
-	 * @default false
-	 */
-	this.disposed = false;
+	instance.updateSource();
 
-	this.format = this.source.hasTransparency() ? RGBAFormat : RGBFormat;
-
-	this.updateSource();
-
-	// Check if image is animated format and start an update cycle
-	if (this.source.encoding === "gif")
+	if (instance.imageResource.encoding === "gif")
 	{
-		this.generateMipmaps = false;
-		this.magFilter = LinearFilter;
-		this.minFilter = LinearFilter;
+		instance.generateMipmaps = false;
+		instance.magFilter = LinearFilter;
+		instance.minFilter = LinearFilter;
 
 		function update()
 		{
-			if (!self.disposed)
+			if (!instance.disposed)
 			{
-				self.needsUpdate = true;
+				instance.needsUpdate = true;
 				requestAnimationFrame(update);
 			}
 		}
 		update();
 	}
+
+	return instance;
 }
 
 Texture.prototype = Object.create(TTexture.prototype);
@@ -100,31 +79,27 @@ Texture.isTexture = true;
  */
 Texture.prototype.updateSource = function()
 {
-	if (this.source !== null)
+	if (this.imageResource !== null)
 	{
 		var self = this;
 
 		this.image.crossOrigin = "anonymous";
-		this.image.src = this.source.data;
+		this.image.src = this.imageResource.data;
 		this.image.onload = function()
 		{
 			self.needsUpdate = true;
 		};
 		this.image.onerror = function()
 		{
-			console.log("nunuStudio: Failed to load image " + self.source.uuid + " data.");
-			self.source.createSolidColor();
-			self.image.src = self.source.data;
+			console.log("nunuStudio: Failed to load image " + self.imageResource.uuid + " data.");
+			self.imageResource.createSolidColor();
+			self.image.src = self.imageResource.data;
 			self.needsUpdate = true;
 		};
 	}
 	else
 	{
-		console.warn("nunuStudio: Texture source is null.");
-
-		this.source.createSolidColor();
-		this.image.src = self.source.data;
-		this.needsUpdate = true;
+		console.warn("nunuStudio: Texture imageResource is null.");
 	}
 };
 
@@ -150,7 +125,7 @@ Texture.prototype.dispose = function()
 Texture.prototype.toJSON = function(meta)
 {
 	var data = TTexture.prototype.toJSON.call(this, meta);
-	var image = this.source.toJSON(meta);
+	var image = this.imageResource.toJSON(meta);
 
 	data.image = image.uuid;
 

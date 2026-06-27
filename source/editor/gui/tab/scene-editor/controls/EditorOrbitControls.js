@@ -1,4 +1,4 @@
-import {Vector3, Vector2, Matrix4, PerspectiveCamera, Math as TMath} from "three";
+import {Vector3, Vector2, Matrix4, PerspectiveCamera, MathUtils as TMath} from "three";
 import {ObjectUtils} from "../../../../../core/utils/ObjectUtils.js";
 import {OrbitControls} from "../../../../../core/objects/controls/OrbitControls.js";
 import {OrthographicCamera} from "../../../../../core/objects/cameras/OrthographicCamera.js";
@@ -18,112 +18,30 @@ import {EditorControls} from "./EditorControls.js";
  */
 function EditorOrbitControls()
 {
-	EditorControls.call(this);
+	var instance = Reflect.construct(EditorControls, [], new.target || EditorOrbitControls);
 
-	/**
-	 * Distance to the center of the orbit.
-	 *
-	 * @property distance
-	 * @type {number}
-	 */
-	this.distance = 10;
+	instance.distance = 10;
+	instance.center = new Vector3();
+	instance.orientation = new Vector2();
+	instance.maxDistance = Number.MAX_SAFE_INTEGER;
+	instance.minDistance = 1e-10;
+	instance.limitUp = 1.57;
+	instance.limitDown = -1.57;
+	instance.needsUpdate = false;
+	instance.smooth = false;
+	instance.friction = 0.8;
+	instance.speed = 0.3;
+	instance.speedDistance = 0;
+	instance.speedCenter = new Vector3(0, 0, 0);
+	instance.speedOrientation = new Vector2(0, 0);
 
-	/**
-	 * Central point of the orbit.
-	 *
-	 * @property center
-	 * @type {Vector3}
-	 */
-	this.center = new Vector3();
+	instance.tempVector = new Vector3(0, 0, 0);
+	instance.tempMatrix = new Matrix4();
 
-	/**
-	 * Orientation of the camera.
-	 *
-	 * X is the horizontal orientation and Y the vertical orientation.
-	 *
-	 * @property orientation
-	 * @type {Vector2}
-	 */	 
-	this.orientation = new Vector2();
+	instance.reset();
+	instance.updateControls();
 
-	/**
-	 * Maximum Distance allowed.
-	 *
-	 * @property maxDistance
-	 * @type {number}
-	 */
-	this.maxDistance = Number.MAX_SAFE_INTEGER;
-
-	/**
-	 * Minimum distance allowed.
-	 *
-	 * @property minDistance
-	 * @type {number}
-	 */
-	this.minDistance = 1e-10;
-	
-	/**
-	 * Maximum angle allowed in the y (vertical) orientation.
-	 *
-	 * @property limitUp
-	 * @type {number}
-	 */
-	this.limitUp = 1.57;
-
-	/**
-	 * Minimum angle allowed in the y (vertical) orientation.
-	 *
-	 * @property limitDown
-	 * @type {number}
-	 */
-	this.limitDown = -1.57;
-	
-	/**
-	 * Indicates if the orbit controls needed an update on the last update.
-	 *
-	 * The variable is reset on each update call.
-	 *
-	 * @property needsUpdate
-	 * @type {boolean}
-	 */
-	this.needsUpdate = false;
-
-	/**
-	 * Enables smooth orbit movement.
-	 *
-	 * @property smooth
-	 * @type {boolean}
-	 */	
-	this.smooth = false;
-
-	/**
-	 * Orbit speed friction, higher value allow the orbit to retain more speed.
-	 *
-	 * Only used when smooth is set true.
-	 *
-	 * @property friction
-	 * @type {number}
-	 */	
-	this.friction = 0.8;
-
-	/**
-	 * Obit movement speed.
-	 *
-	 * Only used when smooth is set true.
-	 *
-	 * @property speed
-	 * @type {number}
-	 */	
-	this.speed = 0.3;
-	this.speedDistance = 0;
-	this.speedCenter = new Vector3(0, 0, 0);
-	this.speedOrientation = new Vector2(0, 0);
-
-	this.tempVector = new Vector3(0, 0, 0);
-	this.tempMatrix = new Matrix4();
-
-	this.reset();
-	this.updateControls();
+	return instance;
 }
 
 EditorOrbitControls.UP = new Vector3(0, 1, 0);

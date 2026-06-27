@@ -8,20 +8,25 @@ import {MeshBasicMaterial, FrontSide} from "three";
  */
 function GizmoMaterial(parameters)
 {
-	MeshBasicMaterial.call(this);
+	var instance = Reflect.construct(MeshBasicMaterial, [], GizmoMaterial);
 
-	this.depthTest = false;
-	this.depthWrite = false;
-	this.side = FrontSide;
-	this.transparent = true;
+	instance.depthTest = false;
+	instance.depthWrite = false;
+	instance.side = FrontSide;
+	instance.transparent = true;
 
-	this.setValues(parameters);
+	instance.setValues(parameters);
 
-	this.baseColor = this.color.clone();
-	this.baseOpacity = this.opacity;
+	instance.baseColor = instance.color.clone();
+	instance.baseOpacity = instance.opacity;
+
+	return instance;
 }
 
 GizmoMaterial.prototype = Object.create(MeshBasicMaterial.prototype);
+GizmoMaterial.prototype.constructor = GizmoMaterial;
+
+Object.defineProperty(GizmoMaterial, "type", {get: function() { return "MeshBasicMaterial"; }});
 
 GizmoMaterial.red = new GizmoMaterial({color: 0xff0000});
 GizmoMaterial.green = new GizmoMaterial({color: 0x00ff00});

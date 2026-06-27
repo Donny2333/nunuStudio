@@ -1,4 +1,4 @@
-import {Math as TMath, LinearFilter, RGBAFormat, RGBFormat, NearestFilter, OthographicCamera, OrthographicCamera, Scene, Mesh, PlaneBufferGeometry} from "three";
+import {MathUtils as TMath, LinearFilter, RGBAFormat, NearestFilter, OrthographicCamera, Scene, Mesh, PlaneGeometry} from "three";
 
 /**
  * A render Pass is used to render something in the graphics pipeline.
@@ -79,7 +79,7 @@ Pass.RGBLinear =
 {
 	minFilter: LinearFilter,
 	magFilter: LinearFilter,
-	format: RGBFormat
+	format: RGBAFormat
 };
 
 /** 
@@ -127,7 +127,7 @@ Pass.prototype.createQuadScene = function()
 	 * @attribute quad
 	 * @type {Mesh}
 	 */
-	this.quad = new Mesh(new PlaneBufferGeometry(2, 2), null);
+	this.quad = new Mesh(new PlaneGeometry(2, 2), null);
 	this.quad.frustumCulled = false;
 	this.scene.add(this.quad);
 };

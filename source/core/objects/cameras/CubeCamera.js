@@ -1,4 +1,4 @@
-import {Object3D, PerspectiveCamera, Vector3, WebGLCubeRenderTarget, RGBFormat, LinearFilter} from "three";
+import {Object3D, PerspectiveCamera, Vector3, WebGLCubeRenderTarget, RGBAFormat, LinearFilter} from "three";
 import {CubeTexture} from "../../texture/CubeTexture.js";
 import {Scene} from "../Scene.js";
 import {Program} from "../Program.js";
@@ -14,10 +14,10 @@ import {Program} from "../Program.js";
  */
 function CubeCamera(near, far, resolution, autoUpdate)
 {
-	Object3D.call(this);
+	var instance = Reflect.construct(Object3D, [], new.target || CubeCamera);
 
-	this.name = "cubecamera";
-	this.type = "CubeCamera";
+	instance.name = "cubecamera";
+	instance.type = "CubeCamera";
 
 	/**
 	 * CubeCamera near plane.
@@ -25,7 +25,7 @@ function CubeCamera(near, far, resolution, autoUpdate)
 	 * @property near
 	 * @type {number}
 	 */
-	this.near = near !== undefined ? near : 1e-2;
+	instance.near = near !== undefined ? near : 1e-2;
 
 	/**
 	 * CubeCamera far plane.
@@ -33,7 +33,7 @@ function CubeCamera(near, far, resolution, autoUpdate)
 	 * @property far
 	 * @type {number}
 	 */
-	this.far = far !== undefined ? far : 1e4;
+	instance.far = far !== undefined ? far : 1e4;
 
 	/**
 	 * Resolution of each face. Should be a power of 2 (32, 64, 128, ...).
@@ -41,7 +41,7 @@ function CubeCamera(near, far, resolution, autoUpdate)
 	 * @property resolution
 	 * @type {number}
 	 */
-	this.resolution = resolution !== undefined ? resolution : 256;
+	instance.resolution = resolution !== undefined ? resolution : 256;
 
 	/**
 	 * Auto update indicates if the cube camera is updated automatically each frame.
@@ -49,7 +49,7 @@ function CubeCamera(near, far, resolution, autoUpdate)
 	 * @property autoUpdate
 	 * @type {boolean}
 	 */
-	this.autoUpdate = autoUpdate !== undefined ? autoUpdate : false;
+	instance.autoUpdate = autoUpdate !== undefined ? autoUpdate : false;
 
 	/**
 	 * Array of 6 cameras used to render each face of the cube.
@@ -57,26 +57,26 @@ function CubeCamera(near, far, resolution, autoUpdate)
 	 * @property cameras
 	 * @type {Array}
 	 */
-	this.cameras = [];
+	instance.cameras = [];
 	for (var i = 0; i < 6; i++)
 	{
-		var camera = new PerspectiveCamera(90, 1, this.near, this.far);
+		var camera = new PerspectiveCamera(90, 1, instance.near, instance.far);
 		camera.parent = this;
-		this.cameras.push(camera);
+		instance.cameras.push(camera);
 	}
 
-	this.cameras[0].up.set(0, -1, 0);
-	this.cameras[0].lookAt(new Vector3(1, 0, 0));
-	this.cameras[1].up.set(0, -1, 0);
-	this.cameras[1].lookAt(new Vector3(-1, 0, 0));
-	this.cameras[2].up.set(0, 0, 1);
-	this.cameras[2].lookAt(new Vector3(0, 1, 0));
-	this.cameras[3].up.set(0, 0, -1);
-	this.cameras[3].lookAt(new Vector3(0, -1, 0));
-	this.cameras[4].up.set(0, -1, 0);
-	this.cameras[4].lookAt(new Vector3(0, 0, 1));
-	this.cameras[5].up.set(0, -1, 0);
-	this.cameras[5].lookAt(new Vector3(0, 0, -1));
+	instance.cameras[0].up.set(0, -1, 0);
+	instance.cameras[0].lookAt(new Vector3(1, 0, 0));
+	instance.cameras[1].up.set(0, -1, 0);
+	instance.cameras[1].lookAt(new Vector3(-1, 0, 0));
+	instance.cameras[2].up.set(0, 0, 1);
+	instance.cameras[2].lookAt(new Vector3(0, 1, 0));
+	instance.cameras[3].up.set(0, 0, -1);
+	instance.cameras[3].lookAt(new Vector3(0, -1, 0));
+	instance.cameras[4].up.set(0, -1, 0);
+	instance.cameras[4].lookAt(new Vector3(0, 0, 1));
+	instance.cameras[5].up.set(0, -1, 0);
+	instance.cameras[5].lookAt(new Vector3(0, 0, -1));
 
 	/**
 	 * WebGL cube render target to where the scene is rendered.
@@ -84,9 +84,9 @@ function CubeCamera(near, far, resolution, autoUpdate)
 	 * @property target
 	 * @type {WebGLCubeRenderTarget}
 	 */
-	this.renderTarget = new WebGLCubeRenderTarget(this.resolution,
+	instance.renderTarget = new WebGLCubeRenderTarget(instance.resolution,
 		{
-			format: RGBFormat,
+			format: RGBAFormat,
 			magFilter: LinearFilter,
 			minFilter: LinearFilter,
 			generateMipmaps: false
@@ -111,8 +111,10 @@ function CubeCamera(near, far, resolution, autoUpdate)
 		}
 		});
 
-	this.scene = null;
-	this.renderer = null;
+	instance.scene = null;
+	instance.renderer = null;
+
+	return instance;
 }
 
 CubeCamera.prototype = Object.create(Object3D.prototype);

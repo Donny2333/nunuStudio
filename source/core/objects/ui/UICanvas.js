@@ -1,14 +1,14 @@
-import {DoubleSide, PlaneBufferGeometry, Mesh, MeshBasicMaterial, Object3D} from "three";
+import {DoubleSide, PlaneGeometry, Mesh, MeshBasicMaterial, Object3D} from "three";
 
 function UICanvas()
 {
-	var geometry = new PlaneBufferGeometry(1.92 * 3, 1.08 * 3);
-	// geometry.translate(0, 1, 0);
+	var geometry = new PlaneGeometry(1.92 * 3, 1.08 * 3);
 	var material = new MeshBasicMaterial({color: 0xeeeeee, side: DoubleSide});
 	geometry.name = material.name = "canvas";
-	Mesh.call(this, geometry, material);
-	this.type = "UICanvas";
-	this.name = "canvas";
+	var instance = Reflect.construct(Mesh, [geometry, material], new.target || UICanvas);
+	instance.type = "UICanvas";
+	instance.name = "canvas";
+	return instance;
 };
 
 UICanvas.prototype = Object.create(Mesh.prototype);

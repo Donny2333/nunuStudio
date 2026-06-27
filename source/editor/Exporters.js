@@ -1,7 +1,6 @@
 import {OBJExporter} from "three/examples/jsm/exporters/OBJExporter";
 import {GLTFExporter} from "three/examples/jsm/exporters/GLTFExporter";
 import {DRACOExporter} from "three/examples/jsm/exporters/DRACOExporter";
-import {ColladaExporter} from "three/examples/jsm/exporters/ColladaExporter";
 import {PLYExporter} from "three/examples/jsm/exporters/PLYExporter";
 import {STLExporter} from "three/examples/jsm/exporters/STLExporter";
 import {FileSystem} from "../core/FileSystem.js";
@@ -113,29 +112,7 @@ Exporters.exportDraco = function(object)
  */
 Exporters.exportCollada = function(object, version)
 {
-	var config =
-	{
-		version: version !== undefined ? version : "1.5.0",
-		binary: true,
-		textureDirectory: ""
-	};
-
-	FileSystem.chooseFileWrite(function(fname)
-	{
-		var path = FileSystem.getFilePath(fname);
-
-		var exporter = new ColladaExporter();
-		exporter.parse(object, function(result)
-		{
-			for (var i = 0; i < result.textures.length; i++)
-			{
-				var texture = result.textures[i];
-				FileSystem.writeFileArrayBuffer(path + texture.name + "." + texture.ext, texture.data.buffer);
-			}
-
-			FileSystem.writeFile(fname, result.data);
-		}, config);
-	}, ".dae");
+	console.warn("nunuStudio: Collada export is no longer supported (ColladaExporter removed from three.js).");
 };
 
 /**

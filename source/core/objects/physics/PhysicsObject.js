@@ -15,10 +15,10 @@ import {Scene} from "../Scene.js";
  */
 function PhysicsObject()
 {
-	Group.call(this);
+	var instance = Reflect.construct(Group, [], new.target || PhysicsObject);
 
-	this.name = "physics";
-	this.type = "Physics";
+	instance.name = "physics";
+	instance.type = "Physics";
 
 	/**
 	 * Physics body contains the following attributes:
@@ -44,9 +44,9 @@ function PhysicsObject()
 	 * @attribute body
 	 * @type {Body}
 	 */
-	this.body = new Body();
-	this.body.type = Body.DYNAMIC;
-	this.body.mass = 1.0;
+	instance.body = new Body();
+	instance.body.type = Body.DYNAMIC;
+	instance.body.mass = 1.0;
 
 	/**
 	 * Physics object position mode, indicates how coordinates from the physics engine are transformed into object coordinates.
@@ -54,7 +54,7 @@ function PhysicsObject()
 	 * @attribute mode
 	 * @type {number}
 	 */
-	this.mode = PhysicsObject.LOCAL;
+	instance.mode = PhysicsObject.LOCAL;
 
 	/**
 	 * Refenrece to the physics world.
@@ -62,7 +62,9 @@ function PhysicsObject()
 	 * @attribute world
 	 * @type {World}
 	 */
-	this.world = null;
+	instance.world = null;
+
+	return instance;
 }
 
 PhysicsObject.prototype = Object.create(Group.prototype);
@@ -164,7 +166,7 @@ PhysicsObject.prototype.update = function(delta)
 
 		// Get inverse of the world matrix
 		var inverse = new Matrix4();
-		inverse.getInverse(this.parent.matrixWorld);
+		inverse.copy(this.parent.matrixWorld).invert();
 
 		// Get position, scale and quaternion
 		var scale = new Vector3();

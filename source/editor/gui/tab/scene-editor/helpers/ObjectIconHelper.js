@@ -9,25 +9,13 @@ import {Object3D, Sprite, Texture, SpriteMaterial} from "three";
  */
 function ObjectIconHelper(object, icon)
 {
-	Sprite.call(this, ObjectIconHelper.getMaterial(icon));
+	var instance = Reflect.construct(Sprite, [ObjectIconHelper.getMaterial(icon)], new.target || ObjectIconHelper);
 
-	/**
-	 * Object attached to the helper
-	 *
-	 * @attribute object
-	 * @type {Object3D}
-	 */
-	this.object = object;
+	instance.object = object;
+	instance.size = 0.1;
+	instance.matrixAutoUpdate = false;
 
-	/**
-	 * Size of the helper.
-	 *
-	 * @attribute size
-	 * @type {number}
-	 */
-	this.size = 0.1;
-	
-	this.matrixAutoUpdate = false;
+	return instance;
 }
 
 ObjectIconHelper.prototype = Object.create(Sprite.prototype);

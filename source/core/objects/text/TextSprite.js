@@ -1,4 +1,4 @@
-import {Math, Object3D} from "three";
+import {MathUtils, Object3D} from "three";
 import {CanvasSprite} from "../sprite/CanvasSprite.js";
 
 /**
@@ -13,11 +13,11 @@ import {CanvasSprite} from "../sprite/CanvasSprite.js";
  */
 function TextSprite()
 {
-	CanvasSprite.call(this);
-	
-	this.name = "text";
-	this.type = "TextSprite";
-	
+	var instance = Reflect.construct(CanvasSprite, [], new.target || TextSprite);
+
+	instance.name = "text";
+	instance.type = "TextSprite";
+
 	var text = "";
 	var color = "#FFFFFF";
 	var outline = true;
@@ -27,53 +27,23 @@ function TextSprite()
 	var align = TextSprite.CENTER;
 	var font = "arial";
 
-	Object.defineProperties(this,
+	Object.defineProperties(instance,
 		{
-		/**
-		 * CSS Font style to be used.
-		 * 
-		 * @attribute font
-		 * @type {string}
-		 */
 			font:
 		{
 			get: function() {return font;},
-			set: function(value) {font = value; this.drawText();}
+			set: function(value) {font = value; instance.drawText();}
 		},
-
-			/**
-			 * Horizontal text alignment can be
-			 *    - TextSprite.LEFT
-			 *    - TextSprite.RIGHT
-			 *    - TextSprite.CENTER
-			 *
-			 * @attribute align
-			 * @type {string}
-			 */
 			align:
 		{
 			get: function() {return align;},
-			set: function(value) {align = value; this.drawText();}
+			set: function(value) {align = value; instance.drawText();}
 		},
-
-			/**
-			 * CSS color of the text.
-			 * 
-			 * @attribute color
-			 * @type {string}
-			 */
 			color:
 		{
 			get: function() {return color;},
-			set: function(value) {color = value; this.drawText();}
+			set: function(value) {color = value; instance.drawText();}
 		},
-
-			/**
-			 * Text of this object.
-			 * 
-			 * @attribute text
-			 * @type {string}
-			 */
 			text:
 		{
 			get: function() {return text;},
@@ -82,63 +52,35 @@ function TextSprite()
 				if (value !== text)
 				{
 					text = value;
-					this.drawText();
+					instance.drawText();
 				}
 			}
 		},
-
-			/**
-			 * Indicates if the text has an outline border.
-			 * 
-			 * @attribute outline
-			 * @type {boolean}
-			 */
 			outline:
 		{
 			get: function() {return outline;},
-			set: function(value) {outline = value; this.drawText();}
+			set: function(value) {outline = value; instance.drawText();}
 		},
-
-			/**
-			 * CSS color of the outline.
-			 * 
-			 * @attribute outlineColor
-			 * @type {string}
-			 */
 			outlineColor:
 		{
 			get: function() {return outlineColor;},
-			set: function(value) {outlineColor = value; this.drawText();}
+			set: function(value) {outlineColor = value; instance.drawText();}
 		},
-
-			/**
-			 * Width of the text outline.
-			 * 
-			 * @attribute outlineWidth
-			 * @type {number}
-			 */
 			outlineWidth:
 		{
 			get: function() {return outlineWidth;},
-			set: function(value) {outlineWidth = value; this.drawText();}
+			set: function(value) {outlineWidth = value; instance.drawText();}
 		},
-
-			/**
-			 * Vertical resolution of the texture created from canvas used.
-			 * 
-			 * Should always be a npot of 2.
-			 *
-			 * @attribute resolution
-			 * @type {number}
-			 */
 			resolution:
 		{
 			get: function() {return resolution;},
-			set: function(value) {resolution = value; this.drawText();}
+			set: function(value) {resolution = value; instance.drawText();}
 		}
 		});
 
-	this.text = "text";
+	instance.text = "text";
+
+	return instance;
 }
 
 TextSprite.prototype = Object.create(CanvasSprite.prototype);
@@ -184,7 +126,7 @@ TextSprite.prototype.drawText = function()
 	context.font = fontSize + "px " + this.font;
 
 	var size = context.measureText(this.text).width;
-	var width = Math.ceilPowerOfTwo(size);
+	var width = MathUtils.ceilPowerOfTwo(size);
 	var ratio = width / height;
 
 	this.texture.width = width;

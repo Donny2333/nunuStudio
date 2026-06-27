@@ -1,4 +1,4 @@
-import {Math} from "three";
+import {MathUtils} from "three";
 import {Component} from "../Component.js";
 import {TabGroup} from "./TabGroup.js";
 import {TabButton} from "./TabButton.js";
@@ -40,7 +40,7 @@ function TabComponent(parent, closeable, container, index, title, icon)
 	 * @property uuid
 	 * @type {string}
 	 */
-	this.uuid = Math.generateUUID();
+	this.uuid = MathUtils.generateUUID();
 
 	/**
 	 * Index of the tab inside of the container

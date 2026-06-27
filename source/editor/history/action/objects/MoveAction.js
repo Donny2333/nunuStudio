@@ -79,7 +79,7 @@ MoveAction.prototype.inverseTransform = function(oldParent, newParent)
 
 	// Get inverse of the world matrix of the new parent
 	var inverse = new Matrix4();
-	inverse.getInverse(newParent.matrixWorld);
+	inverse.copy(newParent.matrixWorld).invert();
 
 	// Apply inverse transform to the object matrix
 	matrix.multiplyMatrices(inverse, matrix);

@@ -1,5 +1,6 @@
 import {Shape} from "cannon-es";
-import {Geometry, Mesh, BoxGeometry, BufferGeometry, Float32BufferAttribute, Line, BoxBufferGeometry, CylinderBufferGeometry, Matrix4} from "three";
+import {Mesh, BoxGeometry, CylinderGeometry, BufferGeometry, Float32BufferAttribute, Line, Matrix4} from "three";
+import {mergeGeometries} from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import {PhysicsObject} from "../../../../../../core/objects/physics/PhysicsObject.js";
 import {ChangeAction} from "../../../../../history/action/ChangeAction.js";
 import {ActionBundle} from "../../../../../history/action/ActionBundle.js";
@@ -16,12 +17,11 @@ import {TransformGizmo} from "./TransformGizmo.js";
  */
 function TransformGizmoScale()
 {
-	var arrowGeometry = new Geometry();
-	var mesh = new Mesh(new BoxGeometry(0.125, 0.125, 0.125));
-	mesh.position.y = 0.5;
-	mesh.updateMatrix();
+	var instance = Reflect.construct(TransformGizmo, [], new.target || TransformGizmoScale);
 
-	arrowGeometry.merge(mesh.geometry, mesh.matrix);
+	var boxGeo = new BoxGeometry(0.125, 0.125, 0.125);
+	boxGeo.translate(0, 0.5, 0);
+	var arrowGeometry = boxGeo;
 
 	var x = new BufferGeometry();
 	x.setAttribute("position", new Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
@@ -32,23 +32,25 @@ function TransformGizmoScale()
 	var z = new BufferGeometry();
 	z.setAttribute("position", new Float32BufferAttribute([0, 0, 0, 0, 0, 1], 3));
 
-	this.handleGizmos =
+	instance.handleGizmos =
 	{
 		X: [[new Mesh(arrowGeometry, GizmoMaterial.red), [0.5, 0, 0], [0, 0, - Math.PI / 2]], [new Line(x, GizmoLineMaterial.red)]],
 		Y: [[new Mesh(arrowGeometry, GizmoMaterial.green), [0, 0.5, 0]], [new Line(y, GizmoLineMaterial.green)]],
 		Z: [[new Mesh(arrowGeometry, GizmoMaterial.blue), [0, 0, 0.5], [Math.PI / 2, 0, 0]], [new Line(z, GizmoLineMaterial.blue)]],
-		XYZ: [[new Mesh(new BoxBufferGeometry(0.125, 0.125, 0.125), GizmoMaterial.whiteAlpha)]]
+		XYZ: [[new Mesh(new BoxGeometry(0.125, 0.125, 0.125), GizmoMaterial.whiteAlpha)]]
 	};
 
-	this.pickerGizmos =
+	instance.pickerGizmos =
 	{
-		X: [[new Mesh(new CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), TransformGizmo.pickerMaterial), [0.6, 0, 0], [0, 0, - Math.PI / 2]]],
-		Y: [[new Mesh(new CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), TransformGizmo.pickerMaterial), [0, 0.6, 0]]],
-		Z: [[new Mesh(new CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), TransformGizmo.pickerMaterial), [0, 0, 0.6], [Math.PI / 2, 0, 0]]],
-		XYZ: [[new Mesh(new BoxBufferGeometry(0.4, 0.4, 0.4), TransformGizmo.pickerMaterial)]]
+		X: [[new Mesh(new CylinderGeometry(0.2, 0, 1, 4, 1, false), TransformGizmo.pickerMaterial), [0.6, 0, 0], [0, 0, - Math.PI / 2]]],
+		Y: [[new Mesh(new CylinderGeometry(0.2, 0, 1, 4, 1, false), TransformGizmo.pickerMaterial), [0, 0.6, 0]]],
+		Z: [[new Mesh(new CylinderGeometry(0.2, 0, 1, 4, 1, false), TransformGizmo.pickerMaterial), [0, 0, 0.6], [Math.PI / 2, 0, 0]]],
+		XYZ: [[new Mesh(new BoxGeometry(0.4, 0.4, 0.4), TransformGizmo.pickerMaterial)]]
 	};
 
-	TransformGizmo.call(this);
+	TransformGizmo.setupGizmos(instance);
+
+	return instance;
 }
 
 TransformGizmoScale.prototype = Object.create(TransformGizmo.prototype);
@@ -56,7 +58,7 @@ TransformGizmoScale.prototype = Object.create(TransformGizmo.prototype);
 TransformGizmoScale.prototype.setActivePlane = function(axis, eye)
 {
 	var tempMatrix = new Matrix4();
-	eye.applyMatrix4(tempMatrix.getInverse(tempMatrix.extractRotation(this.planes["XY"].matrixWorld)));
+	eye.applyMatrix4(tempMatrix.extractRotation(this.planes["XY"].matrixWorld).invert());
 
 	if (axis === "X")
 	{
@@ -132,7 +134,7 @@ TransformGizmoScale.prototype.transformObject = function(controls)
 		}
 		else
 		{
-			controls.point.applyMatrix4(controls.tempMatrix.getInverse(controls.attributes[i].worldRotationMatrix));
+			controls.point.applyMatrix4(controls.tempMatrix.copy(controls.attributes[i].worldRotationMatrix).invert());
 
 			if (controls.axis === "X")
 			{

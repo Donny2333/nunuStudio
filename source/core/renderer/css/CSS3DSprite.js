@@ -11,7 +11,9 @@ import {CSS3DObject} from "./CSS3DObject.js";
  */
 function CSS3DSprite(element)
 {
-	CSS3DObject.call(this, element);
+	var instance = Reflect.construct(CSS3DObject, [element], new.target || CSS3DSprite);
+
+	return instance;
 }
 
 CSS3DSprite.prototype = Object.create(CSS3DObject.prototype);

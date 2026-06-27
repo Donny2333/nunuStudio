@@ -12,10 +12,10 @@ import {NodeGraph} from "escher.js/build/escher.module.js";
  */
 function NodeScript()
 {
-	Group.call(this);
+	var instance = Reflect.construct(Group, [], new.target || NodeScript);
 
-	this.type = "NodeScript";
-	this.name = "script";
+	instance.type = "NodeScript";
+	instance.name = "script";
 
 	/**
 	 * Node graph that composes this script.
@@ -23,7 +23,9 @@ function NodeScript()
 	 * @attribute graph
 	 * @type {NodeGraph}
 	 */
-	this.graph = new NodeGraph();
+	instance.graph = new NodeGraph();
+
+	return instance;
 }
 
 NodeScript.prototype = Object.create(Group.prototype);

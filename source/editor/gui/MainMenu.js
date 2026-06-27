@@ -1,7 +1,7 @@
 import {StaticPair} from "@as-com/pson";
-import {BufferGeometry, Geometry} from "three";
+import {BufferGeometry} from "three";
+import {mergeGeometries} from "three/examples/jsm/utils/BufferGeometryUtils";
 import {SimplifyModifier} from "three/examples/jsm/modifiers/SimplifyModifier";
-import {SubdivisionModifier} from "three/examples/jsm/modifiers/SubdivisionModifier";
 import {Locale} from "../locale/LocaleManager.js";
 import {UnitConverter} from "../../core/utils/UnitConverter.js";
 import {Mesh} from "../../core/objects/mesh/Mesh.js";
@@ -446,20 +446,7 @@ function MainMenu(parent)
 	// Create BSP for CSG operation
 	function createBSP(object)
 	{
-		var geometry = object.geometry;
-
-		if (geometry instanceof BufferGeometry)
-		{
-			geometry = new Geometry().fromBufferGeometry(geometry);
-		}
-		else
-		{
-			geometry = geometry.clone();
-		}
-		
-		geometry.applyMatrix4(object.matrixWorld);
-
-		return new BSP(geometry);
+		return new BSP(object);
 	}
 
 	// Verify is CSG operation is possible
@@ -570,16 +557,8 @@ function MainMenu(parent)
 
 	modifiers.addOption(Locale.subdivide, function()
 	{
-		if (Editor.selection.length < 1 || Editor.selection[0].geometry === undefined)
-		{
-			Editor.alert(Locale.needsObjectGeometry);
-			return;
-		}
-
-		var modifier = new SubdivisionModifier();
-		var geometry = modifier.modify(Editor.selection[0].geometry);
-		var mesh = new Mesh(geometry, Editor.defaultMaterial);
-		Editor.addObject(mesh);
+		console.warn("nunuStudio: Subdivision modifier is no longer supported.");
+		Editor.alert("Subdivision modifier is no longer available.");
 	}, Global.FILE_PATH + "icons/misc/subdivide.png");
 
 	modifiers.addOption(Locale.twist, function()
@@ -655,31 +634,26 @@ function MainMenu(parent)
 			return;
 		}
 
-		var geometry = new Geometry();
+		var geometries = [];
 
 		for (var i = 0; i < Editor.selection.length; i++)
-		{	
+		{
 			var obj = Editor.selection[i];
 			if (obj.geometry !== undefined)
 			{
-				// Convert to geometry and merge
-				if (obj.geometry instanceof BufferGeometry)
-				{
-					var converted = new Geometry();
-					converted.fromBufferGeometry(obj.geometry);
-					geometry.merge(converted, obj.matrixWorld);
-				}
-				// Merge geometry
-				else
-				{
-					geometry.merge(obj.geometry, obj.matrixWorld);
-				}
+				var cloned = obj.geometry.clone();
+				cloned.applyMatrix4(obj.matrixWorld);
+				geometries.push(cloned);
 			}
 		}
 
-		var mesh = new Mesh(geometry, Editor.defaultMaterial);
-		mesh.name = "merged";
-		Editor.addObject(mesh);
+		if (geometries.length > 0)
+		{
+			var mergedGeometry = mergeGeometries(geometries);
+			var mesh = new Mesh(mergedGeometry, Editor.defaultMaterial);
+			mesh.name = "merged";
+			Editor.addObject(mesh);
+		}
 
 	}, Global.FILE_PATH + "icons/misc/union.png");
 

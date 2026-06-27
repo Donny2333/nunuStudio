@@ -1,4 +1,4 @@
-import {Scene, DirectionalLight, AmbientLight, Mesh, Geometry, MeshPhongMaterial, Vector3, GridHelper} from "three";
+import {Scene, DirectionalLight, AmbientLight, Mesh, BufferGeometry, MeshPhongMaterial, Vector3, GridHelper} from "three";
 import {Locale} from "../../../../locale/LocaleManager.js";
 import {AnimationTimer} from "../../../../../core/utils/timer/AnimationTimer.js";
 import {PerspectiveCamera} from "../../../../../core/objects/cameras/PerspectiveCamera.js";
@@ -49,7 +49,7 @@ function GeometryInspector(parent, object)
 	this.scene.add(this.controls);
 
 	// Mesh
-	this.mesh = new Mesh(new Geometry(), new MeshPhongMaterial());
+	this.mesh = new Mesh(new BufferGeometry(), new MeshPhongMaterial());
 	this.scene.add(this.mesh);
 
 	// Render loop timer

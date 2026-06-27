@@ -13,10 +13,10 @@ import {Mouse} from "../../input/Mouse.js";
  */
 function OrbitControls()
 {
-	Group.call(this);
+	var instance = Reflect.construct(Group, [], new.target || OrbitControls);
 
-	this.name = "orbit";
-	this.type = "OrbitControls";
+	instance.name = "orbit";
+	instance.type = "OrbitControls";
 
 	/**
 	 * Initial distance of the object relative to the center.
@@ -25,7 +25,7 @@ function OrbitControls()
 	 * @default 3
 	 * @type {number}
 	 */
-	this.distance = 4;
+	instance.distance = 4;
 
 	/**
 	 * Maximum Distance allowed.
@@ -33,7 +33,7 @@ function OrbitControls()
 	 * @property maxDistance
 	 * @type {number}
 	 */
-	this.maxDistance = 20;
+	instance.maxDistance = 20;
 
 	/**
 	 * Minimum distance allowed.
@@ -41,7 +41,7 @@ function OrbitControls()
 	 * @property minDistance
 	 * @type {number}
 	 */
-	this.minDistance = 2;
+	instance.minDistance = 2;
 
 	/**
 	 * Mouse sensitivity.
@@ -49,7 +49,7 @@ function OrbitControls()
 	 * @property sensitivity
 	 * @type {number}
 	 */
-	this.sensitivity = 0.002;
+	instance.sensitivity = 0.002;
 
 	/**
 	 * Mouse scroll sensitivity.
@@ -57,7 +57,7 @@ function OrbitControls()
 	 * @property zoomSensitivity
 	 * @type {number}
 	 */
-	this.zoomSensitivity = 0.001;
+	instance.zoomSensitivity = 0.001;
 
 	/**
 	 * Top limit angle.
@@ -66,7 +66,7 @@ function OrbitControls()
 	 * @default 1.57
 	 * @type {number}
 	 */
-	this.limitUp = 1.57;
+	instance.limitUp = 1.57;
 
 	/**
 	 * Bottom limit angle.
@@ -75,7 +75,7 @@ function OrbitControls()
 	 * @default -1.57
 	 * @type {number}
 	 */
-	this.limitDown = -1.57;
+	instance.limitDown = -1.57;
 
 	/**
 	 * Indicates if the button left button needs to be pressed to rotate the object.
@@ -84,7 +84,7 @@ function OrbitControls()
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.needsButtonPressed = true;
+	instance.needsButtonPressed = true;
 
 	/**
 	 * Indicates if its possible to zoom in and out to the center point.
@@ -93,7 +93,7 @@ function OrbitControls()
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.zoomEnabled = true;
+	instance.zoomEnabled = true;
 
 	/**
 	 * Indicates if its possible to move the object around.
@@ -102,7 +102,7 @@ function OrbitControls()
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.movementEnabled = true;
+	instance.movementEnabled = true;
 
 	/**
 	 * Central point of the orbit.
@@ -110,7 +110,7 @@ function OrbitControls()
 	 * @property center
 	 * @type {Vector3}
 	 */
-	this.center = new Vector3(0, 0, 0);
+	instance.center = new Vector3(0, 0, 0);
 
 	/**
 	 * Orientation of the camera.
@@ -120,7 +120,7 @@ function OrbitControls()
 	 * @property vector
 	 * @type {Vector2}
 	 */	
-	this.vector = new Vector2(Math.PI / 2, 0);
+	instance.vector = new Vector2(Math.PI / 2, 0);
 
 	/**
 	 * Enables smooth orbit movement.
@@ -128,7 +128,7 @@ function OrbitControls()
 	 * @property smooth
 	 * @type {boolean}
 	 */	
-	this.smooth = true;
+	instance.smooth = true;
 
 	/**
 	 * Orbit speed friction, higher value allow the orbit to retain more speed.
@@ -138,7 +138,7 @@ function OrbitControls()
 	 * @property friction
 	 * @type {number}
 	 */	
-	this.friction = 0.8;
+	instance.friction = 0.8;
 
 	/**
 	 * Obit movement speed.
@@ -148,7 +148,7 @@ function OrbitControls()
 	 * @property friction
 	 * @type {number}
 	 */	
-	this.speed = 0.3;
+	instance.speed = 0.3;
 
 	/**
 	 * If set true the Y orientation movement is inverted.
@@ -156,15 +156,17 @@ function OrbitControls()
 	 * @property invertNavigation
 	 * @type {boolean}
 	 */
-	this.invertNavigation = false;
+	instance.invertNavigation = false;
 
-	this.mouse = null;
-	this.keyboard = null;
+	instance.mouse = null;
+	instance.keyboard = null;
 
-	this.speedDistance = 0;
-	this.speedCenter = new Vector3(0, 0, 0);
-	this.speedOrientation = new Vector2(0, 0);
-	this.tempVector = new Vector3();
+	instance.speedDistance = 0;
+	instance.speedCenter = new Vector3(0, 0, 0);
+	instance.speedOrientation = new Vector2(0, 0);
+	instance.tempVector = new Vector3();
+
+	return instance;
 }
 
 OrbitControls.UP = new Vector3(0, 1, 0);

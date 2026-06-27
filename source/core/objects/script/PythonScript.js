@@ -18,11 +18,10 @@ import {Script} from "./Script.js";
  */
 function PythonScript(code)
 {
-
-	Group.call(this);
+	var instance = Reflect.construct(Group, [], new.target || PythonScript);
 	
-	this.type = "PythonScript";
-	this.name = "script";
+	instance.type = "PythonScript";
+	instance.name = "script";
 
 	/**
 	 * Python code attached to the script.
@@ -46,7 +45,7 @@ function PythonScript(code)
 	 * @property code
 	 * @type {string}
 	 */
-	this.code = code !== undefined ? code : PythonScript.DEFAULT;
+	instance.code = code !== undefined ? code : PythonScript.DEFAULT;
 
 	/**
 	 * Compiled function used during runtime.
@@ -56,7 +55,7 @@ function PythonScript(code)
 	 * @attribute script
 	 * @type {Function}
 	 */
-	this.script = {};
+	instance.script = {};
 
 	/**
 	 * Reference to the program object.
@@ -66,7 +65,7 @@ function PythonScript(code)
 	 * @property program
 	 * @type {Program}
 	 */
-	this.program = null;
+	instance.program = null;
 
 	/**
 	 * Reference to the scene where the script is placed.
@@ -76,7 +75,9 @@ function PythonScript(code)
 	 * @property scene
 	 * @type {Scene}
 	 */
-	this.scene = null;
+	instance.scene = null;
+
+	return instance;
 }
 
 PythonScript.prototype = Object.create(Group.prototype);

@@ -19,6 +19,14 @@ module.exports = [
 		performance: {
 			hints: false,
 		},
+		resolve: {
+			alias: {
+				"three/addons": Path.resolve(__dirname, "node_modules/three/examples/jsm"),
+				three$: Path.resolve(__dirname, "node_modules/three"),
+				three: Path.resolve(__dirname, "node_modules/three"),
+				"three-bmfont-text": Path.resolve(__dirname, "source/core/lib/three-bmfont-text.js")
+			}
+		},
 		module: {
 			rules: [
 				{

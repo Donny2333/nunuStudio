@@ -1,4 +1,4 @@
-import {Color, Material, MeshPhongMaterial, MeshToonMaterial, MeshLambertMaterial, MeshMatcapMaterial, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, SpriteMaterial, ShaderMaterial, LineDashedMaterial, LineBasicMaterial, PointsMaterial, Math} from "three";
+import {Color, Material, MeshPhongMaterial, MeshToonMaterial, MeshLambertMaterial, MeshMatcapMaterial, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, SpriteMaterial, ShaderMaterial, LineDashedMaterial, LineBasicMaterial, PointsMaterial, MathUtils} from "three";
 import {Locale} from "../../../../locale/LocaleManager.js";
 import {MaterialLoader} from "../../../../../core/loaders/MaterialLoader.js";
 import {RemoveResourceAction} from "../../../../history/action/resources/RemoveResourceAction.js";
@@ -39,8 +39,8 @@ function MaterialAsset(parent)
 	this.materialHighlighted = false;
 
 	// Material Preview
-        this.image = document.createElement("img");
-        this.image.draggable = false;
+	this.image = document.createElement("img");
+	this.image.draggable = false;
 	this.image.style.position = "absolute";
 	this.image.style.top = "5%";
 	this.image.style.left = "17%";
@@ -194,7 +194,7 @@ function MaterialAsset(parent)
 
 				// Load
 				var material = loader.parse(json); 
-				material.uuid = Math.generateUUID();
+				material.uuid = MathUtils.generateUUID();
 				material.name += "*";
 				
 				Editor.addAction(new AddResourceAction(material, Editor.program, "materials"));

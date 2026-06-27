@@ -16,15 +16,17 @@ import {PointLight as TPointLight} from "three";
  */
 function PointLight(hex, intensity, distance, decay)
 {
-	TPointLight.call(this, hex, intensity, distance, decay);
+	var instance = Reflect.construct(TPointLight, [hex, intensity, distance, decay], new.target || PointLight);
 
-	this.name = "point";
+	instance.name = "point";
 
-	this.castShadow = true;
+	instance.castShadow = true;
 
-	this.shadow.camera.near = 0.1;
-	this.shadow.camera.far = 1000;
-	this.shadow.bias = 0.0;
+	instance.shadow.camera.near = 0.1;
+	instance.shadow.camera.far = 1000;
+	instance.shadow.bias = 0.0;
+
+	return instance;
 }
 
 PointLight.prototype = Object.create(TPointLight.prototype);

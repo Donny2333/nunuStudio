@@ -1,5 +1,5 @@
 import {Vec3, Sphere, Box, Plane, ConvexPolyhedron, Trimesh, Heightfield, Shape} from "cannon-es";
-import {Object3D, MeshBasicMaterial, SphereBufferGeometry, BoxBufferGeometry, PlaneBufferGeometry, CylinderBufferGeometry, SphereGeometry, BoxGeometry, PlaneGeometry, Mesh, Geometry, Vector3, Face3} from "three";
+import {Object3D, MeshBasicMaterial, SphereGeometry, BoxGeometry, PlaneGeometry, CylinderGeometry, Mesh, BufferGeometry, Float32BufferAttribute, Vector3} from "three";
 
 /**
  * Helper to preview physics objects on the editor.
@@ -10,7 +10,7 @@ import {Object3D, MeshBasicMaterial, SphereBufferGeometry, BoxBufferGeometry, Pl
  */
 function PhysicsObjectHelper(object, color)
 {
-	Object3D.call(this);
+	var instance = Reflect.construct(Object3D, [], new.target || PhysicsObjectHelper);
 
 	/**
 	 * Object attached to the helper.
@@ -18,7 +18,7 @@ function PhysicsObjectHelper(object, color)
 	 * @attribute object
 	 * @type {Object3D}
 	 */
-	this.object = object;
+	instance.object = object;
 
 	/**
 	 * Meshes used to represent the shapes attached to the body.
@@ -26,22 +26,24 @@ function PhysicsObjectHelper(object, color)
 	 * @attribute meshes
 	 * @type {Array}
 	 */
-	this.meshes = [];
-	this.matrixAutoUpdate = false;
+	instance.meshes = [];
+	instance.matrixAutoUpdate = false;
 
-	this.material = new MeshBasicMaterial(
+	instance.material = new MeshBasicMaterial(
 		{
 			color: color !== undefined ? color : 0x00FF00,
 			wireframe: false,
 			transparent: true,
 			opacity: 0.5
 		});
+
+	return instance;
 }
 
-PhysicsObjectHelper.SPHERE = new SphereBufferGeometry(1, 32, 32);
-PhysicsObjectHelper.BOX = new BoxBufferGeometry(1, 1, 1);
-PhysicsObjectHelper.PLANE = new PlaneBufferGeometry(100, 100);
-PhysicsObjectHelper.CYLINDER = new CylinderBufferGeometry(1, 1, 10, 32);
+PhysicsObjectHelper.SPHERE = new SphereGeometry(1, 32, 32);
+PhysicsObjectHelper.BOX = new BoxGeometry(1, 1, 1);
+PhysicsObjectHelper.PLANE = new PlaneGeometry(100, 100);
+PhysicsObjectHelper.CYLINDER = new CylinderGeometry(1, 1, 10, 32);
 
 PhysicsObjectHelper.prototype = Object.create(Object3D.prototype);
 
@@ -164,56 +166,55 @@ PhysicsObjectHelper.prototype.createMesh = function(shape)
 		break;
 
 	case Shape.types.CONVEXPOLYHEDRON:
-		// Create mesh
-		var geo = new Geometry();
+		var geo = new BufferGeometry();
+		var vertices = [];
+		var indices = [];
 
-		// Add vertices
 		for (var i = 0; i < shape.vertices.length; i++)
 		{
 			var v = shape.vertices[i];
-			geo.vertices.push(new Vector3(v.x, v.y, v.z));
+			vertices.push(v.x, v.y, v.z);
 		}
 
-		// Add faces
 		for (var i = 0; i < shape.faces.length; i++)
 		{
 			var face = shape.faces[i];
-
-			// Add triangles
 			var a = face[0];
 			for (var j = 1; j < face.length - 1; j++)
 			{
-				var b = face[j];
-				var c = face[j + 1];
-				geo.faces.push(new Face3(a, b, c));
+				indices.push(a, face[j], face[j + 1]);
 			}
 		}
+
+		geo.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+		geo.setIndex(indices);
 		geo.computeBoundingSphere();
-		geo.computeFaceNormals();
+		geo.computeVertexNormals();
 		mesh = new Mesh(geo, material);
 		shape.geometryId = geo.id;
 		break;
 
 	case Shape.types.TRIMESH:
-		var geometry = new Geometry();
+		var geometry = new BufferGeometry();
+		var vertices = [];
 		var v0 = new Vec3();
 		var v1 = new Vec3();
 		var v2 = new Vec3();
 		for (var i = 0; i < shape.indices.length / 3; i++)
 		{
 			shape.getTriangleVertices(i, v0, v1, v2);
-			geometry.vertices.push(new Vector3(v0.x, v0.y, v0.z), new Vector3(v1.x, v1.y, v1.z), new Vector3(v2.x, v2.y, v2.z));
-			var j = geometry.vertices.length - 3;
-			geometry.faces.push(new Face3(j, j+1, j+2));
+			vertices.push(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 		}
+		geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
 		geometry.computeBoundingSphere();
-		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
 		mesh = new Mesh(geometry, material);
 		shape.geometryId = geometry.id;
 		break;
 
 	case Shape.types.HEIGHTFIELD:
-		var geometry = new Geometry();
+		var geometry = new BufferGeometry();
+		var vertices = [];
 		var v0 = new Vec3();
 		var v1 = new Vec3();
 		var v2 = new Vec3();
@@ -231,15 +232,14 @@ PhysicsObjectHelper.prototype.createMesh = function(shape)
 					v0.vadd(shape.pillarOffset, v0);
 					v1.vadd(shape.pillarOffset, v1);
 					v2.vadd(shape.pillarOffset, v2);
-					geometry.vertices.push(new Vector3(v0.x, v0.y, v0.z), new Vector3(v1.x, v1.y, v1.z), new Vector3(v2.x, v2.y, v2.z));
-					var i = geometry.vertices.length - 3;
-					geometry.faces.push(new Face3(i, i + 1, i + 2));
+					vertices.push(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 				}
 			}
 		}
 
+		geometry.setAttribute("position", new Float32BufferAttribute(vertices, 3));
 		geometry.computeBoundingSphere();
-		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
 		mesh = new Mesh(geometry, material);
 		shape.geometryId = geometry.id;
 		break;

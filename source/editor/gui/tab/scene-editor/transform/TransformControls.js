@@ -17,9 +17,9 @@ import {TransformGizmo} from "./gizmo/TransformGizmo.js";
  */
 function TransformControls(camera, canvas, mouse)
 {
-	Object3D.call(this);
+	var instance = Reflect.construct(Object3D, [], new.target || TransformControls);
 
-	this.visible = false;
+	instance.visible = false;
 
 	/**
 	 * View camera, the controls scale and behavior is calculated relative to the camera.
@@ -31,7 +31,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute camera
 	 * @type {Camera}
 	 */
-	this.camera = camera;
+	instance.camera = camera;
 
 	/**
 	 * DOM canvas where the scene is rendererd.
@@ -41,7 +41,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute canvas
 	 * @type {DOM} 
 	 */
-	this.canvas = canvas;
+	instance.canvas = canvas;
 	
 	/**
 	 * Mouse to get user input from. Should be updated before updating the controls.
@@ -49,7 +49,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute mouse
 	 * @type {Mouse}
 	 */
-	this.mouse = mouse;
+	instance.mouse = mouse;
 
 	/**
 	 * Object currently attached to the transform controls.
@@ -57,7 +57,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute objects
 	 * @type {Array}
 	 */
-	this.objects = [];
+	instance.objects = [];
 
 	/**
 	 * Object transform attributes for each selected object.
@@ -67,7 +67,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute attributes
 	 * @type {Array} 
 	 */
-	this.attributes = [];
+	instance.attributes = [];
 
 	/**
 	 * Transformation space defines how the transformations are applied.
@@ -81,7 +81,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute space
 	 * @type {number}
 	 */
-	this.space = TransformControls.WORLD;
+	instance.space = TransformControls.WORLD;
 
 	/**
 	 * Scale of the transform gizmo.
@@ -91,7 +91,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute size
 	 * @type {number}
 	 */
-	this.size = 1;
+	instance.size = 1;
 
 	/**
 	 * Axis of transformation selected stored as text. (e.g X, Y, Z).
@@ -101,7 +101,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute axis
 	 * @type {string}
 	 */
-	this.axis = null;
+	instance.axis = null;
 
 	/**
 	 * If set true the value set by the transform is always multiple of the snap ratio.
@@ -111,7 +111,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute snap
 	 * @type {boolean}
 	 */
-	this.snap = false;
+	instance.snap = false;
 
 	/**
 	 * Snap ratio applies to translation transform.
@@ -119,7 +119,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute translationSnap
 	 * @type {number}
 	 */
-	this.translationSnap = 1.0;
+	instance.translationSnap = 1.0;
 
 	/**
 	 * Snap ratio applies to rotation transform.
@@ -127,7 +127,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute rotationSnap
 	 * @type {number}
 	 */
-	this.rotationSnap = 0.1;
+	instance.rotationSnap = 0.1;
 
 	/**
 	 * Mode indicates the gizmo currently being used.
@@ -135,7 +135,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute mode
 	 * @type {string}
 	 */
-	this.mode = TransformControls.TRANSLATE;
+	instance.mode = TransformControls.TRANSLATE;
 
 	/**
 	 * If set true the pointer is currently being dragged around.
@@ -143,7 +143,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute dragging
 	 * @type {boolean}
 	 */
-	this.dragging = false;
+	instance.dragging = false;
 
 	/**
 	 * If set true a object is currently being edited.
@@ -151,7 +151,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute editing
 	 * @type {boolean}
 	 */
-	this.editing = false;
+	instance.editing = false;
 
 	/**
 	 * Gizmo tools currenctly in use to edit the object.
@@ -161,7 +161,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute gizmo
 	 * @type {TransformGizmo}
 	 */
-	this.gizmo = new TransformGizmo();
+	instance.gizmo = new TransformGizmo();
 
 	/**
 	 * Raycaster object used to pick the gizmo sections.
@@ -169,7 +169,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute raycaster
 	 * @type {Raycaster}
 	 */
-	this.raycaster = new Raycaster();
+	instance.raycaster = new Raycaster();
 
 	/**
 	 * Normalized vector containing the pointer coordinates used with the raycaster.
@@ -177,14 +177,14 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute pointerVector
 	 * @type {Vector2}
 	 */
-	this.pointerVector = new Vector2();
+	instance.pointerVector = new Vector2();
 
-	this.point = new Vector3();
-	this.offset = new Vector3();
+	instance.point = new Vector3();
+	instance.offset = new Vector3();
 
-	this.toolRotation = new Vector3();
-	this.toolScale = 1;
-	this.offsetRotation = new Vector3();
+	instance.toolRotation = new Vector3();
+	instance.toolScale = 1;
+	instance.offsetRotation = new Vector3();
 
 	/**
 	 * View and projection matrix combined.
@@ -192,7 +192,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute lookAtMatrix
 	 * @type {Matrix4}
 	 */
-	this.lookAtMatrix = new Matrix4();
+	instance.lookAtMatrix = new Matrix4();
 
 	/**
 	 * Camera normalized direction vector relative to the selected object.
@@ -200,7 +200,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute eye
 	 * @type {Vector3}
 	 */
-	this.eye = new Vector3();
+	instance.eye = new Vector3();
 	
 	/**
 	 * View camera position.
@@ -208,7 +208,7 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute camPosition
 	 * @type {Vector3}
 	 */
-	this.camPosition = new Vector3();
+	instance.camPosition = new Vector3();
 
 	/**
 	 * View camera rotation.
@@ -216,20 +216,22 @@ function TransformControls(camera, canvas, mouse)
 	 * @attribute camRotation
 	 * @type {Vector3}
 	 */
-	this.camRotation = new Euler();
+	instance.camRotation = new Euler();
 
 	// Temporary variables used for runtime calcs
-	this.tempMatrix = new Matrix4();
-	this.tempVector = new Vector3();
-	this.tempQuaternion = new Quaternion();
-	this.unitX = new Vector3(1, 0, 0);
-	this.unitY = new Vector3(0, 1, 0);
-	this.unitZ = new Vector3(0, 0, 1);
-	this.quaternionXYZ = new Quaternion();
-	this.quaternionX = new Quaternion();
-	this.quaternionY = new Quaternion();
-	this.quaternionZ = new Quaternion();
-	this.quaternionE = new Quaternion();
+	instance.tempMatrix = new Matrix4();
+	instance.tempVector = new Vector3();
+	instance.tempQuaternion = new Quaternion();
+	instance.unitX = new Vector3(1, 0, 0);
+	instance.unitY = new Vector3(0, 1, 0);
+	instance.unitZ = new Vector3(0, 0, 1);
+	instance.quaternionXYZ = new Quaternion();
+	instance.quaternionX = new Quaternion();
+	instance.quaternionY = new Quaternion();
+	instance.quaternionZ = new Quaternion();
+	instance.quaternionE = new Quaternion();
+
+	return instance;
 }
 
 /**
@@ -510,7 +512,7 @@ TransformControls.prototype.onPointerDown = function()
 				this.attributes[i].oldRotationMatrix.extractRotation(this.objects[i].matrix);
 				this.attributes[i].worldRotationMatrix.extractRotation(this.objects[i].matrixWorld);
 				this.attributes[i].parentRotationMatrix.extractRotation(this.objects[i].parent.matrixWorld);
-				this.attributes[i].parentScale.setFromMatrixScale(this.tempMatrix.getInverse(this.objects[i].parent.matrixWorld));
+				this.attributes[i].parentScale.setFromMatrixScale(this.tempMatrix.copy(this.objects[i].parent.matrixWorld).invert());
 			}
 
 			this.offset.copy(planeIntersect.point);

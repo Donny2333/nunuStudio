@@ -9,20 +9,14 @@ import {Line, Color} from "three";
  */
 function LineHelper(object, hex)
 {
-	Line.call(this, object.geometry, object.material.clone());
+	var instance = Reflect.construct(Line, [object.geometry, object.material.clone()], new.target || LineHelper);
 
-	this.material.color = new Color(hex !== undefined ? hex : 0xFFFF00);
-	
-	/**
-	 * Object attached to the helper
-	 *
-	 * @attribute object
-	 * @type {Object3D}
-	 */
-	this.object = object;
-	
-	this.matrixAutoUpdate = false;
-	this.update();
+	instance.material.color = new Color(hex !== undefined ? hex : 0xFFFF00);
+	instance.object = object;
+	instance.matrixAutoUpdate = false;
+	instance.update();
+
+	return instance;
 }
 
 LineHelper.prototype = Object.create(Line.prototype);

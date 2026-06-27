@@ -27,6 +27,7 @@ import {Scene} from "../objects/Scene.js";
 import {Script} from "../objects/script/Script.js";
 import {SkinnedMesh} from "../objects/mesh/SkinnedMesh.js";
 import {Sky} from "../objects/misc/Sky.js";
+import {TilesetObject} from "../objects/misc/TilesetObject.js";
 import {SpineAnimation} from "../objects/spine/SpineAnimation.js";
 import {SpotLight} from "../objects/lights/SpotLight.js";
 import {Sprite} from "../objects/sprite/Sprite.js";
@@ -62,6 +63,24 @@ function ObjectLoader(manager)
 	this.manager = manager !== undefined ? manager : DefaultLoadingManager;
 	this.texturePath = "";
 }
+
+ObjectLoader.applyShadowData = function(shadow, data)
+{
+	if (!shadow || !data) { return; }
+	if (data.bias !== undefined) { shadow.bias = data.bias; }
+	if (data.radius !== undefined) { shadow.radius = data.radius; }
+	if (data.mapSize !== undefined) { shadow.mapSize.set(data.mapSize.x, data.mapSize.y); }
+	if (data.camera !== undefined)
+	{
+		var cam = data.camera;
+		if (cam.top !== undefined) { shadow.camera.top = cam.top; }
+		if (cam.bottom !== undefined) { shadow.camera.bottom = cam.bottom; }
+		if (cam.left !== undefined) { shadow.camera.left = cam.left; }
+		if (cam.right !== undefined) { shadow.camera.right = cam.right; }
+		if (cam.near !== undefined) { shadow.camera.near = cam.near; }
+		if (cam.far !== undefined) { shadow.camera.far = cam.far; }
+	}
+};
 
 ObjectLoader.prototype = Object.create(ResourceContainer.prototype);
 
@@ -539,7 +558,7 @@ ObjectLoader.prototype.parseObject = function(data)
 
 			if (data.sun !== undefined)
 			{
-				object.sun.shadow.fromJSON(data.sun.shadow);
+				ObjectLoader.applyShadowData(object.sun.shadow, data.sun.shadow);
 
 				if (data.sun.castShadow !== undefined)
 				{
@@ -798,27 +817,27 @@ ObjectLoader.prototype.parseObject = function(data)
 			break;
 
 		case "RectAreaLight":
-			object = new RectAreaLight(data.color, data.intensity, data.width, data.height);
+			object = new RectAreaLight(data.color, data.intensity * Math.PI, data.width, data.height);
 			break;
 
 		case "AmbientLight":
-			object = new AmbientLight(data.color, data.intensity);
+			object = new AmbientLight(data.color, data.intensity * Math.PI);
 			break;
 
 		case "DirectionalLight":
-			object = new DirectionalLight(data.color, data.intensity);
+			object = new DirectionalLight(data.color, data.intensity * Math.PI);
 			break;
 
 		case "PointLight":
-			object = new PointLight(data.color, data.intensity, data.distance, data.decay);
+			object = new PointLight(data.color, data.intensity * Math.PI, data.distance, data.decay);
 			break;
 
 		case "SpotLight":
-			object = new SpotLight(data.color, data.intensity, data.distance, data.angle, data.penumbra, data.decay);
+			object = new SpotLight(data.color, data.intensity * Math.PI, data.distance, data.angle, data.penumbra, data.decay);
 			break;
 
 		case "HemisphereLight":
-			object = new HemisphereLight(data.color, data.groundColor, data.intensity);
+			object = new HemisphereLight(data.color, data.groundColor, data.intensity * Math.PI);
 			break;
 
 		case "HTMLView":
@@ -826,6 +845,13 @@ ObjectLoader.prototype.parseObject = function(data)
 			object.height = data.height;
 			object.width = data.width;
 			object.url = data.url;
+			break;
+
+		case "TilesetObject":
+			object = new TilesetObject(data.url);
+			if (data.centerLat !== undefined) { object.centerLat = data.centerLat; }
+			if (data.centerLon !== undefined) { object.centerLon = data.centerLon; }
+			if (data.zoom !== undefined) { object.zoom = data.zoom; }
 			break;
 
 		case "LightProbe":
@@ -963,7 +989,7 @@ ObjectLoader.prototype.parseObject = function(data)
 	object.receiveShadow = data.receiveShadow === true;
 
 	// Shadowmap data
-	if (data.shadow !== undefined) {object.shadow.fromJSON(data.shadow);}
+	if (data.shadow !== undefined) {ObjectLoader.applyShadowData(object.shadow, data.shadow);}
 
 	// Visibility
 	object.visible = data.visible === true;

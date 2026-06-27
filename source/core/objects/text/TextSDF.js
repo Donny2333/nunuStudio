@@ -2,15 +2,17 @@ import {Text} from "troika-three-text";
 
 function TextSDF() 
 {
-	Text.call(this);
+	var instance = Reflect.construct(Text, [], new.target || TextSDF);
 
-	this.text = "text";
-	this.fontSize = 0.1;
-	this.color = 0xFFFFFF;
-	this.anchorX = "center";
-	this.anchorY = "middle";
-	this.rotation.set(Math.PI, Math.PI, Math.PI);
-	this.sync();
+	instance.text = "text";
+	instance.fontSize = 0.1;
+	instance.color = 0xFFFFFF;
+	instance.anchorX = "center";
+	instance.anchorY = "middle";
+	instance.rotation.set(Math.PI, Math.PI, Math.PI);
+	instance.sync();
+
+	return instance;
 }
 
 TextSDF.prototype = Object.create(Text.prototype);

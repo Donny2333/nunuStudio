@@ -1,5 +1,4 @@
-import {LinearFilter, CubeReflectionMapping, WebGLRenderer, Object3D, Mesh, SkinnedMesh, AnimationClip, MeshBasicMaterial, MeshPhongMaterial, ShapeBufferGeometry, JSONLoader, Matrix4} from "three";
-import {BasisTextureLoader} from "three/examples/jsm/loaders/BasisTextureLoader";
+import {LinearFilter, CubeReflectionMapping, WebGLRenderer, Object3D, Mesh, SkinnedMesh, AnimationClip, MeshBasicMaterial, MeshPhongMaterial, ShapeGeometry, Matrix4} from "three";
 import {AMFLoader} from "three/examples/jsm/loaders/AMFLoader";
 import {DDSLoader} from "three/examples/jsm/loaders/DDSLoader";
 import {PVRLoader} from "three/examples/jsm/loaders/PVRLoader";
@@ -9,17 +8,14 @@ import {GCodeLoader} from "three/examples/jsm/loaders/GCodeLoader";
 import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
 import {ThreeMFLoader} from "three/examples/jsm/loaders/3MFLoader";
-import {AssimpLoader} from "three/examples/jsm/loaders/AssimpLoader";
 import {TDSLoader} from "three/examples/jsm/loaders/TDSLoader";
 import {ColladaLoader} from "three/examples/jsm/loaders/ColladaLoader";
 import {DRACOLoader} from "three/examples/jsm/loaders/DRACOLoader";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import {PLYLoader} from "three/examples/jsm/loaders/PLYLoader";
 import {VTKLoader} from "three/examples/jsm/loaders/VTKLoader";
-import {PRWMLoader} from "three/examples/jsm/loaders/PRWMLoader";
 import {VRMLLoader} from "three/examples/jsm/loaders/VRMLLoader";
 import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader";
-import {XLoader} from "three/examples/jsm/loaders/XLoader";
 import {STLLoader} from "three/examples/jsm/loaders/STLLoader";
 import {PCDLoader} from "three/examples/jsm/loaders/PCDLoader";
 import {SVGLoader} from "three/examples/jsm/loaders/SVGLoader";
@@ -148,23 +144,7 @@ Loaders.loadTexture = function(file, onLoad)
 		}
 		else if (extension === "basis")
 		{
-			var renderer = new WebGLRenderer({alpha: true});
-
-			var loader = new BasisTextureLoader();
-			loader.setTranscoderPath(Global.FILE_PATH + "wasm/basis/");
-			loader.detectSupport(renderer);
-			loader._createTexture(reader.result).then(function(texture)
-			{
-				texture.encoding = THREE.sRGBEncoding;
-				texture.name = name;
-				Editor.addAction(new AddResourceAction(texture, Editor.program, "textures"));
-			}).catch(function(error)
-			{
-				Editor.alert("Error decoding basis texture.");
-				console.error("nunuStudio: Error decoding basis texture.", error);
-			});
-
-			renderer.dispose();
+			console.warn("nunuStudio: Basis texture loading is no longer supported.");
 		}
 		else
 		{
@@ -468,7 +448,7 @@ Loaders.loadModel = function(file, parent)
 					
 					var name = FileSystem.getFileName(file) || "vox";
 
-					var geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+					var geometry = new THREE.BoxGeometry(1, 1, 1);
 					geometry.name = name;
 				
 					var material = new MeshPhongMaterial();
@@ -554,23 +534,8 @@ Loaders.loadModel = function(file, parent)
 		// Assimp
 		else if (extension === "assimp")
 		{
-			var reader = new FileReader();
-			reader.onload = function()
-			{
-				try
-				{
-					var loader = new AssimpLoader();
-					var assimp = loader.parse(reader.result, path);
-					Editor.addObject(assimp.object, parent);
-					modal.destroy();
-				}
-				catch (e)
-				{
-					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
-				}
-			};
-			reader.readAsArrayBuffer(file);
+			console.warn("nunuStudio: Assimp loading is no longer supported.");
+			modal.destroy();
 		}
 		// Babylon
 		else if (extension === "babylon")
@@ -824,31 +789,9 @@ Loaders.loadModel = function(file, parent)
 		// PRWM
 		else if (extension === "prwm")
 		{
-			var reader = new FileReader();
-			reader.onload = function()
-			{
-				try
-				{
-					var loader = new PRWMLoader();
-					var modelName = FileSystem.getNameWithoutExtension(name);
-
-					var geometry = loader.parse(reader.result);
-					geometry.name = modelName;
-
-					var mesh = new Mesh(geometry, Editor.defaultMaterial);
-					mesh.name = modelName;
-					Editor.addObject(mesh, parent);
-					modal.destroy();
-				}
-				catch (e)
-				{
-					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
-				}
-			};
-			reader.readAsArrayBuffer(file);
+			console.warn("nunuStudio: PRWM loading is no longer supported.");
+			modal.destroy();
 		}
-		
 		// VRML
 		else if (extension === "wrl" || extension === "vrml")
 		{
@@ -911,88 +854,8 @@ Loaders.loadModel = function(file, parent)
 		// X
 		else if (extension === "x")
 		{
-			function convertAnimation(baseAnime, name)
-			{
-				var animation = {};
-				animation.fps = baseAnime.fps;
-				animation.name = name;
-				animation.hierarchy = [];
-
-				for (var i = 0; i < baseAnime.hierarchy.length; i++)
-				{
-					var firstKey = -1;
-
-					var frame = {};
-					frame.name = baseAnime.hierarchy[i].name;
-					frame.parent = baseAnime.hierarchy[i].parent;
-					frame.keys = [];
-
-					for (var m = 1; m < baseAnime.hierarchy[i].keys.length; m++)
-					{
-						if (baseAnime.hierarchy[i].keys[m].time > 0)
-						{
-							if (firstKey === -1)
-							{
-								firstKey = m - 1;
-								frame.keys.push(baseAnime.hierarchy[i].keys[m - 1]);
-							}
-
-							frame.keys.push(baseAnime.hierarchy[i].keys[m]);
-						}
-
-						animation.length = baseAnime.hierarchy[i].keys[m].time;
-
-						if (m >= baseAnime.hierarchy[i].keys.length - 1)
-						{
-							break;
-						}
-
-					}
-
-					animation.hierarchy.push(frame);
-				}
-
-				return animation;
-			}
-
-			var reader = new FileReader();
-			reader.onload = function()
-			{
-				try
-				{
-					var loader = new XLoader();
-					loader.baseDir = path;
-					loader.parse(reader.result, function(object)
-					{
-						for (var i = 0; i < object.FrameInfo.length; i ++)
-						{
-							var model = object.FrameInfo[i];
-
-							if (model instanceof SkinnedMesh)
-							{
-								if (object.XAnimationObj !== undefined && object.XAnimationObj.length > 0)
-								{
-									var animations = object.XAnimationObj;
-									for (var j = 0; j < animations.length; j++)
-									{
-										model.animationSpeed = 1000;
-										model.animations.push(AnimationClip.parseAnimation(convertAnimation(animations[j], animations[j].name), model.skeleton.bones));
-									}
-								}
-							}
-
-							Editor.addObject(model, parent);
-						}
-						modal.destroy();
-					});
-				}
-				catch (e)
-				{
-					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
-				}
-			};
-			reader.readAsArrayBuffer(file);
+			console.warn("nunuStudio: X file loading is no longer supported.");
+			modal.destroy();
 		}
 		// PCD
 		else if (extension === "pcd")
@@ -1039,7 +902,7 @@ Loaders.loadModel = function(file, parent)
 						for (var j = 0; j < shapes.length; j++)
 						{
 							var shape = shapes[j];
-							var geometry = new ShapeBufferGeometry(shape);
+							var geometry = new ShapeGeometry(shape);
 							var mesh = new Mesh(geometry, material);
 							mesh.position.z = position;
 							position += 0.1;
@@ -1091,38 +954,10 @@ Loaders.loadModel = function(file, parent)
 			{
 				try
 				{
-					var loader = new JSONLoader();
-					var data = loader.parse(JSON.parse(reader.result));
-					var materials = data.materials;
-					var geometry = data.geometry;
-
-					// Material
-					var material = null;
-					if (materials === undefined || materials.length === 0)
-					{
-						material = Editor.defaultMaterial;
-					}
-					else if (materials.length === 1)
-					{
-						material = materials[0];
-					}
-					else if (materials.length > 1)
-					{
-						material = materials;
-					}
-
-					// Mesh
-					var mesh = null;
-					if (geometry.bones.length > 0)
-					{
-						mesh = new SkinnedMesh(geometry, material);
-					}
-					else
-					{
-						mesh = new Mesh(geometry, material);
-					}
-
-					Editor.addObject(mesh, parent);
+					var json = JSON.parse(reader.result);
+					var loader = new THREE.ObjectLoader();
+					var object = loader.parse(json);
+					Editor.addObject(object, parent);
 					modal.destroy();
 				}
 				catch (e)

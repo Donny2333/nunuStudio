@@ -1,4 +1,4 @@
-import {Math} from "three";
+import {MathUtils} from "three";
 import {FileSystem} from "../FileSystem.js";
 
 /**
@@ -27,7 +27,7 @@ function Resource(name, type)
 	 * @property uuid
 	 * @type {string}
 	 */
-	this.uuid = Math.generateUUID();
+	this.uuid = MathUtils.generateUUID();
 
 	/**
 	 * Resource type. Used to identify the type of the resource, usefull for serialization.

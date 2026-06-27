@@ -12,19 +12,21 @@ import {LineSegments, BufferGeometry, LineBasicMaterial, Float32BufferAttribute}
  */
 function GridHelper(size, spacing, color)
 {
-	this.size = size !== undefined ? size : 100;
-	this.spacing = spacing !== undefined ? spacing : 1;
-
-	LineSegments.call(this, new BufferGeometry(), new LineBasicMaterial(
+	var instance = Reflect.construct(LineSegments, [new BufferGeometry(), new LineBasicMaterial(
 		{
 			color: color !== undefined ? color : 0x888888,
 			depthWrite: false,
 			transparent: true,
 			opacity: 0.5
-		}));
+		})], new.target || GridHelper);
 
-	this.update();
-};
+	instance.size = size !== undefined ? size : 100;
+	instance.spacing = spacing !== undefined ? spacing : 1;
+
+	instance.update();
+
+	return instance;
+}
 
 GridHelper.prototype = Object.create(LineSegments.prototype);
 

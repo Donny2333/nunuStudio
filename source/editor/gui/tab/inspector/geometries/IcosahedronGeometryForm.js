@@ -1,4 +1,4 @@
-import {IcosahedronBufferGeometry, IcosahedronGeometry, BufferGeometry} from "three";
+import {IcosahedronGeometry, BufferGeometry} from "three";
 import {Locale} from "../../../../locale/LocaleManager.js";
 import {ChangeAction} from "../../../../history/action/ChangeAction.js";
 import {Editor} from "../../../../Editor.js";

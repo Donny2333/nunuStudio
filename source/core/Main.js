@@ -128,6 +128,7 @@ export {Sky} from "./objects/misc/Sky.js";
 export {Group} from "./objects/misc/Group.js";
 export {LensFlare} from "./objects/misc/LensFlare.js";
 export {HTMLView} from "./objects/misc/HTMLView.js";
+export {TilesetObject} from "./objects/misc/TilesetObject.js";
 
 export {OrbitControls} from "./objects/controls/OrbitControls.js";
 export {FirstPersonControls} from "./objects/controls/FirstPersonControls.js";

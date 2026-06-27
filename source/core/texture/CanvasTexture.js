@@ -22,55 +22,32 @@ import {Texture, RGBAFormat} from "three";
  */
 function CanvasTexture(width, height, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding)
 {
-	/**
-	 * Image is used to store a DOM canvas element.
-	 * 
-	 * @property image
-	 * @type {Element}
-	 */
-	Texture.call(this, document.createElement("canvas"), mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding);
+	var instance = Reflect.construct(Texture, [document.createElement("canvas"), mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding], new.target || CanvasTexture);
 
-	this.name = "canvas";
-	this.category = "Canvas";
-	this.format = RGBAFormat;
+	instance.name = "canvas";
+	instance.category = "Canvas";
+	instance.format = RGBAFormat;
 
-	Object.defineProperties(this,
+	Object.defineProperties(instance,
 		{
-		/**
-		 * Canvas width, internal resolution of the canvas texture.
-		 * 
-		 * @property width
-		 * @type {number}
-		 */
 			width:
 		{
-			get: function() {return this.image.width;},
-			set: function(value) {this.image.width = value;}
+			get: function() {return instance.image.width;},
+			set: function(value) {instance.image.width = value;}
 		},
-
-			/**
-			 * Canvas height, internal resolution of the canvas texture.
-			 * 
-			 * @property height
-			 * @type {number}
-			 */
 			height:
 		{
-			get: function() {return this.image.height;},
-			set: function(value) {this.image.height = value;}
+			get: function() {return instance.image.height;},
+			set: function(value) {instance.image.height = value;}
 		}
 		});
 
-	this.width = width !== undefined ? width : 1;
-	this.height = height !== undefined ? height : 1;
+	instance.width = width !== undefined ? width : 1;
+	instance.height = height !== undefined ? height : 1;
 
-	/**
-	 * Canvas context 2D, can be used to draw content do the canvas texture.
-	 * 
-	 * @property context
-	 * @type {Context2D}
-	 */
-	this.context = this.image.getContext("2d");
+	instance.context = instance.image.getContext("2d");
+
+	return instance;
 }
 
 CanvasTexture.prototype = Object.create(Texture.prototype);

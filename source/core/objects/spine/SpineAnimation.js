@@ -74,12 +74,12 @@ function SpineAnimation(json, atlas, path, textures)
 	var loader = new AtlasAttachmentLoader(textureAtlas);
 	var skeleton = new SkeletonJson(loader).readSkeletonData(json);
 
-	SkeletonMesh.call(this, skeleton);
+	var instance = Reflect.construct(SkeletonMesh, [skeleton], new.target || SpineAnimation);
 
-	this.name = "spine";
-	this.type = "SpineAnimation";
+	instance.name = "spine";
+	instance.type = "SpineAnimation";
 
-	this.scale.set(0.01, 0.01, 0.01);
+	instance.scale.set(0.01, 0.01, 0.01);
 
 	/**
 	 * Spine animation data.
@@ -87,7 +87,7 @@ function SpineAnimation(json, atlas, path, textures)
 	 * @property json
 	 * @type {Object}
 	 */
-	this.json = json;
+	instance.json = json;
 
 	/**
 	 * Texture atlas information.
@@ -95,7 +95,7 @@ function SpineAnimation(json, atlas, path, textures)
 	 * @property atlas
 	 * @type {Object}
 	 */
-	this.atlas = atlas;
+	instance.atlas = atlas;
 
 	/**
 	 * Array of SpineTextures used by the animation.
@@ -103,7 +103,7 @@ function SpineAnimation(json, atlas, path, textures)
 	 * @property textures
 	 * @type {Array}
 	 */
-	this.textures = textures;
+	instance.textures = textures;
 
 	/**
 	 * The animation can have multiple skins that define diferent sets of textures for the same animation.
@@ -111,7 +111,7 @@ function SpineAnimation(json, atlas, path, textures)
 	 * @attribute skin
 	 * @type {Object}
 	 */
-	this.skin = this.getSkins().length > 0 ? this.getSkins()[0].name : null;
+	instance.skin = instance.getSkins().length > 0 ? instance.getSkins()[0].name : null;
 
 	/**
 	 * Animation currently playing, animations are split into tracks.
@@ -121,7 +121,7 @@ function SpineAnimation(json, atlas, path, textures)
 	 * @attribute animation
 	 * @type {Object}
 	 */
-	this.animation = this.getAnimations().length > 0 ? this.getAnimations()[0].name : null;
+	instance.animation = instance.getAnimations().length > 0 ? instance.getAnimations()[0].name : null;
 
 	/**
 	 * Index of the animation track playing.
@@ -129,7 +129,7 @@ function SpineAnimation(json, atlas, path, textures)
 	 * @attribute track
 	 * @type {number}
 	 */
-	this.track = 0;
+	instance.track = 0;
 
 	/**
 	 * Indicates the loop mode of the animation if set true the animation starts again after it ends.
@@ -137,11 +137,13 @@ function SpineAnimation(json, atlas, path, textures)
 	 * @attribute loop
 	 * @type {boolean}
 	 */
-	this.loop = true;
+	instance.loop = true;
 
-	this.clock = new Clock();
+	instance.clock = new Clock();
 
-	this.play();
+	instance.play();
+
+	return instance;
 }
 
 SpineAnimation.prototype = Object.create(SkeletonMesh.prototype);

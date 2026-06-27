@@ -35,7 +35,7 @@ RendererState.prototype.backup = function(renderer)
 
 	this.sortObjects = renderer.sortObjects;
 
-	this.clearColor.copy(renderer.getClearColor());
+	renderer.getClearColor(this.clearColor);
 	this.clearAlpha = renderer.getClearAlpha();
 };
 

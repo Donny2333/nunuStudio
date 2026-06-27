@@ -1,18 +1,19 @@
 import {SkinnedMesh, MeshBasicMaterial} from "three";
 
-function SkinnedWireframeHelper(object, hex) 
+function SkinnedWireframeHelper(object, hex)
 {
-	SkinnedMesh.call(this, object.geometry, new MeshBasicMaterial(
+	var instance = Reflect.construct(SkinnedMesh, [object.geometry, new MeshBasicMaterial(
 		{
 			color: hex !== undefined ? hex : 0xFFFFFF,
 			wireframe: true,
 			skinning: true
-		}));
+		})], new.target || SkinnedWireframeHelper);
 
-	this.object = object;
-	
-	this.matrixAutoUpdate = false;
-	this.update();
+	instance.object = object;
+	instance.matrixAutoUpdate = false;
+	instance.update();
+
+	return instance;
 }
 
 SkinnedWireframeHelper.prototype = Object.create(SkinnedMesh.prototype);

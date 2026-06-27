@@ -132,6 +132,8 @@ TreeView.prototype.traverse = function(callback)
  */
 TreeView.prototype.addObject = function(object, parent, index)
 {
+	if (object.hideInEditor === true) { return; }
+
 	var parentNode = null;
 	this.traverse(function(node)
 	{
@@ -153,6 +155,8 @@ TreeView.prototype.addObject = function(object, parent, index)
 	// Auxiliar method to insert object recursivelly
 	function insertObject(parent, object)
 	{
+		if (object.hideInEditor === true) { return; }
+
 		var element = parent.addObject(object);
 
 		for (var k = 0; k < object.children.length; k++)
@@ -219,6 +223,8 @@ TreeView.prototype.buildTree = function()
 {
 	function fillTree(root, object)
 	{
+		if (object.hideInEditor === true) { return; }
+
 		var element = root.addObject(object);
 
 		for (var i = 0; i < object.children.length; i++)

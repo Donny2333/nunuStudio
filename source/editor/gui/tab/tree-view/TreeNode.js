@@ -1,6 +1,6 @@
-import {Vector2, Object3D, Mesh, SkinnedMesh, InstancedMesh, Vector3, Quaternion, Math, Material, Camera} from "three";
+import {Vector2, Object3D, Mesh, SkinnedMesh, InstancedMesh, Vector3, Quaternion, MathUtils, Material, Camera} from "three";
 import {ConvexGeometry} from "three/examples/jsm/geometries/ConvexGeometry";
-import {BufferGeometryUtils} from "three/examples/jsm/utils/BufferGeometryUtils";
+import {mergeVertices} from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import {Locale} from "../../../locale/LocaleManager.js";
 import {PhysicsGenerator} from "../../../../core/utils/PhysicsGenerator.js";
 import {ObjectUtils} from "../../../../core/utils/ObjectUtils.js";
@@ -289,7 +289,7 @@ function TreeNode(container)
 					context.addOption(Locale.convexHull, function()
 					{
 						var geometry = self.object.geometry.clone();
-						geometry = BufferGeometryUtils.mergeVertices(geometry);
+						geometry = mergeVertices(geometry);
 
 						const vertices = [];
 						const positionAttribute = geometry.getAttribute("position");
@@ -447,7 +447,7 @@ function TreeNode(container)
 					var object = new ObjectLoader().parse(self.object.toJSON());
 					object.traverse(function(child)
 					{
-						child.uuid = Math.generateUUID();
+						child.uuid = MathUtils.generateUUID();
 					});
 					Editor.addAction(new AddAction(object, self.object.parent));
 				});

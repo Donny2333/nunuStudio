@@ -1,17 +1,14 @@
-import {ShaderMaterial, SphereBufferGeometry, Mesh} from "three";
+import {ShaderMaterial, SphereGeometry, Mesh} from "three";
 
 function LightProbeHelper(lightProbe, size)
 {
-	this.lightProbe = lightProbe;
-	this.size = size;
-
 	var material = new ShaderMaterial({
 
 		type: 'LightProbeHelperMaterial',
 
 		uniforms: {
-			sh: {value: this.lightProbe.sh.coefficients}, // by reference
-			intensity: {value: this.lightProbe.intensity}
+			sh: {value: lightProbe.sh.coefficients},
+			intensity: {value: lightProbe.intensity}
 		},
 
 		vertexShader: [
@@ -25,37 +22,23 @@ function LightProbeHelper(lightProbe, size)
 		fragmentShader: [
 			'#define RECIPROCAL_PI 0.318309886',
 			'vec3 inverseTransformDirection(in vec3 normal, in mat4 matrix) {',
-			'	// matrix is assumed to be orthogonal',
 			'	return normalize((vec4(normal, 0.0) * matrix).xyz);',
 			'}',
-
-			'// source: https:// graphics.stanford.edu/papers/envmap/envmap.pdf',
 			'vec3 shGetIrradianceAt(in vec3 normal, in vec3 shCoefficients[9]) {',
-
-			'	// normal is assumed to have unit length',
 			'	float x = normal.x, y = normal.y, z = normal.z;',
-
-			'	// band 0',
 			'	vec3 result = shCoefficients[0] * 0.886227;',
-
-			'	// band 1',
 			'	result += shCoefficients[1] * 2.0 * 0.511664 * y;',
 			'	result += shCoefficients[2] * 2.0 * 0.511664 * z;',
 			'	result += shCoefficients[3] * 2.0 * 0.511664 * x;',
-
-			'	// band 2',
 			'	result += shCoefficients[4] * 2.0 * 0.429043 * x * y;',
 			'	result += shCoefficients[5] * 2.0 * 0.429043 * y * z;',
 			'	result += shCoefficients[6] * (0.743125 * z * z - 0.247708);',
 			'	result += shCoefficients[7] * 2.0 * 0.429043 * x * z;',
 			'	result += shCoefficients[8] * 0.429043 * (x * x - y * y);',
-
 			'	return result;',
-
 			'}',
-
-			'uniform vec3 sh[9]; // sh coefficients',
-			'uniform float intensity; // light probe intensity',
+			'uniform vec3 sh[9];',
+			'uniform float intensity;',
 			'varying vec3 vNormal;',
 			'void main() {',
 			'	vec3 normal = normalize(vNormal);',
@@ -64,16 +47,18 @@ function LightProbeHelper(lightProbe, size)
 			'	vec3 outgoingLight = RECIPROCAL_PI * irradiance * intensity;',
 			'	gl_FragColor = linearToOutputTexel(vec4(outgoingLight, 1.0));',
 			'}'
-
 		].join('\n')
 	});
 
-	var geometry = new SphereBufferGeometry(1, 32, 16);
+	var geometry = new SphereGeometry(1, 32, 16);
 
-	Mesh.call(this, geometry, material);
+	var instance = Reflect.construct(Mesh, [geometry, material], new.target || LightProbeHelper);
 
-	this.onBeforeRender();
+	instance.lightProbe = lightProbe;
+	instance.size = size;
+	instance.onBeforeRender();
 
+	return instance;
 }
 
 LightProbeHelper.prototype = Object.create(Mesh.prototype);

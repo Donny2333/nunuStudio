@@ -9,43 +9,45 @@ import {TextSprite} from "../text/TextSprite.js";
  */
 function Measurement()
 {
-	TGroup.call(this);
+	var instance = Reflect.construct(TGroup, [], new.target || Measurement);
 
-	this.name = "measurement";
-	this.type = "Measurement";
+	instance.name = "measurement";
+	instance.type = "Measurement";
 
-	this.start = new Vector3(0, 0, 0);
-	this.end = new Vector3(1, 0, 0);
-	this.precision = 2;
+	instance.start = new Vector3(0, 0, 0);
+	instance.end = new Vector3(1, 0, 0);
+	instance.precision = 2;
 
-	this._startWorld = new Vector3();
-	this._endWorld = new Vector3();
-	this._midpoint = new Vector3();
-	this._lastDistance = -1;
+	instance._startWorld = new Vector3();
+	instance._endWorld = new Vector3();
+	instance._midpoint = new Vector3();
+	instance._lastDistance = -1;
 
 	var geometry = new BufferGeometry();
 	geometry.setAttribute("position", new Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
-	this.line = new Line(geometry, new LineBasicMaterial({color: 0xFFFF00}));
-	this.line.frustumCulled = false;
-	this.line.locked = true;
-	this.line.name = "line";
-	this.add(this.line);
+	instance.line = new Line(geometry, new LineBasicMaterial({color: 0xFFFF00}));
+	instance.line.frustumCulled = false;
+	instance.line.locked = true;
+	instance.line.name = "line";
+	instance.add(instance.line);
 
-	this.label = new TextSprite();
-	this.label.name = "label";
-	this.label.locked = true;
-	this.label.sizeAttenuation = false;
-	this.label.color = "#000000";
-	this.label.font = "arial";
-	this.label.resolution = 128;
-	this.label.outline = false;
-	this.label.material.depthTest = false;
-	this.label.material.depthWrite = false;
-	this.label.material.needsUpdate = true;
-	this.label.scale.setScalar(0.03);
-	this.add(this.label);
+	instance.label = new TextSprite();
+	instance.label.name = "label";
+	instance.label.locked = true;
+	instance.label.sizeAttenuation = false;
+	instance.label.color = "#000000";
+	instance.label.font = "arial";
+	instance.label.resolution = 128;
+	instance.label.outline = false;
+	instance.label.material.depthTest = false;
+	instance.label.material.depthWrite = false;
+	instance.label.material.needsUpdate = true;
+	instance.label.scale.setScalar(0.03);
+	instance.add(instance.label);
 
-	this.updateGeometry();
+	instance.updateGeometry();
+
+	return instance;
 }
 
 Measurement.prototype = Object.create(TGroup.prototype);

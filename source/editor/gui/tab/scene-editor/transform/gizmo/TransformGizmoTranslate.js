@@ -1,4 +1,4 @@
-import {Geometry, Mesh, CylinderGeometry, BufferGeometry, Float32BufferAttribute, Line, CylinderBufferGeometry, BoxBufferGeometry, PlaneBufferGeometry, Matrix4} from "three";
+import {Mesh, CylinderGeometry, BoxGeometry, PlaneGeometry, BufferGeometry, Float32BufferAttribute, Line, Matrix4} from "three";
 import {ChangeAction} from "../../../../../history/action/ChangeAction.js";
 import {ActionBundle} from "../../../../../history/action/ActionBundle.js";
 import {TransformControls} from "../TransformControls.js";
@@ -15,12 +15,11 @@ import {TransformGizmo} from "./TransformGizmo.js";
  */
 function TransformGizmoTranslate()
 {
-	var arrowGeometry = new Geometry();
-	var mesh = new Mesh(new CylinderGeometry(0, 0.05, 0.2, 12, 1, false));
-	mesh.position.y = 0.5;
-	mesh.updateMatrix();
+	var instance = Reflect.construct(TransformGizmo, [], new.target || TransformGizmoTranslate);
 
-	arrowGeometry.merge(mesh.geometry, mesh.matrix);
+	var cylinderGeo = new CylinderGeometry(0, 0.05, 0.2, 12, 1, false);
+	cylinderGeo.translate(0, 0.5, 0);
+	var arrowGeometry = cylinderGeo;
 
 	var lineXGeometry = new BufferGeometry();
 	lineXGeometry.setAttribute("position", new Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
@@ -31,7 +30,7 @@ function TransformGizmoTranslate()
 	var lineZGeometry = new BufferGeometry();
 	lineZGeometry.setAttribute("position", new Float32BufferAttribute([0, 0, 0, 0, 0, 1], 3));
 
-	this.handleGizmos =
+	instance.handleGizmos =
 	{
 		X: [[new Mesh(arrowGeometry, GizmoMaterial.red), [0.5, 0, 0], [0, 0, - Math.PI / 2]], [new Line(lineXGeometry, GizmoLineMaterial.red)]],
 		Y: [[new Mesh(arrowGeometry, GizmoMaterial.green), [0, 0.5, 0]], [new Line(lineYGeometry, GizmoLineMaterial.green)]],
@@ -42,7 +41,7 @@ function TransformGizmoTranslate()
 		XYZ: [[new Mesh(TransformGizmoTranslate.box, GizmoMaterial.whiteAlpha), [0, 0, 0], [0, 0, 0]]]
 	};
 
-	this.pickerGizmos =
+	instance.pickerGizmos =
 	{
 		X: [[new Mesh(TransformGizmoTranslate.cylinder, TransformGizmo.pickerMaterial), [0.6, 0, 0], [0, 0, - Math.PI / 2]]],
 		Y: [[new Mesh(TransformGizmoTranslate.cylinder, TransformGizmo.pickerMaterial), [0, 0.6, 0]]],
@@ -53,20 +52,22 @@ function TransformGizmoTranslate()
 		XYZ: [[new Mesh(TransformGizmoTranslate.box, TransformGizmo.pickerMaterial)]]
 	};
 
-	TransformGizmo.call(this);
+	TransformGizmo.setupGizmos(instance);
+
+	return instance;
 }
 
 TransformGizmoTranslate.prototype = Object.create(TransformGizmo.prototype);
 
-TransformGizmoTranslate.cylinder = new CylinderBufferGeometry(0.2, 0, 1, 4, 1, false);
-TransformGizmoTranslate.box = new BoxBufferGeometry(0.1, 0.1, 0.1);
-TransformGizmoTranslate.plane = new PlaneBufferGeometry(0.29, 0.29);
-TransformGizmoTranslate.planeBig = new PlaneBufferGeometry(0.4, 0.4);
+TransformGizmoTranslate.cylinder = new CylinderGeometry(0.2, 0, 1, 4, 1, false);
+TransformGizmoTranslate.box = new BoxGeometry(0.1, 0.1, 0.1);
+TransformGizmoTranslate.plane = new PlaneGeometry(0.29, 0.29);
+TransformGizmoTranslate.planeBig = new PlaneGeometry(0.4, 0.4);
 
 TransformGizmoTranslate.prototype.setActivePlane = function(axis, eye)
 {
 	var tempMatrix = new Matrix4();
-	eye.applyMatrix4(tempMatrix.getInverse(tempMatrix.extractRotation(this.planes["XY"].matrixWorld)));
+	eye.applyMatrix4(tempMatrix.extractRotation(this.planes["XY"].matrixWorld).invert());
 
 	if (axis === "X")
 	{
@@ -155,7 +156,7 @@ TransformGizmoTranslate.prototype.transformObject = function(controls)
 				
 		if (controls.space === TransformControls.WORLD || controls.axis.search("XYZ") !== -1)
 		{
-			controls.point.applyMatrix4(controls.tempMatrix.getInverse(controls.attributes[i].parentRotationMatrix));
+			controls.point.applyMatrix4(controls.tempMatrix.copy(controls.attributes[i].parentRotationMatrix).invert());
 
 			for (var j = 0; j < controls.objects.length; j++)
 			{
@@ -167,7 +168,7 @@ TransformGizmoTranslate.prototype.transformObject = function(controls)
 		{
 			if (controls.axis.length > 1)
 			{
-				controls.point.applyMatrix4(controls.tempMatrix.getInverse(controls.attributes[i].worldRotationMatrix));
+				controls.point.applyMatrix4(controls.tempMatrix.copy(controls.attributes[i].worldRotationMatrix).invert());
 				controls.point.applyMatrix4(controls.attributes[i].oldRotationMatrix);
 			}
 			else
@@ -186,7 +187,7 @@ TransformGizmoTranslate.prototype.transformObject = function(controls)
 		{
 			if (controls.space === TransformControls.LOCAL)
 			{
-				controls.objects[i].position.applyMatrix4(controls.tempMatrix.getInverse(controls.attributes[i].worldRotationMatrix));
+				controls.objects[i].position.applyMatrix4(controls.tempMatrix.copy(controls.attributes[i].worldRotationMatrix).invert());
 			}
 
 			if (controls.axis.search("X") !== -1)

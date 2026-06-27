@@ -1,4 +1,4 @@
-import {Object3D, SkinnedMesh, Mesh, Points, Line, Light, PointLight, RectAreaLight, SpotLight, DirectionalLight, HemisphereLight, LightProbe, Audio, Geometry, BufferGeometry, Material, Texture} from "three";
+import {Object3D, SkinnedMesh, Mesh, Points, Line, Light, PointLight, RectAreaLight, SpotLight, DirectionalLight, HemisphereLight, LightProbe, Audio, BufferGeometry, Material, Texture} from "three";
 import {Locale} from "../../../locale/LocaleManager.js";
 import {Video} from "../../../../core/resources/Video.js";
 import {Resource} from "../../../../core/resources/Resource.js";
@@ -13,6 +13,7 @@ import {Program} from "../../../../core/objects/Program.js";
 import {PhysicsObject} from "../../../../core/objects/physics/PhysicsObject.js";
 import {ParticleEmitter} from "../../../../core/objects/particle/ParticleEmitter.js";
 import {Sky} from "../../../../core/objects/misc/Sky.js";
+import {TilesetObject} from "../../../../core/objects/misc/TilesetObject.js";
 import {InstancedMesh} from "../../../../core/objects/mesh/InstancedMesh.js";
 import {OrbitControls} from "../../../../core/objects/controls/OrbitControls.js";
 import {FirstPersonControls} from "../../../../core/objects/controls/FirstPersonControls.js";
@@ -39,6 +40,7 @@ import {ProgramInspector} from "./objects/ProgramInspector.js";
 import {PhysicsInspector} from "./objects/physics/PhysicsInspector.js";
 import {ObjectInspector} from "./objects/ObjectInspector.js";
 import {SkyInspector} from "./objects/misc/SkyInspector.js";
+import {TilesetObjectInspector} from "./objects/misc/TilesetObjectInspector.js";
 import {ParticleEmitterInspector} from "./objects/misc/ParticleEmitterInspector.js";
 import {CubeCameraInspector} from "./objects/misc/CubeCameraInspector.js";
 import {MeshInspector} from "./objects/mesh/MeshInspector.js";
@@ -220,6 +222,10 @@ InspectorContainer.prototype.updateSelection = function()
 		{
 			this.panel = new SkyInspector(this, object);
 		}
+		else if (object instanceof TilesetObject)
+		{
+			this.panel = new TilesetObjectInspector(this, object);
+		}
 		else if (object instanceof PerspectiveCamera)
 		{
 			this.panel = new PerspectiveCameraInspector(this, object);
@@ -265,7 +271,7 @@ InspectorContainer.prototype.updateSelection = function()
 			this.panel = new ObjectInspector(this, object);
 		}
 	}
-	else if (object instanceof Geometry || object instanceof BufferGeometry)
+	else if (object instanceof BufferGeometry)
 	{
 		this.panel = new GeometryInspector(this, object);
 	}

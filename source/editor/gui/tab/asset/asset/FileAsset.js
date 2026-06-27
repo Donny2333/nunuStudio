@@ -19,8 +19,8 @@ function FileAsset(parent)
 	var self = this;
 
 	// Image
-        this.image = document.createElement("img");
-        this.image.draggable = false;
+	this.image = document.createElement("img");
+	this.image.draggable = false;
 	this.image.style.position = "absolute";
 	this.image.style.top = "5%";
 	this.image.style.left = "17%";

@@ -10,9 +10,9 @@ import {BufferGeometry, BufferAttribute, Vector3} from "three";
  */
 function RoundedBoxBufferGeometry(width, height, depth, radius, radiusSegments)
 {
-	BufferGeometry.call(this);
+	var instance = Reflect.construct(BufferGeometry, [], new.target || RoundedBoxBufferGeometry);
 
-	this.type = "RoundedBoxBufferGeometry";
+	instance.type = "RoundedBoxBufferGeometry";
 
 	// Validate params
 	radiusSegments = !isNaN(radiusSegments) ? Math.max(1, Math.floor(radiusSegments)) : 1;
@@ -27,7 +27,7 @@ function RoundedBoxBufferGeometry(width, height, depth, radius, radiusSegments)
 	var edgeHalfDepth = depth / 2 - radius;
 
 	// Serialization parameters
-	this.parameters =
+	instance.parameters =
 	{
 		width: width,
 		height: height,
@@ -355,9 +355,11 @@ function RoundedBoxBufferGeometry(width, height, depth, radius, radiusSegments)
 		index++;
 	}
 
-	this.setIndex(new BufferAttribute(new Uint16Array(indices), 1));
-	this.addAttribute("position", positions);
-	this.addAttribute("normal", normals);
+	instance.setIndex(new BufferAttribute(new Uint16Array(indices), 1));
+	instance.setAttribute("position", positions);
+	instance.setAttribute("normal", normals);
+
+	return instance;
 };
 
 RoundedBoxBufferGeometry.prototype = Object.create(BufferGeometry.prototype);

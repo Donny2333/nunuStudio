@@ -10,12 +10,11 @@ import {BufferGeometry, BufferAttribute, Vector3, Vector2} from "three";
  */
 function CapsuleBufferGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, capsTopSegments, capsBottomSegments, thetaStart, thetaLength) 
 {
+	var instance = Reflect.construct(BufferGeometry, [], new.target || CapsuleBufferGeometry);
 
-	BufferGeometry.call(this);
+	instance.type = "CapsuleBufferGeometry";
 
-	this.type = "CapsuleBufferGeometry";
-
-	this.parameters = {
+	instance.parameters = {
 		radiusTop: radiusTop,
 		radiusBottom: radiusBottom,
 		height: height,
@@ -64,10 +63,10 @@ function CapsuleBufferGeometry(radiusTop, radiusBottom, height, radialSegments, 
 	generateTorso();
 
 	// Build geometry
-	this.setIndex(indices);
-	this.setAttribute("position", vertices);
-	this.setAttribute("normal", normals);
-	this.setAttribute("uv", uvs);
+	instance.setIndex(indices);
+	instance.setAttribute("position", vertices);
+	instance.setAttribute("normal", normals);
+	instance.setAttribute("uv", uvs);
 
 	// Helper functions
 	function calculateVertexCount()
@@ -269,6 +268,8 @@ function CapsuleBufferGeometry(radiusTop, radiusBottom, height, radialSegments, 
 			}
 		}
 	}
+
+	return instance;
 }
 
 CapsuleBufferGeometry.prototype = Object.create(BufferGeometry.prototype);

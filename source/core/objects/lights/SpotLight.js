@@ -11,24 +11,26 @@ import {SpotLight as TSpotLight, Light} from "three";
  * @param {number} intensity Light intensity
  * @param {number} distance SpotLight maximum range
  * @param {number} angle
- * @param {number} exponent
+ * @param {number} penumbra Penumbra softness (0-1)
  * @param {number} decay
  * @class SpotLight
  * @extends {SpotLight}
  * @module Lights
  */
-function SpotLight(hex, intensity, distance, angle, exponent, decay)
+function SpotLight(hex, intensity, distance, angle, penumbra, decay)
 {
-	TSpotLight.call(this, hex, intensity, distance, angle, exponent, decay);
+	var instance = Reflect.construct(TSpotLight, [hex, intensity, distance, angle, penumbra, decay], new.target || SpotLight);
 
-	this.name = "spotlight";
+	instance.name = "spotlight";
 
-	this.castShadow = true;
+	instance.castShadow = true;
 
-	this.shadow.camera.near = 0.05;
-	this.shadow.camera.far = 5000;
-	this.shadow.mapSize.width = 512;
-	this.shadow.mapSize.height = 512;
+	instance.shadow.camera.near = 0.05;
+	instance.shadow.camera.far = 5000;
+	instance.shadow.mapSize.width = 512;
+	instance.shadow.mapSize.height = 512;
+
+	return instance;
 }
 
 SpotLight.prototype = Object.create(TSpotLight.prototype);

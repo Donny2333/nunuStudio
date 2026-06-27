@@ -18,156 +18,42 @@ import {Program} from "./Program.js";
  */
 function Scene()
 {
-	TScene.call(this);
+	var instance = Reflect.construct(TScene, [], new.target || Scene);
 
-	this.name = "scene";
-	this.matrixAutoUpdate = false;
+	instance.name = "scene";
+	instance.matrixAutoUpdate = false;
+	instance.usePhysics = true;
 
-	this.usePhysics = true;
+	instance.world = new World();
+	instance.world.defaultContactMaterial.contactEquationStiffness = 1e9;
+	instance.world.defaultContactMaterial.contactEquationRelaxation = 4;
+	instance.world.quatNormalizeSkip = 0;
+	instance.world.quatNormalizeFast = false;
+	instance.world.gravity.set(0, -9.8, 0);
+	instance.world.broadphase = new NaiveBroadphase();
+	instance.world.solver = new SplitSolver(new GSSolver());
+	instance.world.solver.tolerance = 0.05;
+	instance.world.solver.iterations = 7;
 
-	/**
-	 * Cannon.js world used for physics simulation.
-	 *
-	 * The world is configured by default with a NaiveBroadphase and a SplitSolver.
-	 *
-	 * Documentation for cannon.js physics World object can be found at http://schteppe.github.io/cannon.js/docs/classes/World.html.
-	 *
-	 * @property world
-	 * @type {World}
-	 */
-	this.world = new World();
-	this.world.defaultContactMaterial.contactEquationStiffness = 1e9;
-	this.world.defaultContactMaterial.contactEquationRelaxation = 4;
-	this.world.quatNormalizeSkip = 0;
-	this.world.quatNormalizeFast = false;
-	this.world.gravity.set(0, -9.8, 0);
-	this.world.broadphase = new NaiveBroadphase();
-	this.world.solver = new SplitSolver(new GSSolver());
-	this.world.solver.tolerance = 0.05;
-	this.world.solver.iterations = 7;
+	instance.background = null;
+	instance.alpha = 1.0;
+	instance.cameras = [];
+	instance.defaultCamera = null;
+	instance.delta = 0;
+	instance.raycaster = new Raycaster();
+	instance.useOctree = false;
+	instance.octree = null;
+	instance.octreeUpdateScheduled = false;
+	instance.octreeMatches = [];
+	instance.program = null;
+	instance.canvas = null;
+	instance.mouse = new Vector2(0, 0);
 
-	/**
-	 * Background of the scene.
-	 *
-	 * The background of the scene is drawn after the renderer clears the buffers.
-	 *
-	 * It can be a color, a texture or a cube map.
-	 *
-	 * @property background
-	 * @type {Color|Texture|null}
-	 */
-	this.background = null;
-
-	/**
-	 * Opacity of the background color.
-	 *
-	 * @property alpha
-	 * @type {number}
-	 */
-	this.alpha = 1.0;
-
-	/**
-	 * List of active cameras currently being displayed.
-	 *
-	 * The cameras are rendered by their render order.
-	 *
-	 * @property cameras
-	 * @type {Array}
-	 */
-	this.cameras = [];
-
-	/**
-	 * Default camera of the scene used where there is no active camera.
-	 *
-	 * While using the editor the scene default camera gets set as the last camera configuration used.
-	 *
-	 * @property defaultCamera
-	 * @type {Camera}
-	 */
-	this.defaultCamera = null;
-
-	/**
-	 * Stores the time since the last frame.
-	 *
-	 * @property delta
-	 * @type {number}
-	 */
-	this.delta = 0;
-
-	/**
-	 * Raycaster used for mouse interaction with 3D objects.
-	 *
-	 * This raycaster is automatically updated using the first camera being drawn.
-	 *
-	 * @property raycaster
-	 * @type {Raycaster}
-	 */
-	this.raycaster = new Raycaster();
-
-	/**
-	 * Indicates if the scene is using octree indexation for ray casting.
-	 *
-	 * @property useOctree
-	 * @type {boolean}
-	 */
- 	this.useOctree = false;
-
-	// TODO <ADD OCTREE CODE>
-
-	/**
-	 * Octree used to index all the unoObject in the scene being visualized.
-	 *
-	 * It is used to filter the visibility of objects and raycast them.
-	 *
-	 * @attribute octree
-	 * @type {PointOctree}
-	 */
-	this.octree = null;
-
-	/**
-	 * Flag indicating if the is a octree update scheduled.
-	 *
-	 * Avoids scheduling multiple octree updates from different objects.
-	 *
-	 * @attribute octreeUpdateScheduled
-	 * @type {Boolean}
-	 */
-	this.octreeUpdateScheduled = false;
-
-	/**
-	 * Stores the octree object matches, that are the objects currently visible.
-	 *
-	 * @attribute octreeMatches
-	 * @type {Array}
-	 */
-	this.octreeMatches = [];
-
-	/**
-	 * Program that contains this scene.
-	 *
-	 * @property program
-	 * @type {Program}
-	 */
-	this.program = null;
-
-	/**
-	 * Canvas used to draw this scene.
-	 *
-	 * @property canvas
-	 * @type {Element}
-	 */
-	this.canvas = null;
-
-	/**
-	 * Normalized mouse coordinates used by the scene internal raycaster.
-	 *
-	 * @property mouse
-	 * @type {Vector2}
-	 */
-	this.mouse = new Vector2(0, 0);
+	return instance;
 }
 
 Scene.prototype = Object.create(TScene.prototype);
+Scene.prototype.constructor = Scene;
 
 Scene.prototype.initialize = function()
 {

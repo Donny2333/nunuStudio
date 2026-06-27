@@ -11,10 +11,10 @@ import {Object3D, AudioListener, Audio} from "three";
  */
 function AudioEmitter(audio)
 {
-	Object3D.call(this);
+	var instance = Reflect.construct(Object3D, [], new.target || AudioEmitter);
 
-	this.name = "audio";
-	this.type = "Audio";
+	instance.name = "audio";
+	instance.type = "Audio";
 
 	/**
 	 * AudioListener used by this emmiter.
@@ -24,9 +24,9 @@ function AudioEmitter(audio)
 	 * @property listener
 	 * @type {AudioListener}
 	 */
-	this.listener = new AudioListener();
-	this.context = this.listener.context;
-	this.matrixAutoUpdate = false;
+	instance.listener = new AudioListener();
+	instance.context = instance.listener.context;
+	instance.matrixAutoUpdate = false;
 
 	/**
 	 * WebAudio gain node, used to control the volume.
@@ -36,12 +36,12 @@ function AudioEmitter(audio)
 	 * @property gain
 	 * @type {GainNode}
 	 */
-	this.gain = this.context.createGain();
-	this.gain.connect(this.listener.getInput());
+	instance.gain = instance.context.createGain();
+	instance.gain.connect(instance.listener.getInput());
 
-	this.buffer = null;
+	instance.buffer = null;
 
-	this.filters = [];
+	instance.filters = [];
 
 	/**
 	 * Audio source type, can have the following values:
@@ -53,7 +53,7 @@ function AudioEmitter(audio)
 	 * @type {string}
 	 * @default {"empty"}
 	 */
-	this.sourceType = "empty";
+	instance.sourceType = "empty";
 
 	/**
 	 * Audio source resource.
@@ -61,7 +61,7 @@ function AudioEmitter(audio)
 	 * @property audio
 	 * @type {Audio}
 	 */
-	this.audio = audio !== undefined ? audio : null;
+	instance.audio = audio !== undefined ? audio : null;
 
 	/**
 	 * If true the playback starts automatically.
@@ -70,7 +70,7 @@ function AudioEmitter(audio)
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.autoplay = true;
+	instance.autoplay = true;
 
 	/**
 	 * Audio volume.
@@ -79,7 +79,7 @@ function AudioEmitter(audio)
 	 * @default 1.0
 	 * @type {number}
 	 */
-	this.volume = 1.0;
+	instance.volume = 1.0;
 
 	/**
 	 * Start time in seconds.
@@ -88,7 +88,7 @@ function AudioEmitter(audio)
 	 * @default 1.0
 	 * @type {number}
 	 */
-	this.playbackRate = 1.0;
+	instance.playbackRate = 1.0;
 
 	/**
 	 * Start time in seconds.
@@ -97,7 +97,7 @@ function AudioEmitter(audio)
 	 * @default 0.0
 	 * @type {number}
 	 */
-	this.startTime = 0.0;
+	instance.startTime = 0.0;
 
 	/**
 	 * If true the audio plays in loop.
@@ -106,7 +106,7 @@ function AudioEmitter(audio)
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.loop = true;
+	instance.loop = true;
 
 	/**
 	 * Modify pitch, measured in cents. +/- 100 is a semitone. +/- 1200 is an octave.
@@ -114,12 +114,14 @@ function AudioEmitter(audio)
 	 * @property detune
 	 * @type {number}
 	 */
-	this.detune = 0;
+	instance.detune = 0;
 
-	this.isPlaying = false;
-	this.hasPlaybackControl = true;
+	instance.isPlaying = false;
+	instance.hasPlaybackControl = true;
 
-	this.filters = [];
+	instance.filters = [];
+
+	return instance;
 }
 
 AudioEmitter.prototype = Object.create(Object3D.prototype);

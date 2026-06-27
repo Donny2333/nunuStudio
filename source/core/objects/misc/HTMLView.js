@@ -14,68 +14,49 @@ function HTMLView(url)
 	var element = document.createElement("iframe");
 	element.style.border = "none";
 
-	CSS3DObject.call(this, element);
+	var instance = Reflect.construct(CSS3DObject, [element], new.target || HTMLView);
 
-	this.type = "HTMLView";
-	this.name = "webview";
+	instance.type = "HTMLView";
+	instance.name = "webview";
 
-	var self = this;
-	var url, width, height;
+	var _url, width, height;
 
-	Object.defineProperties(this,
+	Object.defineProperties(instance,
 		{
-		/**
-		 * URL of the webpage to open in the view.
-		 *
-		 * @attribute url
-		 * @type {string}
-		 */
 			url:
 		{
-			get: function() {return url;},
+			get: function() {return _url;},
 			set: function(value)
 			{
-				url = value !== undefined ? HTMLView.processURL(value) : "";
-				self.element.src = url;
+				_url = value !== undefined ? HTMLView.processURL(value) : "";
+				instance.element.src = _url;
 			}
 		},
-
-			/**
-			 * Width in pixels of the web view port.
-			 *
-			 * @attribute size
-			 * @type {number}
-			 */
 			width:
 		{
 			get: function() {return width;},
 			set: function(value)
 			{
 				width = value;
-				self.element.style.width = width + "px";
+				instance.element.style.width = width + "px";
 			}
 		},
-
-			/**
-			 * Height in pixels of the web view port.
-			 *
-			 * @attribute height
-			 * @type {number}
-			 */
 			height:
 		{
 			get: function() {return height;},
 			set: function(value)
 			{
 				height = value;
-				self.element.style.height = height + "px";
+				instance.element.style.height = height + "px";
 			}
 		}
 		});
 
-	this.width = 1920;
-	this.height = 1080;
-	this.url = url !== undefined ? url : "";
+	instance.width = 1920;
+	instance.height = 1080;
+	instance.url = url !== undefined ? url : "";
+
+	return instance;
 }
 
 HTMLView.prototype = Object.create(CSS3DObject.prototype);

@@ -16,10 +16,10 @@ import {AudioEmitter} from "./AudioEmitter.js";
  */
 function PositionalAudio(audio)
 {
-	AudioEmitter.call(this, audio);
+	var instance = Reflect.construct(AudioEmitter, [audio], new.target || PositionalAudio);
 
-	this.type = "PositionalAudio";
-	this.matrixAutoUpdate = true;
+	instance.type = "PositionalAudio";
+	instance.matrixAutoUpdate = true;
 
 	/**
 	 * Distance model to be applied to the audio panner.
@@ -27,7 +27,7 @@ function PositionalAudio(audio)
 	 * @property distanceModel
 	 * @type {string}
 	 */
-	this.distanceModel = "inverse";
+	instance.distanceModel = "inverse";
 
 	/**
 	 * Model to be applied to the audio panner.
@@ -35,7 +35,7 @@ function PositionalAudio(audio)
 	 * @property panningModel
 	 * @type {string}
 	 */
-	this.panningModel = "HRTF";
+	instance.panningModel = "HRTF";
 
 	/**
 	 * WebAudio panner effect.
@@ -45,16 +45,16 @@ function PositionalAudio(audio)
 	 * @property panner
 	 * @type {PannerNode}
 	 */
-	this.panner = this.context.createPanner();
-	this.panner.connect(this.gain);
-	this.panner.panningModel = this.panningModel;
-	this.panner.distanceModel = this.distanceModel;
-	this.panner.refDistance = 1;
-	this.panner.maxDistance = 10000;
-	this.panner.rolloffFactor = 1;
-	this.panner.coneInnerAngle = 360;
-	this.panner.coneOuterAngle = 0;
-	this.panner.coneOuterGain = 0;
+	instance.panner = instance.context.createPanner();
+	instance.panner.connect(instance.gain);
+	instance.panner.panningModel = instance.panningModel;
+	instance.panner.distanceModel = instance.distanceModel;
+	instance.panner.refDistance = 1;
+	instance.panner.maxDistance = 10000;
+	instance.panner.rolloffFactor = 1;
+	instance.panner.coneInnerAngle = 360;
+	instance.panner.coneOuterAngle = 0;
+	instance.panner.coneOuterGain = 0;
 
 	/**
 	 * Runtime pointer to the scene to get the camera list.
@@ -62,11 +62,13 @@ function PositionalAudio(audio)
 	 * @attribute scene
 	 * @type {Scene}
 	 */
-	this.scene = null;
+	instance.scene = null;
 
-	this.tempPosition = new Vector3();
-	this.tempPositionCamera = new Vector3();
-	this.tempQuaternionCamera = new Quaternion();
+	instance.tempPosition = new Vector3();
+	instance.tempPositionCamera = new Vector3();
+	instance.tempQuaternionCamera = new Quaternion();
+
+	return instance;
 }
 
 PositionalAudio.prototype = Object.create(AudioEmitter.prototype);

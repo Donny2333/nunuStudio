@@ -16,10 +16,10 @@ import {Keyboard} from "../../input/Keyboard.js";
  */
 function FirstPersonControls()
 {
-	Group.call(this);
+	var instance = Reflect.construct(Group, [], new.target || FirstPersonControls);
 
-	this.name = "controls";
-	this.type = "FirstPersonControls";
+	instance.name = "controls";
+	instance.type = "FirstPersonControls";
 
 	/**
 	 * Mouse sensitivity.
@@ -27,7 +27,7 @@ function FirstPersonControls()
 	 * @property sensitivity
 	 * @type {number}
 	 */
-	this.sensitivity = 0.005;
+	instance.sensitivity = 0.005;
 
 	/**
 	 * Flag to indicate if the button left button needs to be pressed to rotate the object.
@@ -36,7 +36,7 @@ function FirstPersonControls()
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.needsButtonPressed = true;
+	instance.needsButtonPressed = true;
 
 	/**
 	 * Indicates if its possible to move the object using the Keyboard keys.
@@ -45,7 +45,7 @@ function FirstPersonControls()
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.movementEnabled = true;
+	instance.movementEnabled = true;
 
 	/**
 	 * Movement speed, relative to the world.
@@ -54,7 +54,7 @@ function FirstPersonControls()
 	 * @default moveSpeed
 	 * @type {number}
 	 */
-	this.moveSpeed = 0.05;
+	instance.moveSpeed = 0.05;
 
 	/**
 	 * If set to true the object will only move on X and Z axis.
@@ -63,7 +63,7 @@ function FirstPersonControls()
 	 * @default false
 	 * @type {boolean}
 	 */
-	this.moveOnPlane = false;
+	instance.moveOnPlane = false;
 
 	/**
 	 * Array with keys to be used to move the object.
@@ -75,7 +75,7 @@ function FirstPersonControls()
 	 * @property moveKeys
 	 * @type {Array}
 	 */
-	this.moveKeys = [Keyboard.W, Keyboard.S, Keyboard.A, Keyboard.D];
+	instance.moveKeys = [Keyboard.W, Keyboard.S, Keyboard.A, Keyboard.D];
 	
 	/**
 	 * Orientation of the camera.
@@ -85,12 +85,14 @@ function FirstPersonControls()
 	 * @property vector
 	 * @type {Vector2}
 	 */	
-	this.vector = new Vector2(0, 0);
+	instance.vector = new Vector2(0, 0);
 
-	this.mouse = null;
-	this.keyboard = null;
+	instance.mouse = null;
+	instance.keyboard = null;
 
-	this.tempVector = new Vector3();
+	instance.tempVector = new Vector3();
+
+	return instance;
 }
 
 FirstPersonControls.UP = new Vector3(0, 1, 0);

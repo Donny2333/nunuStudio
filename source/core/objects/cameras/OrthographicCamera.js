@@ -20,9 +20,9 @@ import {Viewport} from "./Viewport.js";
  */
 function OrthographicCamera(size, aspect, mode, near, far)
 {
-	TOrthographicCamera.call(this, -1.0, 1.0, 1.0, -1.0, near, far);
+	var instance = Reflect.construct(TOrthographicCamera, [-1.0, 1.0, 1.0, -1.0, near, far], new.target || OrthographicCamera);
 
-	this.name = "camera";
+	instance.name = "camera";
 
 	/**
 	 * Camera size relative to resize mode.
@@ -31,7 +31,7 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @default 10.0
 	 * @type {number}
 	 */
-	this.size = size !== undefined ? size : 10.0;
+	instance.size = size !== undefined ? size : 10.0;
 
 	/**
 	 * Aspect ratio X/Y.
@@ -40,7 +40,7 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @default 1.0
 	 * @type {number}
 	 */
-	this.aspect = aspect !== undefined ? aspect : 1.0;
+	instance.aspect = aspect !== undefined ? aspect : 1.0;
 
 	/**
 	 * Camera resize mode.
@@ -49,7 +49,7 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @default RESIZE_HORIZONTAL
 	 * @type {number}
 	 */
-	this.mode = mode !== undefined ? mode : OrthographicCamera.RESIZE_HORIZONTAL;
+	instance.mode = mode !== undefined ? mode : OrthographicCamera.RESIZE_HORIZONTAL;
 
 	/**
 	 * Camera viewport indicates where the image is drawn on the screen.
@@ -57,7 +57,7 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @property viewport
 	 * @type {Viewport}
 	 */
-	this.viewport = new Viewport();
+	instance.viewport = new Viewport();
 
 	/**
 	 * Clear screen color flag.
@@ -66,7 +66,7 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @default false
 	 * @type {boolean}
 	 */
-	this.clearColor = true;
+	instance.clearColor = true;
 
 	/**
 	 * Clear depth flag.
@@ -75,7 +75,7 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @default false
 	 * @type {boolean}
 	 */
-	this.clearDepth = true;
+	instance.clearDepth = true;
 
 	/**
 	 * Clear stencil buffer flag.
@@ -84,7 +84,7 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @default false
 	 * @type {boolean}
 	 */
-	this.clearStencil = true;
+	instance.clearStencil = true;
 
 	/**
 	 * Camera draw order preference.
@@ -95,9 +95,9 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @default 0
 	 * @type {number}
 	 */
-	this.order = 0;
+	instance.order = 0;
 
-	this.updateProjectionMatrix();
+	instance.updateProjectionMatrix();
 	
 	/**
 	 * Effect composed of this camera. Is used to render the scene to the screen and apply effects.
@@ -107,11 +107,13 @@ function OrthographicCamera(size, aspect, mode, near, far)
 	 * @property composer
 	 * @type {EffectComposer}
 	 */
-	this.composer = new EffectComposer();
+	instance.composer = new EffectComposer();
 
 	var renderPass = new RenderPass();
 	renderPass.renderToScreen = true;
-	this.composer.addPass(renderPass);
+	instance.composer.addPass(renderPass);
+
+	return instance;
 }
 
 OrthographicCamera.prototype = Object.create(TOrthographicCamera.prototype);

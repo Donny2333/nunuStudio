@@ -9,21 +9,15 @@ import {Points, Color} from "three";
  */
 function PointsHelper(object, hex)
 {
-	Points.call(this, object.geometry, object.material.clone());
+	var instance = Reflect.construct(Points, [object.geometry, object.material.clone()], new.target || PointsHelper);
 
-	this.material.color = new Color(hex !== undefined ? hex : 0xFFFF00);
-	this.material.size = object.material.size * 1.2;
+	instance.material.color = new Color(hex !== undefined ? hex : 0xFFFF00);
+	instance.material.size = object.material.size * 1.2;
+	instance.object = object;
+	instance.matrixAutoUpdate = false;
+	instance.update();
 
-	/**
-	 * Object attached to the helper
-	 *
-	 * @attribute object
-	 * @type {Object3D}
-	 */
-	this.object = object;
-
-	this.matrixAutoUpdate = false;
-	this.update();
+	return instance;
 }
 
 PointsHelper.prototype = Object.create(Points.prototype);

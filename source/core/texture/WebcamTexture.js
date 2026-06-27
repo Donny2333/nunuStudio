@@ -1,4 +1,4 @@
-import {Texture, LinearFilter, RGBFormat} from "three";
+import {Texture, LinearFilter, RGBAFormat} from "three";
 
 /**
  * Webcam texture is used to capture and display video from a webcam in real-time.
@@ -25,7 +25,7 @@ function WebcamTexture(mapping, wrapS, wrapT, type, anisotropy)
 	 * @property image
 	 * @type {Element}
 	 */
-	Texture.call(this, video, mapping, wrapS, wrapT, LinearFilter, LinearFilter, RGBFormat, type, anisotropy);
+	Texture.call(this, video, mapping, wrapS, wrapT, LinearFilter, LinearFilter, RGBAFormat, type, anisotropy);
 	
 	var self = this;
 	

@@ -22,13 +22,13 @@ function Asset(parent)
 	this.scale = new Vector2(0.7, 0.7);
 
 	// Element
-        this.element.style.display = "block";
-        this.element.style.float = "left";
-        this.element.style.position = "relative";
-        this.element.style.cursor = "pointer";
-        this.element.style.width = "70px";
-        this.element.style.height = "70px";
-        this.element.draggable = true;
+	this.element.style.display = "block";
+	this.element.style.float = "left";
+	this.element.style.position = "relative";
+	this.element.style.cursor = "pointer";
+	this.element.style.width = "70px";
+	this.element.style.height = "70px";
+	this.element.draggable = true;
 
 	// Icon
 	this.icon = document.createElement("img");

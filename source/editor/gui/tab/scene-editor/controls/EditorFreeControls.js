@@ -17,34 +17,17 @@ import {EditorControls} from "./EditorControls.js";
  */
 function EditorFreeControls()
 {
-	EditorControls.call(this);
+	var instance = Reflect.construct(EditorControls, [], new.target || EditorFreeControls);
 
-	/**
-	 * Orientation of the camera.
-	 *
-	 * X is the horizontal orientation and Y the vertical orientation.
-	 *
-	 * @property orientation
-	 * @type {Vector2}
-	 */	 
-	this.orientation = new Vector2();
+	instance.orientation = new Vector2();
+	instance.camera = null;
+	instance.needsUpdate = false;
+	instance.temp = new Vector3();
 
-	this.camera = null;
+	instance.reset();
+	instance.updateControls();
 
-	/**
-	 * Indicates if the orbit controls needed an update on the last update.
-	 *
-	 * The variable is reset on each update call.
-	 *
-	 * @property needsUpdate
-	 * @type {boolean}
-	 */
-	this.needsUpdate = false;
-
-	this.temp = new Vector3();
-
-	this.reset();
-	this.updateControls();
+	return instance;
 }
 
 EditorFreeControls.prototype = Object.create(EditorControls.prototype);

@@ -1,4 +1,4 @@
-import {Scene, PerspectiveCamera, Object3D, FrontSide, BackSide, DoubleSide, NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth, NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending, SphereBufferGeometry, TorusBufferGeometry, BoxBufferGeometry, TorusKnotBufferGeometry, ConeBufferGeometry, Quaternion, Euler} from "three";
+import {Scene, PerspectiveCamera, Object3D, FrontSide, BackSide, DoubleSide, NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth, NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending, SphereGeometry, TorusGeometry, BoxGeometry, TorusKnotGeometry, ConeGeometry, Quaternion, Euler} from "three";
 import {Locale} from "../../../locale/LocaleManager.js";
 import {Mouse} from "../../../../core/input/Mouse.js";
 import {ChangeAction} from "../../../history/action/ChangeAction.js";
@@ -303,11 +303,11 @@ function MaterialEditor(parent, closeable, container, index)
 }
 
 MaterialEditor.geometries = [
-	[Locale.sphere, new SphereBufferGeometry(1, 40, 40)],
-	[Locale.torus, new TorusBufferGeometry(0.8, 0.4, 32, 64)],
-	[Locale.cube, new BoxBufferGeometry(1, 1, 1, 1, 1, 1)],
-	[Locale.torusKnot, new TorusKnotBufferGeometry(0.7, 0.3, 128, 64)],
-	[Locale.cone, new ConeBufferGeometry(1, 2, 32)]
+	[Locale.sphere, new SphereGeometry(1, 40, 40)],
+	[Locale.torus, new TorusGeometry(0.8, 0.4, 32, 64)],
+	[Locale.cube, new BoxGeometry(1, 1, 1, 1, 1, 1)],
+	[Locale.torusKnot, new TorusKnotGeometry(0.7, 0.3, 128, 64)],
+	[Locale.cone, new ConeGeometry(1, 2, 32)]
 ];
 
 MaterialEditor.prototype = Object.create(TabComponent.prototype);

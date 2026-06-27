@@ -10,10 +10,10 @@ import {BufferGeometry, Mesh, MeshBasicMaterial} from "three";
  */
 function BillboardGroup()
 {
-	Mesh.call(this, new BufferGeometry(), new MeshBasicMaterial({depthWrite: false, colorWrite: false}));
-
-	this.name = "billboard";
-	this.type = "BillboardGroup";
+	var instance = Reflect.construct(Mesh, [new BufferGeometry(), new MeshBasicMaterial({depthWrite: false, colorWrite: false})], new.target || BillboardGroup);
+	instance.name = "billboard";
+	instance.type = "BillboardGroup";
+	return instance;
 }
 
 BillboardGroup.prototype = Object.create(Mesh.prototype);

@@ -1,4 +1,4 @@
-import {SphereBufferGeometry, SphereGeometry, BufferGeometry} from "three";
+import {SphereGeometry, BufferGeometry} from "three";
 import {Locale} from "../../../../locale/LocaleManager.js";
 import {ChangeAction} from "../../../../history/action/ChangeAction.js";
 import {Editor} from "../../../../Editor.js";
@@ -93,7 +93,7 @@ function SphereGeometryForm(form, object)
 SphereGeometryForm.prototype.updateGeometry = function()
 {
 	this.object.geometry.dispose();
-	var GeometryConstructor = this.buffer.getValue() ? SphereBufferGeometry : SphereGeometry;
+	var GeometryConstructor = SphereGeometry;
 	Editor.addAction(new ChangeAction(this.object, "geometry", new GeometryConstructor(this.radius.getValue(), this.widthSegments.getValue(), this.heightSegments.getValue(), this.phiStart.getValue(), this.phiLength.getValue(), this.thetaStart.getValue(), this.thetaLength.getValue())));
 };
 

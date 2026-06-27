@@ -9,29 +9,12 @@ import {DefaultLoadingManager, MaterialLoader as TMaterialLoader} from "three";
  */
 function MaterialLoader(manager)
 {
-	this.manager = manager !== undefined ? manager : DefaultLoadingManager;
-	this.textures = {};
+	var instance = Reflect.construct(TMaterialLoader, [manager], new.target || MaterialLoader);
+	return instance;
 }
 
-/**
- * Load material file from URL.
- *
- * @method load
- * @param {string} url
- * @param {Function} onLoad
- * @param {Function} onProgress
- * @param {Function} onError
- */
-MaterialLoader.prototype.load = function(url, onLoad, onProgress, onError)
-{
-	var self = this;
-
-	var loader = new FileLoader(self.manager);
-	loader.load(url, function(text)
-	{
-		onLoad(self.parse(JSON.parse(text)));
-	}, onProgress, onError);
-};
+MaterialLoader.prototype = Object.create(TMaterialLoader.prototype);
+MaterialLoader.prototype.constructor = MaterialLoader;
 
 /**
  * Set texture array to be used when loading materials

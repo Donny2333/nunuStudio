@@ -1,4 +1,4 @@
-import {Math} from "three";
+import {MathUtils} from "three";
 import {Locale} from "../../../../locale/LocaleManager.js";
 import {VideoTexture} from "../../../../../core/texture/VideoTexture.js";
 import {SpriteSheetTexture} from "../../../../../core/texture/SpriteSheetTexture.js";
@@ -128,7 +128,7 @@ function TextureAsset(parent)
 
 				// Load
 				var texture = loader.parse(json); 
-				texture.uuid = Math.generateUUID();
+				texture.uuid = MathUtils.generateUUID();
 				texture.name += "*";
 				
 				Editor.addAction(new AddResourceAction(texture, Editor.program, "textures"));
@@ -167,9 +167,9 @@ TextureAsset.prototype.attach = function(asset)
 
 	this.preview = TextureRenderer.generateElement(asset);
 
-        if (this.preview !== null)
-        {
-                this.preview.draggable = false;
+	if (this.preview !== null)
+	{
+		this.preview.draggable = false;
 		this.preview.style.position = "absolute";
 		this.preview.style.top = "5%";
 		this.preview.style.left = "17%";

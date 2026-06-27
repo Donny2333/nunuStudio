@@ -43,8 +43,7 @@ var parseBufferAttribute = function(json)
 		// Interleaved buffer
 		var typedArray = new TYPED_ARRAYS[json.data.typedArray.type](json.data.typedArray.array);
 		var interleavedBuffer = new InterleavedBuffer(typedArray, json.data.stride);
-		interleavedBuffer.setUsage(json.data.usage);
-		interleavedBuffer.count = json.data.count;
+		if (json.data.usage !== undefined) {interleavedBuffer.setUsage(json.data.usage);}
 		
 		bufferAttribute = new InterleavedBufferAttribute(interleavedBuffer, json.itemSize, json.offset, json.normalized);
 	}

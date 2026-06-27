@@ -14,9 +14,11 @@ import {AnimationMixer as TAnimationMixer} from "three";
  */
 function AnimationMixer(root)
 {
-	TAnimationMixer.call(this, root);
+	var instance = Reflect.construct(TAnimationMixer, [root], new.target || AnimationMixer);
 
-	this.playing = false;
+	instance.playing = false;
+
+	return instance;
 }
 
 AnimationMixer.prototype = Object.create(TAnimationMixer.prototype);

@@ -1,4 +1,4 @@
-import {AxesHelper, Bone, BoxHelper, BufferGeometry, Camera, CameraHelper, DirectionalLight, DirectionalLightHelper, Float32BufferAttribute, Geometry, HemisphereLight, HemisphereLightHelper, Light, LightProbe, Line, LineBasicMaterial, Material, Mesh, MeshStandardMaterial, Object3D, Plane, PointLight, PointLightHelper, Points, PointsMaterial, Raycaster, RectAreaLight, Scene, ShaderMaterial, SkinnedMesh, SpotLight, SpotLightHelper, Sprite, SpriteMaterial, Texture, Vector2, Vector3} from "three";
+import {AxesHelper, Bone, BoxHelper, BufferGeometry, Camera, CameraHelper, DirectionalLight, DirectionalLightHelper, Float32BufferAttribute, HemisphereLight, HemisphereLightHelper, Light, LightProbe, Line, LineBasicMaterial, Material, Mesh, MeshStandardMaterial, Object3D, Plane, PointLight, PointLightHelper, Points, PointsMaterial, Raycaster, RectAreaLight, Scene, ShaderMaterial, SkinnedMesh, SpotLight, SpotLightHelper, Sprite, SpriteMaterial, Texture, Vector2, Vector3} from "three";
 import {ActionBundle} from "../../../history/action/ActionBundle.js";
 import {AddResourceAction} from "../../../history/action/resources/AddResourceAction.js";
 import {Audio} from "../../../../core/resources/Audio.js";
@@ -36,6 +36,8 @@ import {TabComponent} from "../../../components/tabs/TabComponent.js";
 import {Video} from "../../../../core/resources/Video.js";
 import {VideoTexture} from "../../../../core/texture/VideoTexture.js";
 import {Viewport} from "../../../../core/objects/cameras/Viewport.js";
+import {TilesetObject} from "../../../../core/objects/misc/TilesetObject.js";
+import {Sky} from "../../../../core/objects/misc/Sky.js";
 import {TransformControls} from "./transform/TransformControls.js";
 import {ToolBar} from "./toolbar/ToolBar.js";
 import {SkeletonHelper} from "./helpers/SkeletonHelper.js";
@@ -1082,6 +1084,33 @@ SceneEditor.prototype.render = function()
 	renderer.setClearColor(this.scene.background);
 	renderer.clear(true, true, true);
 
+	// Update tile renderers and sky position (follow camera for infinite appearance)
+	var camera = this.camera;
+	var sceneRenderer = renderer;
+	var hasTileset = false;
+	this.scene.traverse(function(child)
+	{
+		if (child instanceof TilesetObject)
+		{
+			hasTileset = true;
+			child.updateFromCamera(camera, sceneRenderer);
+		}
+		else if (child instanceof Sky)
+		{
+			child.sky.position.copy(camera.position);
+			child.sky.updateMatrix();
+			child.sky.updateMatrixWorld(true);
+		}
+	});
+
+	// Dynamic near-plane: scale near with camera height so close-up map doesn't clip
+	if (hasTileset && camera.isPerspectiveCamera)
+	{
+		var height = Math.abs(camera.position.y);
+		camera.near = Math.max(height * 0.001, 0.0001);
+		camera.updateProjectionMatrix();
+	}
+
 	// Render scene
 	renderer.render(this.scene, this.camera);
 
@@ -1165,19 +1194,6 @@ SceneEditor.prototype.render = function()
 			renderCamera(CubeTexture.BACK, x + size * 3, y + size, size, size);
 			renderCamera(CubeTexture.TOP, x + size, y, size, size);
 			renderCamera(CubeTexture.BOTTOM, x + size, y + size * 2, size, size);
-		}
-		// Preview all cameras in use
-		else if (this.scene.cameras !== undefined && this.scene.cameras.length > 0)
-		{
-			renderer.clear(true, true, true);
-
-			for (var i = 0; i < this.scene.cameras.length; i++)
-			{
-				var camera = this.scene.cameras[i];
-				camera.resize(width, height, viewport);
-				camera.setupRenderer(renderer);
-				camera.render(renderer, this.scene);
-			}
 		}
 	}
 
@@ -1368,6 +1384,8 @@ SceneEditor.prototype.updateSelection = function()
 	this.transform.attach(selectedObjects);
 	this.objectHelper.removeAll();
 
+	var showIcons = Editor.settings.editor.showObjectIcons;
+
 	for (var i = 0; i < selectedObjects.length; i++)
 	{
 		var object = selectedObjects[i];
@@ -1376,7 +1394,10 @@ SceneEditor.prototype.updateSelection = function()
 		if (object instanceof Camera)
 		{
 			this.objectHelper.add(new CameraHelper(object));
-			this.objectHelper.add(new ObjectIconHelper(object, Global.FILE_PATH + "icons/camera/camera.png"));
+			if (showIcons)
+			{
+				this.objectHelper.add(new ObjectIconHelper(object, Global.FILE_PATH + "icons/camera/camera.png"));
+			}
 		}
 		// Light
 		else if (object instanceof Light)
@@ -1412,7 +1433,7 @@ SceneEditor.prototype.updateSelection = function()
 				this.objectHelper.add(new HemisphereLightHelper(object, 1));
 			}
 			// Ambient light
-			else
+			else if (showIcons)
 			{
 				this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
 			}
@@ -1425,7 +1446,10 @@ SceneEditor.prototype.updateSelection = function()
 		// LensFlare
 		else if (object instanceof LensFlare)
 		{
-			this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			if (showIcons)
+			{
+				this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			}
 		}
 		// Skinned Mesh
 		else if (object instanceof SkinnedMesh)
@@ -1437,7 +1461,10 @@ SceneEditor.prototype.updateSelection = function()
 		else if (object instanceof Bone)
 		{
 			this.objectHelper.add(new SkeletonHelper(object.parent));
-			this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			if (showIcons)
+			{
+				this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			}
 		}
 		// Mesh
 		else if (object instanceof Mesh)
@@ -1457,16 +1484,31 @@ SceneEditor.prototype.updateSelection = function()
 		// Spine animation
 		else if (object instanceof SpineAnimation)
 		{
-			this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			if (showIcons)
+			{
+				this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			}
 		}
 		// Group
 		else if (object instanceof Group)
 		{
 			this.objectHelper.add(new BoxHelper(object, 0xFFFF00));
-			this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			if (showIcons)
+			{
+				this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			}
+		}
+		// TilesetObject
+		else if (object instanceof TilesetObject)
+		{
+			this.objectHelper.add(new BoxHelper(object, 0xFFFF00));
+			if (showIcons)
+			{
+				this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
+			}
 		}
 		// Object 3D
-		else
+		else if (showIcons)
 		{
 			this.objectHelper.add(new ObjectIconHelper(object, ObjectIcons.get(object.type)));
 		}

@@ -1,4 +1,4 @@
-import {CubeReflectionMapping, Texture, Math as TMath, Vector3} from "three";
+import {CubeReflectionMapping, Texture, MathUtils as TMath, Vector3} from "three";
 import {Image} from "../resources/Image.js";
 
 

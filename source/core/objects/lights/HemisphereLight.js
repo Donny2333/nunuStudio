@@ -14,9 +14,11 @@ import {HemisphereLight as THemisphereLight} from "three";
  */
 function HemisphereLight(skyColor, groundColor, intensity)
 {
-	THemisphereLight.call(this, skyColor, groundColor, intensity);
+	var instance = Reflect.construct(THemisphereLight, [skyColor, groundColor, intensity], new.target || HemisphereLight);
 
-	this.name = "hemisphere";
+	instance.name = "hemisphere";
+
+	return instance;
 }
 
 HemisphereLight.prototype = Object.create(THemisphereLight.prototype);

@@ -15,9 +15,11 @@ import {RectAreaLight as TRectAreaLight, Light} from "three";
  */
 function RectAreaLight(color, intensity, width, height)
 {
-	TRectAreaLight.call(this, color, intensity, width, height);
+	var instance = Reflect.construct(TRectAreaLight, [color, intensity, width, height], new.target || RectAreaLight);
 
-	this.name = "rectarea";
+	instance.name = "rectarea";
+
+	return instance;
 }
 
 RectAreaLight.prototype = Object.create(TRectAreaLight.prototype);

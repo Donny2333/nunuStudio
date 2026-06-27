@@ -12,12 +12,15 @@ import {Texture} from "../../texture/Texture.js";
  */
 function SpineTexture(texture)
 {
-	ThreeJsTexture.call(this, texture.image);
+	var instance = Reflect.construct(ThreeJsTexture, [texture.image], new.target || SpineTexture);
 
-	this.texture = texture;
-	this.texture.flipY = false;
+	instance.texture = texture;
+	instance.texture.flipY = false;
+
+	return instance;
 }
 
 SpineTexture.prototype = Object.create(ThreeJsTexture.prototype);
+SpineTexture.prototype.constructor = SpineTexture;
 
 export {SpineTexture};

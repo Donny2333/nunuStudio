@@ -9,7 +9,15 @@ import {Editor} from "./Editor.js";
 // Register the GLSL plugin in Codemirror
 GLSL(CodeMirror);
 
-document.body.onload = Editor.initialize;
+if (document.readyState === "complete")
+{
+	Editor.initialize();
+}
+else
+{
+	document.body.onload = Editor.initialize;
+}
+
 document.body.onresize = Editor.resize;
 
 window.Buffer = window.ArrayBuffer;

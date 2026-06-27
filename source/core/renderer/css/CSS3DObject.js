@@ -13,7 +13,7 @@ import {Object3D} from "three";
  */
 function CSS3DObject(element)
 {
-	Object3D.call(this);
+	var instance = Reflect.construct(Object3D, [], new.target || CSS3DObject);
 
 	/**
 	 * The DOM element to be projected in 3D space.
@@ -23,14 +23,14 @@ function CSS3DObject(element)
 	 * @attribute element
 	 * @type {Element}
 	 */
-	this.element = element;
-	this.element.style.position = "absolute";
+	instance.element = element;
+	instance.element.style.position = "absolute";
 	
-	this.addEventListener("removed", function()
+	instance.addEventListener("removed", function()
 	{
-		if (this.element.parentNode !== null)
+		if (instance.element.parentNode !== null)
 		{
-			this.element.parentNode.removeChild(this.element);
+			instance.element.parentNode.removeChild(instance.element);
 		}
 	});
 
@@ -52,6 +52,8 @@ function CSS3DObject(element)
 			}
 		}
 		});
+
+	return instance;
 };
 
 CSS3DObject.prototype = Object.create(Object3D.prototype);

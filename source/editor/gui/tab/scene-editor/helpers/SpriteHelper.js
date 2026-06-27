@@ -7,21 +7,16 @@ import {Object3D, Sprite, SpriteMaterial, Mesh} from "three";
  * @param {Object3D} object
  * @param {number} hex Helper color in hexadecimal.
  */
-function SpriteHelper(object, hex) 
+function SpriteHelper(object, hex)
 {
-	Sprite.call(this, new SpriteMaterial(
-		{color: hex !== undefined ? hex : 0xFFFFFF}));
+	var instance = Reflect.construct(Sprite, [new SpriteMaterial(
+		{color: hex !== undefined ? hex : 0xFFFFFF})], new.target || SpriteHelper);
 
-	/**
-	 * Object attached to the helper
-	 *
-	 * @attribute object
-	 * @type {Object3D}
-	 */
-	this.object = object;
-	
-	this.matrixAutoUpdate = false;
-	this.update();
+	instance.object = object;
+	instance.matrixAutoUpdate = false;
+	instance.update();
+
+	return instance;
 }
 
 SpriteHelper.prototype = Object.create(Mesh.prototype);

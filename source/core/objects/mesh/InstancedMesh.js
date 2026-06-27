@@ -13,13 +13,13 @@ import {InstancedMesh as TInstancedMesh, BufferAttribute, Object3D} from "three"
  */
 function InstancedMesh(geometry, material, count)
 {
-	TInstancedMesh.call(this, geometry, material, count);
+	var instance = Reflect.construct(TInstancedMesh, [geometry, material, count], new.target || InstancedMesh);
 
-	this.name = "instanced";
-	this.type = "InstancedMesh";
+	instance.name = "instanced";
+	instance.type = "InstancedMesh";
 
-	this.receiveShadow = true;
-	this.castShadow = true;
+	instance.receiveShadow = true;
+	instance.castShadow = true;
 	
 	Object.defineProperties(this,
 		{
@@ -39,13 +39,15 @@ function InstancedMesh(geometry, material, count)
 				// Resize the instanceMatrix to fit the number of instances
 				if (value > count)
 				{
-					this.instanceMatrix = new BufferAttribute(new Float32Array(value * 16), 16);
+					instance.instanceMatrix = new BufferAttribute(new Float32Array(value * 16), 16);
 				}
 				
 				count = value;
 			}
 		}
 		});
+
+	return instance;
 }
 
 InstancedMesh.prototype = Object.create(TInstancedMesh.prototype);

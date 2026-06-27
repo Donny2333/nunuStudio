@@ -86,7 +86,7 @@ BabylonLoader.prototype =
 				positions[j] = - positions[j];
 			}
 
-			geometry.addAttribute("position", new Float32BufferAttribute(positions, 3));
+			geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
 
 			// normals
 			if (normals)
@@ -96,13 +96,13 @@ BabylonLoader.prototype =
 					normals[j] = - normals[j];
 				}
 
-				geometry.addAttribute("normal", new Float32BufferAttribute(normals, 3));
+				geometry.setAttribute("normal", new Float32BufferAttribute(normals, 3));
 			}
 
 			// uvs
 			if (uvs)
 			{
-				geometry.addAttribute("uv", new Float32BufferAttribute(uvs, 2));
+				geometry.setAttribute("uv", new Float32BufferAttribute(uvs, 2));
 			}
 
 			// offsets

@@ -20,7 +20,7 @@ function SpriteSheetTextureEditor(parent, closeable, container, index)
 	this.source.size.set(0, 100);
 	this.source.setOnChange(function()
 	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.texture, "source", self.source.getValue()), function()
+		Editor.addAction(new CallbackAction(new ChangeAction(self.texture, "imageResource", self.source.getValue()), function()
 		{
 			self.texture.updateSource();
 		}));
@@ -109,7 +109,7 @@ SpriteSheetTextureEditor.prototype.attach = function(texture)
 {
 	TextureEditor.prototype.attach.call(this, texture);
 
-	this.source.setValue(this.texture.source);
+	this.source.setValue(this.texture.imageResource);
 	this.frames.setValue(this.texture.framesHorizontal, this.texture.framesVertical);
 	this.totalFrames.setValue(this.texture.totalFrames);
 	this.beginFrame.setValue(this.texture.beginFrame);

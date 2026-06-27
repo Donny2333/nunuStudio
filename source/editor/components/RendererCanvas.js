@@ -284,7 +284,7 @@ RendererCanvas.prototype.updateSize = function()
 
 	this.resizeCanvas();
 
-	if (this.renderer !== null)
+	if (this.renderer !== null && this.resolution.x > 0 && this.resolution.y > 0)
 	{
 		this.renderer.setSize(this.resolution.x, this.resolution.y, false);
 	}

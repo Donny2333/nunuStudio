@@ -1,4 +1,4 @@
-import {Line, Mesh, Geometry, TorusBufferGeometry, BufferGeometry, Float32BufferAttribute, Matrix4, Euler, Quaternion, Vector3} from "three";
+import {Line, Mesh, TorusGeometry, BufferGeometry, Float32BufferAttribute, Matrix4, Euler, Quaternion, Vector3} from "three";
 import {ChangeAction} from "../../../../../history/action/ChangeAction.js";
 import {ActionBundle} from "../../../../../history/action/ActionBundle.js";
 import {TransformControls} from "../TransformControls.js";
@@ -14,7 +14,9 @@ import {TransformGizmo} from "./TransformGizmo.js";
  */
 function TransformGizmoRotate()
 {
-	this.handleGizmos =
+	var instance = Reflect.construct(TransformGizmo, [], new.target || TransformGizmoRotate);
+
+	instance.handleGizmos =
 	{
 		X: [[new Line(new CircleGeometry(1, "x", 0.5), GizmoLineMaterial.red)]],
 		Y: [[new Line(new CircleGeometry(1, "y", 0.5), GizmoLineMaterial.green)]],
@@ -23,20 +25,22 @@ function TransformGizmoRotate()
 		XYZE: [[new Line(new CircleGeometry(1, "z", 1), GizmoLineMaterial.grey)]]
 	};
 
-	this.pickerGizmos =
+	instance.pickerGizmos =
 	{
 		X: [[new Mesh(TransformGizmoRotate.torus, TransformGizmo.pickerMaterial), [0, 0, 0], [0, - Math.PI / 2, - Math.PI / 2]]],
 		Y: [[new Mesh(TransformGizmoRotate.torus, TransformGizmo.pickerMaterial), [0, 0, 0], [Math.PI / 2, 0, 0]]],
 		Z: [[new Mesh(TransformGizmoRotate.torus, TransformGizmo.pickerMaterial), [0, 0, 0], [0, 0, - Math.PI / 2]]],
 		E: [[new Mesh(TransformGizmoRotate.torusBig, TransformGizmo.pickerMaterial)]],
-		XYZE: [[new Mesh(new Geometry())]]
+		XYZE: [[new Mesh(new BufferGeometry())]]
 	};
 
-	TransformGizmo.call(this);
+	TransformGizmo.setupGizmos(instance);
+
+	return instance;
 }
 
-TransformGizmoRotate.torus = new TorusBufferGeometry(1, 0.12, 4, 12, Math.PI);
-TransformGizmoRotate.torusBig = new TorusBufferGeometry(1.25, 0.12, 2, 24);
+TransformGizmoRotate.torus = new TorusGeometry(1, 0.12, 4, 12, Math.PI);
+TransformGizmoRotate.torusBig = new TorusGeometry(1.25, 0.12, 2, 24);
 
 /**
  * Circle geometry used for the rotation gizmo rings.
@@ -45,7 +49,6 @@ TransformGizmoRotate.torusBig = new TorusBufferGeometry(1.25, 0.12, 2, 24);
  */
 function CircleGeometry(radius, facing, arc)
 {
-	BufferGeometry.call(this);
 	var vertices = [];
 
 	var arcLen = arc !== undefined ? arc * 64 : 64;
@@ -66,8 +69,10 @@ function CircleGeometry(radius, facing, arc)
 		}
 	}
 
-	this.setAttribute("position", new Float32BufferAttribute(vertices, 3));
-};
+	var instance = Reflect.construct(BufferGeometry, [], new.target || CircleGeometry);
+	instance.setAttribute("position", new Float32BufferAttribute(vertices, 3));
+	return instance;
+}
 
 CircleGeometry.prototype = Object.create(BufferGeometry.prototype);
 
@@ -112,7 +117,7 @@ TransformGizmoRotate.prototype.update = function(rotation, eye2)
 	worldRotation.copy(this.planes["XY"].rotation);
 	tempQuaternion.setFromEuler(worldRotation);
 
-	tempMatrix.makeRotationFromQuaternion(tempQuaternion).getInverse(tempMatrix);
+	tempMatrix.makeRotationFromQuaternion(tempQuaternion).invert();
 	eye.applyMatrix4(tempMatrix);
 
 	this.traverse(function(child)
@@ -174,13 +179,13 @@ TransformGizmoRotate.prototype.transformObject = function(controls)
 
 		if (controls.axis === "E")
 		{
-			controls.point.applyMatrix4(controls.tempMatrix.getInverse(controls.lookAtMatrix));
-			controls.tempVector.applyMatrix4(controls.tempMatrix.getInverse(controls.lookAtMatrix));
+			controls.point.applyMatrix4(controls.tempMatrix.copy(controls.lookAtMatrix).invert());
+			controls.tempVector.applyMatrix4(controls.tempMatrix.copy(controls.lookAtMatrix).invert());
 
 			controls.toolRotation.set(Math.atan2(controls.point.z, controls.point.y), Math.atan2(controls.point.x, controls.point.z), Math.atan2(controls.point.y, controls.point.x));
 			controls.offsetRotation.set(Math.atan2(controls.tempVector.z, controls.tempVector.y), Math.atan2(controls.tempVector.x, controls.tempVector.z), Math.atan2(controls.tempVector.y, controls.tempVector.x));
 
-			controls.tempQuaternion.setFromRotationMatrix(controls.tempMatrix.getInverse(controls.attributes[i].parentRotationMatrix));
+			controls.tempQuaternion.setFromRotationMatrix(controls.tempMatrix.copy(controls.attributes[i].parentRotationMatrix).invert());
 
 			controls.quaternionE.setFromAxisAngle(controls.eye, controls.toolRotation.z - controls.offsetRotation.z);
 			controls.quaternionXYZ.setFromRotationMatrix(controls.attributes[i].worldRotationMatrix);
@@ -194,7 +199,7 @@ TransformGizmoRotate.prototype.transformObject = function(controls)
 		{
 			controls.quaternionE.setFromEuler(controls.point.clone().cross(controls.tempVector).normalize()); // rotation axis
 
-			controls.tempQuaternion.setFromRotationMatrix(controls.tempMatrix.getInverse(controls.attributes[i].parentRotationMatrix));
+			controls.tempQuaternion.setFromRotationMatrix(controls.tempMatrix.copy(controls.attributes[i].parentRotationMatrix).invert());
 			controls.quaternionX.setFromAxisAngle(controls.quaternionE, - controls.point.clone().angleTo(controls.tempVector));
 			controls.quaternionXYZ.setFromRotationMatrix(controls.attributes[i].worldRotationMatrix);
 
@@ -205,9 +210,9 @@ TransformGizmoRotate.prototype.transformObject = function(controls)
 		}
 		else if (controls.space === TransformControls.LOCAL)
 		{
-			controls.point.applyMatrix4(controls.tempMatrix.getInverse(controls.attributes[i].worldRotationMatrix));
+			controls.point.applyMatrix4(controls.tempMatrix.copy(controls.attributes[i].worldRotationMatrix).invert());
 
-			controls.tempVector.applyMatrix4(controls.tempMatrix.getInverse(controls.attributes[i].worldRotationMatrix));
+			controls.tempVector.applyMatrix4(controls.tempMatrix.copy(controls.attributes[i].worldRotationMatrix).invert());
 
 			controls.toolRotation.set(Math.atan2(controls.point.z, controls.point.y), Math.atan2(controls.point.x, controls.point.z), Math.atan2(controls.point.y, controls.point.x));
 			controls.offsetRotation.set(Math.atan2(controls.tempVector.z, controls.tempVector.y), Math.atan2(controls.tempVector.x, controls.tempVector.z), Math.atan2(controls.tempVector.y, controls.tempVector.x));
@@ -246,7 +251,7 @@ TransformGizmoRotate.prototype.transformObject = function(controls)
 		{
 			controls.toolRotation.set(Math.atan2(controls.point.z, controls.point.y), Math.atan2(controls.point.x, controls.point.z), Math.atan2(controls.point.y, controls.point.x));
 			controls.offsetRotation.set(Math.atan2(controls.tempVector.z, controls.tempVector.y), Math.atan2(controls.tempVector.x, controls.tempVector.z), Math.atan2(controls.tempVector.y, controls.tempVector.x));
-			controls.tempQuaternion.setFromRotationMatrix(controls.tempMatrix.getInverse(controls.attributes[i].parentRotationMatrix));
+			controls.tempQuaternion.setFromRotationMatrix(controls.tempMatrix.copy(controls.attributes[i].parentRotationMatrix).invert());
 
 			if (controls.snap)
 			{

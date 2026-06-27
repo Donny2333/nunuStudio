@@ -1,23 +1,18 @@
-import {Mesh, PlaneBufferGeometry, MeshBasicMaterial, DoubleSide} from "three";
+import {Mesh, PlaneGeometry, MeshBasicMaterial, DoubleSide} from "three";
 
 /**
  * Helper to visualizer rect aread lights.
  *
  * @class RectAreaLightHelper
  */
-function RectAreaLightHelper(object) 
+function RectAreaLightHelper(object)
 {
-	Mesh.call(this, new PlaneBufferGeometry(1, 1), new MeshBasicMaterial({side: DoubleSide}));
+	var instance = Reflect.construct(Mesh, [new PlaneGeometry(1, 1), new MeshBasicMaterial({side: DoubleSide})], new.target || RectAreaLightHelper);
 
-	/**
-	 * Object attached to the helper
-	 *
-	 * @attribute object
-	 * @type {Object3D}
-	 */
-	this.object = object;
+	instance.object = object;
+	instance.update();
 
-	this.update();
+	return instance;
 }
 
 RectAreaLightHelper.prototype = Object.create(Mesh.prototype);

@@ -15,11 +15,13 @@ import {AmbientLight as TAmbientLight} from "three";
  */
 function AmbientLight(hex, intensity)
 {
-	TAmbientLight.call(this, hex, intensity);
+	var instance = Reflect.construct(TAmbientLight, [hex, intensity], new.target || AmbientLight);
 
-	this.name = "ambient";
+	instance.name = "ambient";
 
-	this.matrixAutoUpdate = false;
+	instance.matrixAutoUpdate = false;
+
+	return instance;
 }
 
 AmbientLight.prototype = Object.create(TAmbientLight.prototype);

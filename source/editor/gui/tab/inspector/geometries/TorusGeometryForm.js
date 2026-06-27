@@ -1,4 +1,4 @@
-import {TorusBufferGeometry, TorusGeometry, BufferGeometry} from "three";
+import {TorusGeometry, BufferGeometry} from "three";
 import {Locale} from "../../../../locale/LocaleManager.js";
 import {ChangeAction} from "../../../../history/action/ChangeAction.js";
 import {Editor} from "../../../../Editor.js";

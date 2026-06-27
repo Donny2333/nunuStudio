@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "editor-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["webpack-dev-server", "--hot", "--config", "webpack.dev.js"],
+      "port": 8080
+    },
+    {
+      "name": "static-server",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", ".", "-p", "8081", "--cors"],
+      "port": 8081
+    },
+    {
+      "name": "angular-page",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start-page"],
+      "port": 4200
+    }
+  ]
+}

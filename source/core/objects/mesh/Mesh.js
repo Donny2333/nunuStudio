@@ -13,12 +13,14 @@ import {Mesh as TMesh, Object3D} from "three";
  */
 function Mesh(geometry, material)
 {
-	TMesh.call(this, geometry, material);
+	var instance = Reflect.construct(TMesh, [geometry, material], new.target || Mesh);
 
-	this.name = "model";
+	instance.name = "model";
 
-	this.receiveShadow = true;
-	this.castShadow = true;
+	instance.receiveShadow = true;
+	instance.castShadow = true;
+
+	return instance;
 }
 
 Mesh.prototype = Object.create(TMesh.prototype);

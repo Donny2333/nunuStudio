@@ -1,8 +1,19 @@
 import {UniformsUtils, ShaderMaterial, NoBlending, WebGLRenderTarget, LinearMipMapLinearFilter, LinearFilter, RGBAFormat, MeshBasicMaterial} from "three";
 import {CopyShader} from "three/examples/jsm/shaders/CopyShader";
 import {LuminosityShader} from "three/examples/jsm/shaders/LuminosityShader";
-import {ToneMapShader} from "three/examples/jsm/shaders/ToneMapShader";
 import {Pass} from "../Pass.js";
+
+var ToneMapShader = {
+	uniforms: {
+		tDiffuse: {value: null},
+		luminanceMap: {value: null},
+		averageLuminance: {value: 1.0},
+		luminanceMax: {value: 16.0},
+		middleGrey: {value: 0.6}
+	},
+	vertexShader: "varying vec2 vUv;\nvoid main() {\nvUv = uv;\ngl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n}",
+	fragmentShader: "#ifdef ADAPTED_LUMINANCE\nuniform sampler2D luminanceMap;\n#else\nuniform float averageLuminance;\n#endif\nuniform sampler2D tDiffuse;\nvarying vec2 vUv;\nuniform float middleGrey;\nuniform float luminanceMax;\nvec3 ToneMap(vec3 vColor) {\n#ifdef ADAPTED_LUMINANCE\nfloat fLumAvg = texture2D(luminanceMap, vec2(0.5, 0.5)).r;\n#else\nfloat fLumAvg = averageLuminance;\n#endif\nfloat fLumPixel = 0.2126 * vColor.r + 0.7152 * vColor.g + 0.0722 * vColor.b;\nfloat fLumScaled = (fLumPixel * middleGrey) / max(0.001, fLumAvg);\nfloat fLumCompressed = (fLumScaled * (1.0 + (fLumScaled / (luminanceMax * luminanceMax)))) / (1.0 + fLumScaled);\nreturn fLumCompressed * vColor;\n}\nvoid main() {\nvec4 texel = texture2D(tDiffuse, vUv);\ngl_FragColor = vec4(ToneMap(texel.rgb), texel.a);\n}"
+};
 
 /**
  * Generate a texture that represents the luminosity of the current scene, adapted over time to simulate the optic nerve responding to the amount of light it is receiving.

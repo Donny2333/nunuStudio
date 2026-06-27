@@ -1,4 +1,4 @@
-import {ShaderMaterial, OrthographicCamera, Scene, PlaneBufferGeometry, BufferAttribute, Mesh} from "three";
+import {ShaderMaterial, OrthographicCamera, Scene, PlaneGeometry, BufferAttribute, Mesh} from "three";
 import CubemapFlatVertex from "./cubemap_flat_vertex.glsl";
 import CubemapFlatFragment from "./cubemap_flat_fragment.glsl";
 
@@ -48,7 +48,7 @@ function CubemapFlatRenderer(envMap, faceSize, paddingLeft, paddingRight)
 	this.faces = [];
 	for (var i = 0; i < 6; i++)
 	{
-		var geometry = new PlaneBufferGeometry(faceSize, faceSize);
+		var geometry = new PlaneGeometry(faceSize, faceSize);
 		var envLookupArray = new Float32Array(12);
 		geometry.setAttribute("envLookup", new BufferAttribute(envLookupArray, 3));
 		for (var j = 0; j < 4; j++)

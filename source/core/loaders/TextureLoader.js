@@ -299,7 +299,13 @@ TextureLoader.prototype.parse = function(json, onLoad)
 
 	if (json.format !== undefined) {texture.format = json.format;}
 	if (json.type !== undefined) {texture.type = json.type;}
-	if (json.encoding !== undefined) {texture.encoding = json.encoding;}
+	if (json.encoding !== undefined)
+	{
+		// r152+ uses string colorSpace; older saves used numeric encoding constants (3007=sRGB, 3000=Linear, 3002=Gamma)
+		var ENCODING_MAP = {3007: "srgb", 3000: "srgb-linear", 3001: "srgb-linear", 3002: "srgb-linear"};
+		texture.colorSpace = ENCODING_MAP[json.encoding] || json.encoding;
+	}
+	if (json.colorSpace !== undefined) {texture.colorSpace = json.colorSpace;}
 
 	texture.minFilter = json.minFilter;
 	texture.magFilter = json.magFilter;

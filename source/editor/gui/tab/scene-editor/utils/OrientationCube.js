@@ -1,4 +1,4 @@
-import {PerspectiveCamera, Raycaster, Vector2, Scene, PlaneBufferGeometry, RGBFormat, Mesh, MeshBasicMaterial} from "three";
+import {PerspectiveCamera, Raycaster, Vector2, Scene, PlaneGeometry, RGBAFormat, Mesh, MeshBasicMaterial} from "three";
 import {Texture} from "../../../../../core/texture/Texture.js";
 import {Viewport} from "../../../../../core/objects/cameras/Viewport.js";
 import {Global} from "../../../../Global.js";
@@ -43,11 +43,11 @@ function OrientationCube()
 	// Selected face
 	this.selected = null;
 
-	var plane = new PlaneBufferGeometry(1, 1);
+	var plane = new PlaneGeometry(1, 1);
 
 	// Cube faces
 	var texture = new Texture(Global.FILE_PATH + "camera/xPos.png");
-	texture.format = RGBFormat;
+	texture.format = RGBAFormat;
 	this.xPos = new Mesh(plane, new MeshBasicMaterial({map: texture}));
 	this.xPos.code = OrientationCube.X_POS;
 	this.xPos.position.set(0.5, 0, 0);
@@ -57,7 +57,7 @@ function OrientationCube()
 	this.scene.add(this.xPos);
 
 	var texture = new Texture(Global.FILE_PATH + "camera/xNeg.png");
-	texture.format = RGBFormat;
+	texture.format = RGBAFormat;
 	this.xNeg = new Mesh(plane, new MeshBasicMaterial({map: texture}));
 	this.xNeg.code = OrientationCube.X_NEG;
 	this.xNeg.position.set(-0.5, 0, 0);
@@ -67,7 +67,7 @@ function OrientationCube()
 	this.scene.add(this.xNeg);
 
 	var texture = new Texture(Global.FILE_PATH + "camera/yPos.png");
-	texture.format = RGBFormat;
+	texture.format = RGBAFormat;
 	this.yPos = new Mesh(plane, new MeshBasicMaterial({map: texture}));
 	this.yPos.code = OrientationCube.Y_POS;
 	this.yPos.position.set(0, 0.5, 0);
@@ -77,7 +77,7 @@ function OrientationCube()
 	this.scene.add(this.yPos);
 
 	var texture = new Texture(Global.FILE_PATH + "camera/yNeg.png");
-	texture.format = RGBFormat;
+	texture.format = RGBAFormat;
 	this.yNeg = new Mesh(plane, new MeshBasicMaterial({map: texture}));
 	this.yNeg.code = OrientationCube.Y_NEG;
 	this.yNeg.position.set(0, -0.5, 0);
@@ -87,7 +87,7 @@ function OrientationCube()
 	this.scene.add(this.yNeg);
 
 	var texture = new Texture(Global.FILE_PATH + "camera/zPos.png");
-	texture.format = RGBFormat;
+	texture.format = RGBAFormat;
 	this.zPos = new Mesh(plane, new MeshBasicMaterial({map: texture}));
 	this.zPos.code = OrientationCube.Z_POS;
 	this.zPos.position.set(0, 0, 0.5);
@@ -96,7 +96,7 @@ function OrientationCube()
 	this.scene.add(this.zPos);
 
 	var texture = new Texture(Global.FILE_PATH + "camera/zNeg.png");
-	texture.format = RGBFormat;
+	texture.format = RGBAFormat;
 	this.zNeg = new Mesh(plane, new MeshBasicMaterial({map: texture}));
 	this.zNeg.code = OrientationCube.Z_NEG;
 	this.zNeg.position.set(0, 0, -0.5);
@@ -155,7 +155,7 @@ OrientationCube.prototype.updateRotation = function(camera)
 {
 	this.scene.quaternion.copy(camera.quaternion);
 	this.scene.updateMatrix();
-	this.scene.matrix.getInverse(this.scene.matrix);
+	this.scene.matrix.invert();
 };
 
 /**

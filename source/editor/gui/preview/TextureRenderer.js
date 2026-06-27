@@ -1,4 +1,4 @@
-import {MeshBasicMaterial, Mesh, PlaneBufferGeometry, Texture} from "three";
+import {MeshBasicMaterial, Mesh, PlaneGeometry, Texture} from "three";
 import {OrthographicCamera} from "../../../core/objects/cameras/OrthographicCamera.js";
 import {PreviewRenderer} from "./PreviewRenderer.js";
 import {CubemapFlatRenderer} from "./CubemapFlatRenderer.js";
@@ -20,7 +20,7 @@ function TextureRenderer()
 	this.material = new MeshBasicMaterial({transparent: true});
 
 	// Plane
-	this.plane = new Mesh(new PlaneBufferGeometry(1, 1), this.material);
+	this.plane = new Mesh(new PlaneGeometry(1, 1), this.material);
 	this.plane.position.set(0, 0, -1);
 	this.scene.add(this.plane);
 }

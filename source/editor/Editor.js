@@ -1,4 +1,4 @@
-import {Object3D, Material, Texture, Geometry, BufferGeometry, Shape, Math, BoxBufferGeometry, MeshStandardMaterial, SpriteMaterial} from "three";
+import {Object3D, Material, Texture, BufferGeometry, Shape, MathUtils, BoxGeometry, MeshStandardMaterial, SpriteMaterial} from "three";
 import {StaticPair} from "@as-com/pson";
 import {EventManager} from "../core/utils/EventManager.js";
 import {Video} from "../core/resources/Video.js";
@@ -17,6 +17,7 @@ import {Keyboard} from "../core/input/Keyboard.js";
 import {FileSystem} from "../core/FileSystem.js";
 import {ResourceContainer} from "../core/resources/ResourceContainer.js";
 import {AmbientLight} from "../core/objects/lights/AmbientLight";
+import {TilesetObject} from "../core/objects/misc/TilesetObject.js";
 import {Locale} from "./locale/LocaleManager.js";
 import {VirtualClipboard} from "./utils/VirtualClipboard.js";
 import {Settings} from "./Settings.js";
@@ -137,14 +138,15 @@ Editor.initialize = function()
 		};
 
 		// Store settings when exiting the page
-		window.onbeforeunload = function(event)
-		{
-			Editor.settings.store();
-
-			var message = Locale.unsavedChangesExit;
-			event.returnValue = message;
-			return message;
-		};
+		// TODO: 开发阶段暂时禁用关闭确认弹框，避免影响热重载体验
+		// window.onbeforeunload = function(event)
+		// {
+		// 	Editor.settings.store();
+		//
+		// 	var message = Locale.unsavedChangesExit;
+		// 	event.returnValue = message;
+		// 	return message;
+		// };
 	}
 
 	// Open ISP file if dragged to the window
@@ -673,7 +675,7 @@ Editor.deleteObject = function(object)
 			Editor.addAction(new RemoveResourceAction(selected[i], Editor.program, "videos"));
 		}
 		// Geometries
-		else if (selected[i] instanceof Geometry || selected[i] instanceof BufferGeometry)
+		else if (selected[i] instanceof BufferGeometry)
 		{
 			Editor.addAction(new RemoveResourceAction(selected[i], Editor.program, "geometries"));
 		}
@@ -792,7 +794,7 @@ Editor.pasteObject = function(target)
 			var obj = new ObjectLoader().parse(data[i]);
 			obj.traverse(function(child) 
 			{
-				child.uuid = Math.generateUUID();
+				child.uuid = MathUtils.generateUUID();
 			});
 			objs.push(obj);
 		}
@@ -869,7 +871,7 @@ Editor.createDefaultResouces = function()
 	Editor.defaultImageTerrain = new Image(Global.FILE_PATH + "terrain.png");
 	Editor.defaultImageTerrain.name = "terrain";
 
-	Editor.defaultGeometry = new BoxBufferGeometry(1, 1, 1);
+	Editor.defaultGeometry = new BoxGeometry(1, 1, 1);
 	Editor.defaultGeometry.name = "box";
 
 	Editor.defaultMaterial = new MeshStandardMaterial({roughness: 0.6, metalness: 0.2});
@@ -973,16 +975,12 @@ Editor.addDefaultScene = function(material)
 	// Box
 	var model = new Mesh(Editor.defaultGeometry, material);
 	model.name = "box";
+	model.position.set(0, 0.5, 0);
 	scene.add(model);
 
-	// Floor
-	var ground = new BoxBufferGeometry(20, 1, 20);
-	ground.name = "ground";
-
-	model = new Mesh(ground, material);
- 	model.position.set(0, -1.0, 0);
-	model.name = "ground";
-	scene.add(model);
+	// TODO: 开发调试用，后期删除默认 TilesetObject
+	var tileset = new TilesetObject();
+	scene.add(tileset);
 
 	// Add scene to program
 	Editor.addObject(scene, Editor.program);

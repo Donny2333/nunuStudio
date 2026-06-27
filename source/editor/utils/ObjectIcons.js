@@ -76,6 +76,7 @@ ObjectIcons.icons = new Map([
 	["Measurement", ObjectIcons.path + "misc/ruler.png"],
 	["BillboardGroup", ObjectIcons.path + "misc/rotate.png"],
 	["LensFlare", ObjectIcons.path + "misc/flare.png"],
+	["TilesetObject", ObjectIcons.path + "misc/scene.png"],
 	["OrbitControls", ObjectIcons.path + "misc/orbit.png"],
 	["FirstPersonControls", ObjectIcons.path + "misc/crosshair.png"]
 ]);

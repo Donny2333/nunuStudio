@@ -19,7 +19,13 @@ module.exports = [
 			compress: false,
 			historyApiFallback: true,
 			hot: true,
-			https: false
+			https: false,
+			client: {
+				overlay: {
+					warnings: false,
+					errors: true
+				}
+			}
 		},
 		plugins: [
 			new Webpack.DefinePlugin({

@@ -15,14 +15,16 @@ import {DirectionalLight as TDirectionalLight} from "three";
  */
 function DirectionalLight(hex, intensity)
 {
-	TDirectionalLight.call(this, hex, intensity);
+	var instance = Reflect.construct(TDirectionalLight, [hex, intensity], new.target || DirectionalLight);
 
-	this.name = "directional";
+	instance.name = "directional";
 
-	this.castShadow = true;
+	instance.castShadow = true;
 
-	this.shadow.camera.near = 0.5;
-	this.shadow.camera.far = 10000;
+	instance.shadow.camera.near = 0.5;
+	instance.shadow.camera.far = 10000;
+
+	return instance;
 }
 
 DirectionalLight.prototype = Object.create(TDirectionalLight.prototype);

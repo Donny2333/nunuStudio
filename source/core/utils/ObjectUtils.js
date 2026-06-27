@@ -1,4 +1,4 @@
-import {Vector3, Object3D, Box3, Matrix4, BufferGeometry} from "three";
+import {Vector3, Object3D, Box3, Matrix4} from "three";
 
 /**
  * Object utils is a collection of methods to apply operations to Object3D instances.
@@ -152,13 +152,7 @@ ObjectUtils.centerGeometryOrigin = function(object)
  */
 ObjectUtils.convertToBufferGeometry = function(object)
 {
-	object.traverse(function(children)
-	{
-		if (children.geometry !== undefined && children.geometry.isGeometry === true)
-		{
-			children.geometry = new BufferGeometry().fromGeometry(children.geometry);
-		}
-	});
+	// No-op: all geometries are BufferGeometry in three.js r125+
 };
 
 export {ObjectUtils};

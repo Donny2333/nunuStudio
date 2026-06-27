@@ -1,4 +1,4 @@
-import {Scene, NearestFilter, LinearFilter, NearestMipMapNearestFilter, NearestMipMapLinearFilter, LinearMipMapNearestFilter, LinearMipMapLinearFilter, CubeReflectionMapping, CubeRefractionMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping, CubeUVReflectionMapping, CubeUVRefractionMapping} from "three";
+import {Scene, NearestFilter, LinearFilter, NearestMipMapNearestFilter, NearestMipMapLinearFilter, LinearMipMapNearestFilter, LinearMipMapLinearFilter, CubeReflectionMapping, CubeRefractionMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping, CubeUVReflectionMapping} from "three";
 import {Locale} from "../../../locale/LocaleManager.js";
 import {CubeTexture} from "../../../../core/texture/CubeTexture.js";
 import {PerspectiveCamera} from "../../../../core/objects/cameras/PerspectiveCamera.js";
@@ -122,7 +122,6 @@ function CubeTextureEditor(parent, closeable, container, index)
 	this.mapping.addValue(Locale.equirectangularReflection, EquirectangularReflectionMapping);
 	this.mapping.addValue(Locale.equirectangularRefraction, EquirectangularRefractionMapping);
 	this.mapping.addValue(Locale.cubeUvReflection, CubeUVReflectionMapping);
-	this.mapping.addValue(Locale.cubeUvRefraction, CubeUVRefractionMapping);
 	this.mapping.setOnChange(function()
 	{
 		self.texture.mapping = self.mapping.getValue();

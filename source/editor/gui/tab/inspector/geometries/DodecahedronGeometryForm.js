@@ -1,4 +1,4 @@
-import {DodecahedronBufferGeometry, DodecahedronGeometry, BufferGeometry} from "three";
+import {DodecahedronGeometry, BufferGeometry} from "three";
 import {Locale} from "../../../../locale/LocaleManager.js";
 import {ChangeAction} from "../../../../history/action/ChangeAction.js";
 import {Editor} from "../../../../Editor.js";

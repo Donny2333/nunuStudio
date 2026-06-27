@@ -1,4 +1,4 @@
-import {DirectionalLight, AmbientLight, Mesh, Geometry, MeshPhongMaterial, Vector3} from "three";
+import {DirectionalLight, AmbientLight, Mesh, BufferGeometry, MeshPhongMaterial, Vector3} from "three";
 import {OrthographicCamera} from "../../../core/objects/cameras/OrthographicCamera.js";
 import {PreviewRenderer} from "./PreviewRenderer.js";
 
@@ -21,7 +21,7 @@ function GeometryRenderer()
 	this.scene.add(directional);
 	this.scene.add(new AmbientLight(0x888888));
 
-	this.mesh = new Mesh(new Geometry(), new MeshPhongMaterial({color: 0xFFFFFF}));
+	this.mesh = new Mesh(new BufferGeometry(), new MeshPhongMaterial({color: 0xFFFFFF}));
 	this.scene.add(this.mesh);
 }
 

@@ -73,7 +73,7 @@ BloomPass.prototype.render = function(renderer, writeBuffer, readBuffer, delta, 
 {
 	if (maskActive)
 	{
-		renderer.context.disable(renderer.context.STENCIL_TEST);
+		renderer.getContext().disable(renderer.getContext().STENCIL_TEST);
 	}
 
 	// Render quad with blured scene into texture (convolution pass 1)
@@ -97,7 +97,7 @@ BloomPass.prototype.render = function(renderer, writeBuffer, readBuffer, delta, 
 
 	if (maskActive)
 	{
-		renderer.context.enable(renderer.context.STENCIL_TEST);
+		renderer.getContext().enable(renderer.getContext().STENCIL_TEST);
 	}
 
 	renderer.setRenderTarget(writeBuffer);

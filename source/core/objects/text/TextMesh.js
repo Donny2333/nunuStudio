@@ -1,4 +1,5 @@
-import {Geometry, Font, ExtrudeBufferGeometry, ShapeBufferGeometry, Object3D} from "three";
+import {BufferGeometry, ExtrudeGeometry, ShapeGeometry, Object3D} from "three";
+import {Font} from "three/examples/jsm/loaders/FontLoader.js";
 import {Mesh} from "../mesh/Mesh.js";
 
 /**
@@ -22,10 +23,10 @@ import {Mesh} from "../mesh/Mesh.js";
  */
 function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize, size, curveSegments, extruded)
 {
-	Mesh.call(this, TextMesh.EMPTY_GEOMETRY, material);
+	var instance = Reflect.construct(Mesh, [TextMesh.EMPTY_GEOMETRY, material], new.target || TextMesh);
 
-	this.name = "text";
-	this.type = "TextMesh";
+	instance.name = "text";
+	instance.type = "TextMesh";
 
 	/**
 	 * Font used to draw text.
@@ -33,7 +34,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property font
 	 * @type {Font}
 	 */
-	this.font = font !== undefined ? font : null;
+	instance.font = font !== undefined ? font : null;
 
 	/**
 	 * Indicates if the text mesh has volume or not.
@@ -41,7 +42,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property extruded
 	 * @type {boolean}
 	 */
-	this.extruded = extruded !== undefined ? extruded : true;
+	instance.extruded = extruded !== undefined ? extruded : true;
 
 	/**
 	 * Size of the text (depth).
@@ -49,7 +50,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property size
 	 * @type {number}
 	 */
-	this.size = size !== undefined ? size : 1;
+	instance.size = size !== undefined ? size : 1;
 
 	/**
 	 * Height of the text.
@@ -57,7 +58,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property height
 	 * @type {number}
 	 */
-	this.height = height !== undefined ? height : 0.5;
+	instance.height = height !== undefined ? height : 0.5;
 
 	/**
 	 * Number of segments that compose a curve in the font.
@@ -65,7 +66,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property curveSegments
 	 * @type {number}
 	 */
-	this.curveSegments = curveSegments !== undefined ? curveSegments : 15;
+	instance.curveSegments = curveSegments !== undefined ? curveSegments : 15;
 
 	/**
 	 * If true a bevel is added to the text.
@@ -73,7 +74,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property bevel
 	 * @type {boolean}
 	 */
-	this.bevel = bevel !== undefined ? bevel : false;
+	instance.bevel = bevel !== undefined ? bevel : false;
 
 	/**
 	 * Bevel thickness.
@@ -81,7 +82,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property bevelThickness
 	 * @type {number}
 	 */
-	this.bevelThickness = bevelThickness !== undefined ? bevelThickness : 0.1;
+	instance.bevelThickness = bevelThickness !== undefined ? bevelThickness : 0.1;
 
 	/**
 	 * Bevel size.
@@ -89,7 +90,7 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 	 * @property bevelSize
 	 * @type {number}
 	 */
-	this.bevelSize = bevelSize !== undefined ? bevelSize : 0.05;
+	instance.bevelSize = bevelSize !== undefined ? bevelSize : 0.05;
 
 	/**
 	 * Text to be diplayed in the mesh.
@@ -111,18 +112,20 @@ function TextMesh(text, material, font, height, bevel, bevelThickness, bevelSize
 				if (text !== value)
 				{
 					text = value;
-					this.updateGeometry();
+					instance.updateGeometry();
 				}
 			}
 		}
 		});
 
-	this.updateGeometry();
+	instance.updateGeometry();
+
+	return instance;
 }
 
 TextMesh.prototype = Object.create(Mesh.prototype);
 
-TextMesh.EMPTY_GEOMETRY = new Geometry();
+TextMesh.EMPTY_GEOMETRY = new BufferGeometry();
 
 /**
  * Set font used by this text 3D instance.
@@ -177,7 +180,7 @@ TextMesh.prototype.updateGeometry = function()
 
 		if (this.extruded)
 		{
-			this.geometry = new ExtrudeBufferGeometry(shapes,
+			this.geometry = new ExtrudeGeometry(shapes,
 				{
 					curveSegments: this.curveSegments,
 					depth: this.height,
@@ -189,7 +192,7 @@ TextMesh.prototype.updateGeometry = function()
 		}
 		else
 		{
-			this.geometry = new ShapeBufferGeometry(shapes, this.curveSegments);
+			this.geometry = new ShapeGeometry(shapes, this.curveSegments);
 		}
 	}
 };

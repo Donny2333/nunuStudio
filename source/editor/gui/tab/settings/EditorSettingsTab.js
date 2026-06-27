@@ -86,6 +86,18 @@ function EditorSettingsTab(parent, closeable, container, index)
 	this.form.add(this.axisEnabled);
 	this.form.nextRow();
 
+	// Show object icons
+	this.form.addText("Show object icons");
+	this.showObjectIcons = new CheckBox(this.form);
+	this.showObjectIcons.size.set(18, 18);
+	this.showObjectIcons.setOnChange(function()
+	{
+		Editor.settings.editor.showObjectIcons = self.showObjectIcons.getValue();
+		Editor.updateSelectionGUI();
+	});
+	this.form.add(this.showObjectIcons);
+	this.form.nextRow();
+
 	// Enable orientation cube
 	this.form.addText("Orientation cube");
 	this.cameraRotationCube = new CheckBox(this.form);
@@ -403,6 +415,7 @@ EditorSettingsTab.prototype.activate = function()
 	this.gridSize.setValue(Editor.settings.editor.gridSize);
 	this.gridSpacing.setValue(Editor.settings.editor.gridSpacing);
 	this.axisEnabled.setValue(Editor.settings.editor.axisEnabled);
+	this.showObjectIcons.setValue(Editor.settings.editor.showObjectIcons);
 	this.cameraRotationCube.setValue(Editor.settings.editor.cameraRotationCube);
 	this.cameraRotationCubeSize.setValue(Editor.settings.editor.cameraRotationCubeSize);
 

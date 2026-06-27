@@ -33,7 +33,7 @@ THREE.Texture.prototype.toJSON = function(meta)
 
 		format: this.format,
 		type: this.type,
-		encoding: this.encoding,
+		colorSpace: this.colorSpace,
 
 		minFilter: this.minFilter,
 		magFilter: this.magFilter,

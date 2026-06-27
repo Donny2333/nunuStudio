@@ -36,36 +36,8 @@ function TextBitmap(config, texture, shader, color)
 	if (config.letterSpacing === undefined) {config.letterSpacing = 5;}
 	if (config.text === undefined) {config.text = "";}
 
-	/**
-	 * BMFont text configuration object.
-	 *
-	 * Passed to the BMFont text geometry generator. It is a object with the format.
-	 *
-	 * {
-	 *    font: (Object) Font data should be parsed from (.json, .fnt, etc) file,
-	 *    text: (String),
-	 *    width: (Number) Width of the text area,
-	 *    align: (String) Side to align the text,
-	 *    lineHeight: (Number) Line height/font size,
-	 *    letterSpacing: (Number) Spacing between characters,
-	 *    mode: (String) a mode for word-wrapper; can be 'pre' (maintain spacing), or 'nowrap' (collapse whitespace but only break on newline characters), otherwise assumes normal word-wrap behaviour (collapse whitespace, break at width or newlines)
-	 *    tabSize: (Number) the number of spaces to use in a single tab (default 4)
-	 *    start: (Number) the starting index into the text to layout (default 0)
-	 *    end: (Number) the ending index (exclusive) into the text to layout (default text.length)
-	 * }
-	 *
-	 * @attribute config
-	 * @type {Object}
-	 */
-	this.config = config;
-
-	/**
-	 * Uniforms passed to the text rendering shaders.
-	 *
-	 * @attribute uniforms
-	 * @type {Object}
-	 */
-	this.uniforms =
+	var _config = config;
+	var _uniforms =
 	{
 		map: {type: "t", value: texture},
 		color: {type: "v3", value: new Color(color !== undefined ? color : 0xFFFFFF)},
@@ -73,173 +45,80 @@ function TextBitmap(config, texture, shader, color)
 		threshold: {type: "f", value: 0.4}
 	};
 
-	Mesh.call(this, createTextGeometry(this.config), null);
+	var instance = Reflect.construct(Mesh, [createTextGeometry(_config), null], new.target || TextBitmap);
 
-	this.name = "text";
-	this.type = "TextBitmap";
+	instance.config = _config;
+	instance.uniforms = _uniforms;
+	instance.name = "text";
+	instance.type = "TextBitmap";
 
-	var shader = shader !== undefined ? shader : TextBitmap.BITMAP;
+	var _shader = shader !== undefined ? shader : TextBitmap.BITMAP;
 	var fontScale = 0.01;
 
-	Object.defineProperties(this,
+	Object.defineProperties(instance,
 		{
-		/**
-		 * Scale applied to the generated text geometry.
-		 *
-		 * @attribute fontScale
-		 * @type {number}
-		 */
 			fontScale:
 		{
 			get: function() {return fontScale;},
 			set: function(value) {fontScale = value; this.updateGeometry();}
 		},
-
-			/**
-			 * Text bitmap rendering shader, can be:
-			 *    - TextBitmap.BITMAP 
-			 *    - TextBitmap.SDF 
-			 *    - TextBitmap.MSDF 
-			 *
-			 * @attribute shader
-			 * @type {number}
-			 */
 			shader:
 		{
-			get: function() {return shader;},
-			set: function(value) {shader = value; this.updateShader();}
+			get: function() {return _shader;},
+			set: function(value) {_shader = value; this.updateShader();}
 		},
-
-			/**
-			 * Texture containing the bitmap characters.
-			 *
-			 * Data specifiyng the position of each character in the texture should be placed in the font.
-			 *
-			 * @attribute texture
-			 * @type {Texture}
-			 */
 			texture:
 		{
 			get: function() {return this.uniforms.map.value;},
 			set: function(value) {this.uniforms.map.value = value; this.material.needsUpdate = true;}
 		},
-
-			/**
-			 * BMFont text font data, contains the data about all characters available, and their position in the atlas.
-			 *
-			 * Font data should be parsed from (.json, .fnt, etc) file.
-			 *
-			 * Passed to the BMFont text geometry generator.
-			 *
-			 * @attribute font
-			 * @type {Object}
-			 */
-			font: 
+			font:
 		{
 			get: function() {return this.config.font;},
 			set: function(value) {this.config.font = value; this.updateGeometry();}
 		},
-
-			/** 
-			 * Text displayed on the object.
-			 *
-			 * @attribute text
-			 * @type {string}
-			 */
 			text:
 		{
 			get: function() {return this.config.text;},
 			set: function(value)
 			{
 				if (this.config.text !== value)
-				{					
+				{
 					this.config.text = value;
 					this.updateGeometry();
 				}
 			}
 		},
-
-			/**
-			 * Space between each text line.
-			 *
-			 * @attribute lineHeight
-			 * @type {number}
-			 */
 			lineHeight:
 		{
 			get: function() {return this.config.lineHeight;},
 			set: function(value) {this.config.lineHeight = value; this.updateGeometry();}
 		},
-		
-			/**
-			 * Spacing between each letter.
-			 *
-			 * @attribute letterSpacing
-			 * @type {number}
-			 */
 			letterSpacing:
 		{
 			get: function() {return this.config.letterSpacing;},
 			set: function(value) {this.config.letterSpacing = value; this.updateGeometry();}
 		},
-
-			/**
-			 * Horizontal text alignment can be
-			 *    - TextBitmap.LEFT
-			 *    - TextBitmap.RIGHT
-			 *    - TextBitmap.CENTER
-			 *
-			 * @attribute align
-			 * @type {string}
-			 */
 			align:
 		{
 			get: function() {return this.config.align;},
 			set: function(value) {this.config.align = value; this.updateGeometry();}
 		},
-
-			/** 
-			 * Width of the text box.
-			 *
-			 * @attribute width
-			 * @type {number}
-			 */
 			width:
 		{
 			get: function() {return this.config.width;},
 			set: function(value) {this.config.width = value; this.updateGeometry();}
 		},
-
-			/** 
-			 * Color of the text, only applied for SDF and MSDF modes.
-			 *
-			 * @attribute color
-			 * @type {Color}
-			 */
 			color:
 		{
 			get: function() {return this.uniforms.color.value;},
 			set: function(value) {this.uniforms.color.value = value;}
 		},
-
-			/** 
-			 * SDF distance alpha threshold.
-			 *
-			 * @attribute threshold
-			 * @type {number}
-			 */
-			threshold: 
+			threshold:
 		{
 			get: function() {return this.uniforms.threshold.value;},
 			set: function(value) {this.uniforms.threshold.value = value;}
 		},
-
-			/** 
-			 * Smoothing of the text borders.
-			 *
-			 * @attribute smoothing
-			 * @type {number}
-			 */
 			smoothing:
 		{
 			get: function() {return this.uniforms.smoothing.value;},
@@ -247,8 +126,10 @@ function TextBitmap(config, texture, shader, color)
 		}
 		});
 
-	this.updateGeometry();
-	this.updateShader(texture);
+	instance.updateGeometry();
+	instance.updateShader(texture);
+
+	return instance;
 }
 
 TextBitmap.prototype = Object.create(Mesh.prototype);

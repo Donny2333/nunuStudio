@@ -1,5 +1,6 @@
 import {Shape, Box, Vec3, ConvexPolyhedron, Cylinder, Quaternion as CQuaternion, Sphere, Trimesh} from "cannon-es";
-import {Vector3, BufferGeometry, Geometry, Quaternion as TQuaternion, Matrix4, Mesh} from "three";
+import {Vector3, BufferGeometry, Quaternion as TQuaternion, Matrix4, Mesh} from "three";
+import {mergeGeometries} from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import {ConvexHull} from "three/examples/jsm/math/ConvexHull";
 
 /**
@@ -74,20 +75,15 @@ PhysicsGenerator.createShape = function(object, type)
 	switch (geometry.type)
 	{
 	case "BoxGeometry":
-	case "BoxBufferGeometry":
 		return PhysicsGenerator.createBoxShape(geometry);
 	case "CylinderGeometry":
-	case "CylinderBufferGeometry":
 		return PhysicsGenerator.createCylinderShape(geometry);
 	case "PlaneGeometry":
-	case "PlaneBufferGeometry":
 		return PhysicsGenerator.createPlaneShape(geometry);
 	case "SphereGeometry":
-	case "SphereBufferGeometry":
 		return PhysicsGenerator.createSphereShape(geometry);
 	case "TubeGeometry":
 		return PhysicsGenerator.createTubeShape(geometry);
-	case "Geometry":
 	case "BufferGeometry":
 		return PhysicsGenerator.createConvexPolyhedron(object);
 	default:
@@ -283,9 +279,7 @@ PhysicsGenerator.createBoundingSphereShape = function(object)
  */
 PhysicsGenerator.createTubeShape = function(geometry)
 {
-	var tmp = new BufferGeometry();
-	tmp.fromGeometry(geometry);
-	return createTrimeshShape(tmp);
+	return createTrimeshShape(geometry);
 };
 
 /**
@@ -327,45 +321,32 @@ PhysicsGenerator.getGeometry = function(object)
 		return null;
 	}
 
-	var tmp = new Geometry();
-
-	// Apply scale (it can't easily be applied to a Shape later)
 	if (meshes.length === 1)
 	{
 		var position = new Vector3();
 		var quaternion = new TQuaternion();
 		var scale = new Vector3(1, 1, 1);
 
-		tmp = meshes[0].geometry.clone();
+		var geom = meshes[0].geometry.clone();
 		meshes[0].updateMatrixWorld();
 		meshes[0].matrixWorld.decompose(position, quaternion, scale);
 
-		return tmp.scale(scale.x, scale.y, scale.z);
+		return geom.scale(scale.x, scale.y, scale.z);
 	}
-	// If more than one mesh found merge into single geometry
 	else
 	{
-		var combined = new Geometry();
-		var mesh = meshes.pop();
+		var geometries = [];
 
-		// Recursively merge geometry, preserving local transforms
-		while (mesh !== undefined)
+		for (var i = 0; i < meshes.length; i++)
 		{
+			var mesh = meshes[i];
 			mesh.updateMatrixWorld();
-
-			if (mesh.geometry instanceof BufferGeometry)
-			{
-				tmp.fromBufferGeometry(mesh.geometry);
-				combined.merge(tmp, mesh.matrixWorld);
-			}
-			else
-			{
-				combined.merge(mesh.geometry, mesh.matrixWorld);
-			}
-
-			mesh = meshes.pop();
+			var cloned = mesh.geometry.clone();
+			cloned.applyMatrix4(mesh.matrixWorld);
+			geometries.push(cloned);
 		}
 
+		var combined = mergeGeometries(geometries);
 		var matrix = new Matrix4();
 		matrix.scale(object.scale);
 		combined.applyMatrix4(matrix);
@@ -382,11 +363,6 @@ PhysicsGenerator.getGeometry = function(object)
  */
 PhysicsGenerator.getVertices = function(geometry)
 {
-	if (geometry instanceof Geometry)
-	{
-		geometry = new BufferGeometry().fromGeometry(geometry);
-	}
-
 	return geometry.attributes.position.array;
 };
 

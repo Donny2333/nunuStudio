@@ -1,4 +1,4 @@
-import {PerspectiveCamera as TPerspectiveCamera, Object3D, Math as TMath} from "three";
+import {PerspectiveCamera as TPerspectiveCamera, Object3D, MathUtils as TMath} from "three";
 import {RenderPass} from "../../postprocessing/RenderPass.js";
 import {EffectComposer} from "../../postprocessing/EffectComposer.js";
 import {Scene} from "../Scene.js";
@@ -40,69 +40,21 @@ import {Viewport} from "./Viewport.js";
  */
 function PerspectiveCamera(fov, aspect, near, far)
 {
-	/**
-	 * Camera viewport indicates where the image is drawn on the screen.
-	 * 
-	 * @property viewport
-	 * @type {Viewport}
-	 */
-	this.viewport = new Viewport();
-	
-	TPerspectiveCamera.call(this, fov, aspect, near, far);
+	var instance = Reflect.construct(TPerspectiveCamera, [fov, aspect, near, far], new.target || PerspectiveCamera);
 
-	this.name = "camera";
+	instance.viewport = new Viewport();
+	instance.name = "camera";
+	instance.clearColor = true;
+	instance.clearDepth = true;
+	instance.clearStencil = true;
+	instance.order = 0;
+	instance.composer = new EffectComposer();
 
-	/**
-	 * Clear screen color flag.
-	 * 
-	 * @property clearColor
-	 * @default false
-	 * @type {boolean}
-	 */
-	this.clearColor = true;
-
-	/**
-	 * Clear depth flag.
-	 * 
-	 * @property clearDepth
-	 * @default false
-	 * @type {boolean}
-	 */
-	this.clearDepth = true;
-
-	/**
-	 * Clear stencil buffer flag.
-	 * 
-	 * @property clearDepth
-	 * @default false
-	 * @type {boolean}
-	 */
-	this.clearStencil = true;
-
-	/**
-	 * Camera draw order preference.
-	 * 
-	 * If more than one camera has the same order value the draw order is undefined for those cameras.
-	 * 
-	 * @property order
-	 * @default 0
-	 * @type {number}
-	 */
-	this.order = 0;
-
-	/**
-	 * Effect composed of this camera. Is used to render the scene to the screen and apply effects.
-	 *
-	 * It is inialized with a RenderPass attached to it.
-	 * 
-	 * @property composer
-	 * @type {EffectComposer}
-	 */
-	this.composer = new EffectComposer();
-	
 	var renderPass = new RenderPass();
 	renderPass.renderToScreen = true;
-	this.composer.addPass(renderPass);
+	instance.composer.addPass(renderPass);
+
+	return instance;
 }
 
 PerspectiveCamera.prototype = Object.create(TPerspectiveCamera.prototype);
@@ -191,7 +143,7 @@ PerspectiveCamera.prototype.updateProjectionMatrix = function()
 	}
 
 	this.projectionMatrix.makePerspective(left, left + width, top, top - height, this.near, this.far);
-	this.projectionMatrixInverse.getInverse(this.projectionMatrix);
+	this.projectionMatrixInverse.copy(this.projectionMatrix).invert();
 };
 
 PerspectiveCamera.prototype.toJSON = function(meta)

@@ -1,4 +1,4 @@
-import {Group, Color, HemisphereLight, SphereBufferGeometry, ShaderMaterial, BackSide, Mesh, Object3D} from "three";
+import {Group, Color, HemisphereLight, SphereGeometry, ShaderMaterial, BackSide, Mesh, Object3D} from "three";
 import {MathUtils} from "../../utils/MathUtils.js";
 import {DirectionalLight} from "../lights/DirectionalLight.js";
 import SkyFragmentShader from "./sky_fragment.glsl";
@@ -21,11 +21,11 @@ import SkyVertexShader from "./sky_vertex.glsl";
  * @module Lights
  */
 function Sky(autoUpdate, dayTime, sunDistance, time)
-{	
-	Group.call(this);
+{
+	var instance = Reflect.construct(Group, [], new.target || Sky);
 
-	this.name = "sky";
-	this.type = "Sky";
+	instance.name = "sky";
+	instance.type = "Sky";
 	
 	/**
 	 * Array with top sky colors.
@@ -33,7 +33,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property colorTop
 	 * @type {Array}
 	 */
-	this.colorTop = [new Color(0x77b3fb), new Color(0x0076ff), new Color(0x035bb6), new Color(0x002439)];
+	instance.colorTop = [new Color(0x77b3fb), new Color(0x0076ff), new Color(0x035bb6), new Color(0x002439)];
 
 	/**
 	 * Array with bottom sky colors.
@@ -41,7 +41,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property colorBottom
 	 * @type {Array}
 	 */
-	this.colorBottom = [new Color(0xebece6), new Color(0xFFFFFF), new Color(0xfee7d7), new Color(0x0065a7)];
+	instance.colorBottom = [new Color(0xebece6), new Color(0xFFFFFF), new Color(0xfee7d7), new Color(0x0065a7)];
 
 	/**
 	 * Sun color in hex RGB.
@@ -50,7 +50,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @type {number}
 	 * @default 0xFFFFAA
 	 */
-	this.sunColor = 0xFFFFAA;
+	instance.sunColor = 0xFFFFAA;
 
 	/**
 	 * Sun color intensity.
@@ -58,7 +58,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property intensity
 	 * @type {number}
 	 */
-	this.intensity = 0.3;
+	instance.intensity = 0.3;
 
 	/**
 	 * Moon color in hex RGB.
@@ -67,7 +67,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @type {number}
 	 * @default 0x5555BB
 	 */
-	this.moonColor = 0x5555BB;
+	instance.moonColor = 0x5555BB;
 
 	/**
 	 * Hemisphere light used to match ambient ligth with sky color.
@@ -75,11 +75,11 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property hemisphere
 	 * @type {HemisphereLight}
 	 */
-	this.hemisphere = new HemisphereLight(0x3284ff, 0xffcc7f, 0.5);
-	this.hemisphere.name = "hemisphere";
-	this.hemisphere.locked = true;
-	this.hemisphere.matrixAutoUpdate = false;
-	this.add(this.hemisphere);
+	instance.hemisphere = new HemisphereLight(0x3284ff, 0xffcc7f, 0.3);
+	instance.hemisphere.name = "hemisphere";
+	instance.hemisphere.locked = true;
+	instance.hemisphere.matrixAutoUpdate = false;
+	instance.add(instance.hemisphere);
 
 	/**
 	 * Directional light to simulate sun light and cast shadows.
@@ -87,10 +87,10 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property sun
 	 * @type {DirectionalLight}
 	 */
-	this.sun = new DirectionalLight(this.sunColor, this.intensity);
-	this.sun.castShadow = true;
-	this.sun.locked = true;
-	this.add(this.sun);
+	instance.sun = new DirectionalLight(instance.sunColor, instance.intensity);
+	instance.sun.castShadow = true;
+	instance.sun.locked = true;
+	instance.add(instance.sun);
 
 	// Uniforms
 	var uniforms =
@@ -101,10 +101,10 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 		exponent: {type: "f", value: 0.2}
 	};
 	
-	uniforms.topColor.value.copy(this.hemisphere.color);
+	uniforms.topColor.value.copy(instance.hemisphere.color);
 
 	// Sky
-	var geometry = new SphereBufferGeometry(1.5e4, 16, 16);
+	var geometry = new SphereGeometry(5e4, 32, 32);
 	var material = new ShaderMaterial(
 		{
 			vertexShader: SkyVertexShader,
@@ -119,14 +119,14 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property sky
 	 * @type {Mesh}
 	 */
-	this.sky = new Mesh(geometry, material);
-	this.sky.locked = true;
-	this.sky.matrixAutoUpdate = false;
-	this.sky.name = "sky";
-	this.add(this.sky);
+	instance.sky = new Mesh(geometry, material);
+	instance.sky.locked = true;
+	instance.sky.matrixAutoUpdate = false;
+	instance.sky.name = "sky";
+	instance.add(instance.sky);
 
 	// Override sky raycast function
-	this.sky.raycast = function()
+	instance.sky.raycast = function()
 	{
 		return null;
 	};
@@ -138,7 +138,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @default true
 	 * @type {boolean}
 	 */
-	this.autoUpdate = autoUpdate !== undefined ? autoUpdate : true;
+	instance.autoUpdate = autoUpdate !== undefined ? autoUpdate : true;
 
 	/**
 	 * Sun distance.
@@ -146,7 +146,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property sunDistance
 	 * @type {number}
 	 */
-	this.sunDistance = sunDistance !== undefined ? sunDistance : 100;
+	instance.sunDistance = sunDistance !== undefined ? sunDistance : 100;
 
 	/**
 	 * Day time in seconds.
@@ -154,7 +154,7 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property dayTime
 	 * @type {number}
 	 */
-	this.dayTime = dayTime !== undefined ? dayTime : 120;
+	instance.dayTime = dayTime !== undefined ? dayTime : 120;
 
 	/**
 	 * Current day time in seconds.
@@ -162,9 +162,11 @@ function Sky(autoUpdate, dayTime, sunDistance, time)
 	 * @property time
 	 * @type {number}
 	 */
-	this.time = time !== undefined ? time : 75;
+	instance.time = time !== undefined ? time : 75;
 	
-	this.updateSky();
+	instance.updateSky();
+
+	return instance;
 }
 
 Sky.prototype = Object.create(Group.prototype);

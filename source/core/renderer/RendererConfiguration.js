@@ -1,4 +1,4 @@
-import {PCFSoftShadowMap, NoToneMapping, WebGLRenderer} from "three";
+import {PCFSoftShadowMap, NoToneMapping, SRGBColorSpace, WebGLRenderer} from "three";
 
 /**
  * Renderer configuration stores all the WebGL renderer related parameters.
@@ -138,14 +138,6 @@ function RendererConfiguration(options)
 	this.sortObjects = true;
 
 	/**
-	 * Gamma factor applied to the image.
-	 *
-	 * @property gammaFactor
-	 * @type {number}
-	 */
-	this.gammaFactor = 2.0;
-
-	/**
 	 * Shader precision. Can be "highp", "mediump" or "lowp". Defaults to "highp" if supported by the device.
 	 *
 	 * @property precision
@@ -192,14 +184,6 @@ function RendererConfiguration(options)
 	 * @type {boolean}
 	 */
 	this.logarithmicDepthBuffer = false;
-
-	/**
-	 * Whether to use physically correct lighting mode.
-	 *
-	 * @property physicallyCorrectLights
-	 * @type {boolean}
-	 */
-	this.physicallyCorrectLights = false;
 
 	/**
 	 * Defines whether material shader programs are checked for errors during compilation and linkage process.
@@ -325,8 +309,7 @@ RendererConfiguration.prototype.apply = function(renderer)
 	renderer.debug.checkShaderErrors = this.checkShaderErrors;
 	renderer.sortObjects = this.sortObjects;
 
-	renderer.gammaFactor = this.gammaFactor;
-	renderer.physicallyCorrectLights = this.physicallyCorrectLights;
+	renderer.outputColorSpace = SRGBColorSpace;
 
 	renderer.maxMorphTargets = this.maxMorphTargets;
 	renderer.maxMorphNormals = this.maxMorphNormals;
@@ -350,14 +333,12 @@ RendererConfiguration.prototype.toJSON = function()
 		toneMappingExposure: this.toneMappingExposure,
 		sortObjects: this.sortObjects,
 		checkShaderErrors: this.checkShaderErrors,
-		gammaFactor: this.gammaFactor,
 		precision: this.precision,
 		alpha: this.alpha,
 		premultipliedAlpha: this.premultipliedAlpha,
 		preserveDrawingBuffer: this.preserveDrawingBuffer,
 		powerPreference: this.powerPreference,
 		logarithmicDepthBuffer: this.logarithmicDepthBuffer,
-		physicallyCorrectLights: this.physicallyCorrectLights,
 		maxMorphTargets: this.maxMorphTargets,
 		maxMorphNormals: this.maxMorphNormals
 	};
@@ -380,14 +361,12 @@ RendererConfiguration.prototype.fromJSON = function(data)
 	this.toneMappingExposure = data.toneMappingExposure;
 	this.sortObjects = data.sortObjects;
 	this.checkShaderErrors = data.checkShaderErrors;
-	this.gammaFactor = data.gammaFactor;
 	this.precision = data.precision;
 	this.alpha = data.alpha;
 	this.premultipliedAlpha = data.premultipliedAlpha;
 	this.preserveDrawingBuffer = data.preserveDrawingBuffer;
 	this.powerPreference = data.powerPreference;
 	this.logarithmicDepthBuffer = data.logarithmicDepthBuffer;
-	this.physicallyCorrectLights = data.physicallyCorrectLights;
 	this.maxMorphTargets = data.maxMorphTargets;
 	this.maxMorphNormals = data.maxMorphNormals;
 };

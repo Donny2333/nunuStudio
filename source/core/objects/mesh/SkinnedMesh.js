@@ -15,14 +15,16 @@ import {SkinnedMesh as TSkinnedMesh, Object3D} from "three";
  */
 function SkinnedMesh(geometry, material)
 {
-	TSkinnedMesh.call(this, geometry, material);
+	var instance = Reflect.construct(TSkinnedMesh, [geometry, material], new.target || SkinnedMesh);
 
-	this.name = "skinned";
+	instance.name = "skinned";
 
-	this.receiveShadow = true;
-	this.castShadow = true;
+	instance.receiveShadow = true;
+	instance.castShadow = true;
 
-	this.skeleton = null;
+	instance.skeleton = null;
+
+	return instance;
 }
 
 SkinnedMesh.prototype = Object.create(TSkinnedMesh.prototype);

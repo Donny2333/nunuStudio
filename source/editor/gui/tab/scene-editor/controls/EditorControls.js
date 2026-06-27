@@ -10,15 +10,9 @@ import {Keyboard} from "../../../../../core/input/Keyboard.js";
  */
 function EditorControls()
 {
-	Group.call(this);
-
-	/**
-	 * Camera object attached to this controls.
-	 *
-	 * @property camera
-	 * @type {Object3D}
-	 */
-	this.camera = null;
+	var instance = Reflect.construct(Group, [], new.target || EditorControls);
+	instance.camera = null;
+	return instance;
 }
 
 EditorControls.prototype = Object.create(Group.prototype);

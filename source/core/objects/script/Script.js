@@ -22,10 +22,10 @@ import * as NUNU from "../../Main.js";
  */
 function Script(code, mode)
 {
-	Group.call(this);
+	var instance = Reflect.construct(Group, [], new.target || Script);
 
-	this.type = "Script";
-	this.name = "script";
+	instance.type = "Script";
+	instance.name = "script";
 
 	/**
 	 * Source code attached to the script, by default it is a Javacript source but other languages can be implemented.
@@ -61,7 +61,7 @@ function Script(code, mode)
 	 * @property code
 	 * @type {string}
 	 */
-	this.code = code !== undefined ? code : Script.DEFAULT;
+	instance.code = code !== undefined ? code : Script.DEFAULT;
 
 	/**
 	 * Mode indicates how to include external javascripts files into the script.
@@ -77,7 +77,7 @@ function Script(code, mode)
 	 * @property mode
 	 * @type {number}
 	 */
-	this.mode = mode !== undefined ? mode : Script.APPEND;
+	instance.mode = mode !== undefined ? mode : Script.APPEND;
 
 	/**
 	 * Compiled function used during runtime.
@@ -87,7 +87,7 @@ function Script(code, mode)
 	 * @attribute script
 	 * @type {Function}
 	 */
-	this.script = {};
+	instance.script = {};
 
 	/**
 	 * Reference to the program object.
@@ -97,7 +97,7 @@ function Script(code, mode)
 	 * @property program
 	 * @type {Program}
 	 */
-	this.program = null;
+	instance.program = null;
 
 	/**
 	 * Reference to the scene where the script is placed.
@@ -107,7 +107,9 @@ function Script(code, mode)
 	 * @property scene
 	 * @type {Scene}
 	 */
-	this.scene = null;
+	instance.scene = null;
+
+	return instance;
 }
 
 Script.prototype = Object.create(Group.prototype);
@@ -549,7 +551,7 @@ Script.prototype.createContextObject = function()
 	{
 		math[i] = window.Math[i];
 	}
-	Object.assign(math, THREE.Math);
+	Object.assign(math, THREE.MathUtils);
 
 	Object.assign(context,
 		{

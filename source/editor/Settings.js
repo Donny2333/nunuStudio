@@ -119,7 +119,8 @@ Settings.prototype.loadDefault = function()
 		mouseMoveSpeed: 0.001,
 		mouseWheelSensitivity: 0.0005,
 		cameraRotationCube: true,
-		cameraRotationCubeSize: 120
+		cameraRotationCubeSize: 120,
+		showObjectIcons: false
 	};
 
 	// Render

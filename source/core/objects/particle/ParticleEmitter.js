@@ -17,57 +17,31 @@ import {ParticleEmitterControl} from "./core/ParticleEmitterControl.js";
  */
 function ParticleEmitter(group, emitter)
 {
-	/**
-	 * Particle group instance.
-	 * 
-	 * @property group
-	 * @type {ParticleGroup}
-	 */
-	this.group = new ParticleGroup(group !== undefined ? group : ParticleEmitter.defaultGroup);
+	var _group = new ParticleGroup(group !== undefined ? group : ParticleEmitter.defaultGroup);
+	var _emitter = new ParticleEmitterControl(emitter !== undefined ? emitter : ParticleEmitter.defaultEmitter);
+	_group.addEmitter(_emitter);
 
-	/**
-	 * Emitter instance.
-	 * 
-	 * Emitter has attributes that can be used to controll the particle system
-	 * 
-	 * @property emitter
-	 * @type {ParticleEmitterControl}
-	 */
-	this.emitter = new ParticleEmitterControl(emitter !== undefined ? emitter : ParticleEmitter.defaultEmitter);
-	this.group.addEmitter(this.emitter);
+	var instance = Reflect.construct(Points, [_group.geometry, _group.material], new.target || ParticleEmitter);
 
-	Points.call(this, this.group.geometry, this.group.material);
+	instance.group = _group;
+	instance.emitter = _emitter;
+	instance.type = "ParticleEmiter";
+	instance.name = "particle";
+	instance.frustumCulled = false;
+	instance.dynamicEmitter = false;
+	instance.clock = new Clock();
+	instance.temp = new Vector4();
 
-	this.type = "ParticleEmiter";
-	this.name = "particle";
-	this.frustumCulled = false;
-
-	/**
-	 * A dynamic particle emmiter ignores the position in its transform and applies it directly to the emitter origin.
-	 *
-	 * @property dinamicEmitter
-	 * @type {boolean} 
-	 */
-	this.dynamicEmitter = false;
-
-	this.clock = new Clock();
-	this.temp = new Vector4();
-
-	/**
-	 * Texture attached to the group of this particle emitter.
-	 *
-	 * @property texture
-	 * @type {Texture} 
-	 */
-	var self = this;
-	Object.defineProperties(this,
+	Object.defineProperties(instance,
 		{
 			texture:
 		{
-			get: function() {return self.group.texture;},
-			set: function(value) {self.group.texture = value;}
+			get: function() {return instance.group.texture;},
+			set: function(value) {instance.group.texture = value;}
 		}
 		});
+
+	return instance;
 }
 
 /**

@@ -96,17 +96,6 @@ function RendererConfigurationFormSnippet(form, object)
 	this.form.nextRow();
 
 	// Logaritmic depth
-	this.form.addText(Locale.physicallyCorrectLights).setAltText(Locale.hintPhysicallyCorrectLights);
-	this.physicallyCorrectLights = new CheckBox(this.form);
-	this.physicallyCorrectLights.size.set(18, 18);
-	this.physicallyCorrectLights.setOnChange(function()
-	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "physicallyCorrectLights", self.physicallyCorrectLights.getValue()), updateRenderers));
-	});
-	this.form.add(this.physicallyCorrectLights);
-	this.form.nextRow();
-
-	// Logaritmic depth
 	this.form.addText(Locale.logarithmicDepthBuffer).setAltText(Locale.hintLogarithmicDepthBuffer);
 	this.logarithmicDepthBuffer = new CheckBox(this.form);
 	this.logarithmicDepthBuffer.size.set(18, 18);
@@ -214,19 +203,6 @@ function RendererConfigurationFormSnippet(form, object)
 	this.form.add(this.shadowsAutoUpdate);
 	this.form.nextRow();
 
-	// Gamma
-	this.form.addText(Locale.gammaFactor);
-	this.gammaFactor = new NumberBox(this.form);
-	this.gammaFactor.size.set(60, 18);
-	this.gammaFactor.setRange(0.0, Number.MAX_SAFE_INTEGER);
-	this.gammaFactor.setStep(0.1);
-	this.gammaFactor.setOnChange(function()
-	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "gammaFactor", self.gammaFactor.getValue()), updateRenderers));
-	});
-	this.form.add(this.gammaFactor);
-	this.form.nextRow();
-	
 	// Power preference
 	this.form.addText(Locale.powerPreference).setAltText(Locale.hintPowerPreference);
 	this.powerPreference = new DropdownList(this.form);
@@ -314,14 +290,12 @@ RendererConfigurationFormSnippet.prototype.updateValues = function()
 	this.toneMapping.setValue(this.object.toneMapping);
 	this.toneMappingExposure.setValue(this.object.toneMappingExposure);
 	this.sortObjects.setValue(this.object.sortObjects);
-	this.gammaFactor.setValue(this.object.gammaFactor);
 	this.precision.setValue(this.object.precision);
 	this.alpha.setValue(this.object.alpha);
 	this.premultipliedAlpha.setValue(this.object.premultipliedAlpha);
 	this.preserveDrawingBuffer.setValue(this.object.preserveDrawingBuffer);
 	this.powerPreference.setValue(this.object.powerPreference);
 	this.logarithmicDepthBuffer.setValue(this.object.logarithmicDepthBuffer);
-	this.physicallyCorrectLights.setValue(this.object.physicallyCorrectLights);
 	this.checkShaderErrors.setValue(this.object.checkShaderErrors);
 };
 

@@ -25,227 +25,38 @@ import {Script} from "./script/Script.js";
  */
 function Program()
 {
-	ResourceManager.call(this);
+	var instance = Reflect.construct(ResourceManager, [], new.target || Program);
 
-	this.type = "Program";
+	instance.type = "Program";
 
-	this.matrixAutoUpdate = false;
+	instance.matrixAutoUpdate = false;
 
-	/**
-	 * Runtime instance used to communication between app and the host webpage.
-	 *
-	 * Inside the editor communication with the app is simulated on the debug console.
-	 *
-	 * @property app
-	 * @type {App}
-	 */
-	this.app = null;
+	instance.app = null;
+	instance.name = "program";
+	instance.description = "";
+	instance.author = "";
+	instance.version = "0.0.0";
+	instance.lockPointer = false;
+	instance.handlePixelRatio = true;
+	instance.ar = true;
+	instance.vr = true;
+	instance.vrScale = 1.0;
+	instance.rendererConfig = new RendererConfiguration();
+	instance.targetConfig = new TargetConfig();
+	instance.defaultScene = null;
+	instance.defaultCamera = null;
+	instance.scene = null;
+	instance.keyboard = null;
+	instance.mouse = null;
+	instance.renderer = null;
+	instance.canvas = null;
+	instance.division = null;
+	instance.manager = new EventManager();
+	instance.clock = new Clock();
+	instance.xrEnabled = false;
+	instance.xrMode = Program.XR_NONE;
 
-	/**
-	 * Program name.
-	 *
-	 * @property name
-	 * @type {string}
-	 */
-	this.name = "program";
-
-	/**
-	 * Program description, will be stamped when the app is exported.
-	 *
-	 * @property description
-	 * @type {string}
-	 */
-	this.description = "";
-
-	/**
-	 * Program author, will be stamped when the app is exported.
-	 *
-	 * @property author
-	 * @type {string}
-	 */
-	this.author = "";
-
-	/**
-	 * Program version should adhere to semantic versioning, but it is not mandatory.
-	 *
-	 * @property version
-	 * @type {string}
-	 * @default "0.0.0"
-	 */
-	this.version = "0.0.0";
-
-	/**
-	 * Flag to control pointer locking, when set true the cursor is locked into the application window.
-	 *
-	 * @property lockPointer
-	 * @type {boolean}
-	 * @default false
-	 */
-	this.lockPointer = false;
-
-	/**
-	 * Flag to indicate if the runtime should handle device pixel ratio.
-	 *
-	 * If set false the runtime will ignore the pixel ratio, and use in browser coordinates.
-	 *
-	 * @property handlePixelRatio
-	 * @type {boolean}
-	 */
-	this.handlePixelRatio = true;
-
-	/**
-	 * Enable augmented reality flag to allow the application to run using AR using WebXR.
-	 *
-	 * @property ar
-	 * @type {boolean}
-	 */
-	this.ar = true;
-
-	/**
-	 * Enable virtual reality flag, allows the application to run in VR mode.
-	 *
-	 * VR mode can only be enabled if the system and browser have support for VR using WebXR or WebVR.
-	 *
-	 * @property vr
-	 * @type {boolean}
-	 */
-	this.vr = true;
-
-	/**
-	 * Virtual reality movement scale.
-	 *
-	 * Indicates the relation between the real movement and virtual world movement.
-	 *
-	 * @property vrScale
-	 * @type {number}
-	 */
-	this.vrScale = 1.0;
-
-	/**
-	 * Renderer configuration applied to the WebGL renderer.
-	 *
-	 * @property rendererConfig
-	 * @type {RendererConfiguration}
-	 */
-	this.rendererConfig = new RendererConfiguration();
-
-	/**
-	 * Target related configurations applied when exporting the app.
-	 *
-	 * @property targetConfig
-	 * @type {TargetConfig}
-	 */
-	this.targetConfig = new TargetConfig();
-
-	/**
-	 * Scene loaded as default on startup.
-	 *
-	 * @property defaultScene
-	 * @type {Scene}
-	 */
-	this.defaultScene = null;
-
-	/**
-	 * Default camera to be used by scenes where there is no camera.
-	 *
-	 * On the editor this value is automatically set to the last editor camera point used
-	 *
-	 * @property defaultCamera
-	 * @type {Camera}
-	 */
-	this.defaultCamera = null;
-
-	/**
-	 * Scene currently running in the program, runtime variable.
-	 *
-	 * Should never be manually defined, change it using the setScene(scene) method.
-	 *
-	 * @property scene
-	 * @type {Scene}
-	 */
-	this.scene = null;
-
-	/**
-	 * Keyboard input object, runtime variable.
-	 *
-	 * @property keyboard
-	 * @type {Keyboard}
-	 */
-	this.keyboard = null;
-
-	/**
-	 * Mouse input object, runtime variable.
-	 *
-	 * @property mouse
-	 * @type {Mouse}
-	 */
-	this.mouse = null;
-
-	/**
-	 * Renderer being used during runtime.
-	 *
-	 * @property renderer
-	 * @type {WebGLRenderer}
-	 */
-	this.renderer = null;
-
-	/**
-	 * Canvas being used to draw content by the renderer.
-	 *
-	 * This canvas is where the WebGL rendering context was created.
-	 *
-	 * @property canvas
-	 * @type {Element}
-	 */
-	this.canvas = null;
-
-	/**
-	 * DOM Division element that can be used to add html content to the app.
-	 *
-	 * All content added to this division should be manually removed before the app exits.
-	 *
-	 * @property division
-	 * @type {Element}
-	 */
-	this.division = null;
-
-	/**
-	 * Event manager used to attach and manage program events.
-	 *
-	 * Its created on initialization and destroys on disposal, scripts can attach events to the manager safely during runtime.
-	 *
-	 * @property manager
-	 * @type {EventManager}
-	 */
-	this.manager = new EventManager();
-
-	/**
-	 * Clock object used to measure times between frames.
-	 *
-	 * The time measured is passed down to the scene and its children elements.
-	 *
-	 * @property clock
-	 * @type {Clock}
-	 */
-	this.clock = new Clock();
-
-	/**
-	 * WebX runtime control, true when the app is running in an XR environment.
-	 *
-	 * XR environment can be VR or AR only one of them can be used at a time.
-	 *
-	 * @property xrEnabled
-	 * @type {boolean}
-	 */
-	this.xrEnabled = false;
-
-	/**
-	 * Indicates the XR mode currently active.
-	 *
-	 * @property xrMode
-	 * @type {number}
-	 */
-	this.xrMode = Program.XR_NONE;
+	return instance;
 }
 
 /**
@@ -276,6 +87,7 @@ Program.XR_VR = 1;
 Program.XR_AR = 2;
 
 Program.prototype = Object.create(ResourceManager.prototype);
+Program.prototype.constructor = Program;
 
 /**
  * Select initial scene and initialize that scene.

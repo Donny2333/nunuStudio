@@ -1,4 +1,5 @@
-import {Vector3, Geometry, BufferGeometry, Quaternion} from "three";
+import {Vector3, BufferGeometry, Quaternion} from "three";
+import {mergeVertices} from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 /**
  * The twist modifier applies a tornado twist like deformation to the geometry.
@@ -9,14 +10,6 @@ import {Vector3, Geometry, BufferGeometry, Quaternion} from "three";
  */
 function TwistModifier(angle, start, end)
 {
-	/**
-	 * Indicates if the output should be a buffer geometry or a regular geometry.
-	 *
-	 * @attribute bufferGeometry
-	 * @type {boolean}
-	 */
-	this.bufferGeometry = false;
-
 	/**
 	 * Twist direction vector, the twist is performed around this vector in its direction.
 	 *
@@ -36,8 +29,6 @@ function TwistModifier(angle, start, end)
 	/**
 	 * Start height of the twist rotation.
 	 *
-	 * This values is in geometry coordinate space.
-	 *
 	 * @attribute start
 	 * @type {number}
 	 */
@@ -45,8 +36,6 @@ function TwistModifier(angle, start, end)
 
 	/*
 	 * End height of the twist rotation.
-	 *
-	 * This values is in geometry coordinate space.
 	 *
 	 * @attribute end
 	 * @type {number}
@@ -58,57 +47,43 @@ function TwistModifier(angle, start, end)
  * Apply the modifier to a geometry object, creates a new geometry with the result.
  *
  * @method modify
- * @param {Geometry | BufferGeometry} geometry Geometry to be transformed.
- * @return {Geometry | BufferGeometry} Result geometry after applying the modifier.
+ * @param {BufferGeometry} geometry Geometry to be transformed.
+ * @return {BufferGeometry} Result geometry after applying the modifier.
  */
 TwistModifier.prototype.modify = function(geometry)
 {
-	// Convert the geometry from buffer geometry to regular geometry
-	if (geometry instanceof BufferGeometry)
-	{
-		geometry = new Geometry();
-		geometry.fromBufferGeometry(Editor.selection[0].geometry);
-		geometry.mergeVertices();
-	}
-	else
-	{
-		geometry = geometry.clone();
-	}
+	geometry = mergeVertices(geometry.clone());
 
-	// Apply transformation to all vertices in the geometry.
+	var positionAttr = geometry.getAttribute("position");
 	var quaternion = new Quaternion();
 
-	for (var i = 0; i < geometry.vertices.length; i++)
+	for (var i = 0; i < positionAttr.count; i++)
 	{
-		var y = geometry.vertices[i].y;
+		var y = positionAttr.getY(i);
 
 		if (y >= this.start && y <= this.end)
 		{
-			// Calculate angle to apply interpolated from start to end
 			var interpolate = (y - this.start) / (this.end - this.start);
-
 			quaternion.setFromAxisAngle(this.direction, this.angle * interpolate);
-			geometry.vertices[i].applyQuaternion(quaternion);
+
+			var v = new Vector3(positionAttr.getX(i), positionAttr.getY(i), positionAttr.getZ(i));
+			v.applyQuaternion(quaternion);
+			positionAttr.setXYZ(i, v.x, v.y, v.z);
 		}
 		else if (y > this.end)
 		{
 			quaternion.setFromAxisAngle(this.direction, this.angle);
-			geometry.vertices[i].applyQuaternion(quaternion);
+
+			var v = new Vector3(positionAttr.getX(i), positionAttr.getY(i), positionAttr.getZ(i));
+			v.applyQuaternion(quaternion);
+			positionAttr.setXYZ(i, v.x, v.y, v.z);
 		}
 	}
 
+	positionAttr.needsUpdate = true;
 	geometry.computeVertexNormals();
-	geometry.verticesNeedUpdate = true;
 
-	// Convert to buffer geometry if necessary
-	if (this.bufferGeometry)
-	{
-		var bufferGeometry = new BufferGeometry();
-		bufferGeometry.fromGeometry(geometry);
-		return bufferGeometry;
-	}
-
-	return geometry;	 
+	return geometry;
 };
 
 export {TwistModifier};

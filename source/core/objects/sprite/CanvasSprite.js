@@ -11,25 +11,12 @@ import {CanvasTexture} from "../../texture/CanvasTexture.js";
  */
 function CanvasSprite()
 {
-	/**
-	 * Texture where the text is drawn to.
-	 * 
-	 * @attribute texture
-	 * @type {CanvasTexture}
-	 */
-	this.texture = new CanvasTexture();
-
-	/**
-	 * DOM canvas to draw.
-	 * 
-	 * @attribute canvas
-	 * @type {Element}
-	 */
-	this.canvas = this.texture.image;
+	var _texture = new CanvasTexture();
+	var _canvas = _texture.image;
 
 	var material = new SpriteMaterial(
 		{
-			map: this.texture,
+			map: _texture,
 			color: 0xFFFFFF,
 			transparent: true,
 			alphaTest: 0.4,
@@ -38,29 +25,27 @@ function CanvasSprite()
 			sizeAttenuation: true
 		});
 
-	Sprite.call(this, material);
+	var instance = Reflect.construct(Sprite, [material], new.target || CanvasSprite);
 
-	this.name = "sprite";
-	this.type = "CanvasSprite";
+	instance.texture = _texture;
+	instance.canvas = _canvas;
+	instance.name = "sprite";
+	instance.type = "CanvasSprite";
 
-	Object.defineProperties(this,
+	Object.defineProperties(instance,
 		{
-		/**
-		 * Size attenuation indicates how the sprite should be scaled relative to the camera.
-		 *
-		 * @attribute sizeAttenuation
-		 * @type {number}
-		 */
 			sizeAttenuation:
 		{
-			get: function() {return this.material.sizeAttenuation;},
+			get: function() {return instance.material.sizeAttenuation;},
 			set: function(value)
 			{
-				this.material.sizeAttenuation = value;
-				this.material.needsUpdate = true;
+				instance.material.sizeAttenuation = value;
+				instance.material.needsUpdate = true;
 			}
 		}
 		});
+
+	return instance;
 }	
 
 CanvasSprite.prototype = Object.create(Sprite.prototype);

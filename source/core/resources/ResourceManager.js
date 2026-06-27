@@ -20,11 +20,13 @@ import {Audio} from "./Audio.js";
  */
 function ResourceManager()
 {
-	Object3D.call(this);
-	ResourceContainer.call(this);
+	var instance = Reflect.construct(Object3D, [], new.target || ResourceManager);
+	ResourceContainer.call(instance);
+	return instance;
 }
 
 ResourceManager.prototype = Object.create(Object3D.prototype);
+ResourceManager.prototype.constructor = ResourceManager;
 Object.assign(ResourceManager.prototype, ResourceContainer.prototype);
 
 /**

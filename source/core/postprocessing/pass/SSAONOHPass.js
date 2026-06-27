@@ -1,4 +1,4 @@
-import {DepthTexture, UnsignedShortType, NearestFilter, MeshNormalMaterial, NoBlending, WebGLRenderTarget, LinearFilter, RGBAFormat, ShaderMaterial, UniformsUtils, DstColorFactor, ZeroFactor, AddEquation, DstAlphaFactor, Vector3, Math as TMath, DataTexture, LuminanceFormat, FloatType, RepeatWrapping, CustomBlending} from "three";
+import {DepthTexture, UnsignedShortType, NearestFilter, MeshNormalMaterial, NoBlending, WebGLRenderTarget, LinearFilter, RGBAFormat, ShaderMaterial, UniformsUtils, DstColorFactor, ZeroFactor, AddEquation, DstAlphaFactor, Vector3, MathUtils as TMath, DataTexture, RedFormat, FloatType, RepeatWrapping, CustomBlending} from "three";
 import {SSAOShader, SSAOBlurShader} from "three/examples/jsm/shaders/SSAOShader";
 import {CopyShader} from "three/examples/jsm/shaders/CopyShader";
 import {Pass} from "../Pass.js";
@@ -228,7 +228,7 @@ SSAONOHPass.prototype.generateRandomKernelRotations = function()
 		data[i] = simplex.noise3d(x, y, z);
 	}
 
-	this.noiseTexture = new DataTexture(data, width, height, LuminanceFormat, FloatType);
+	this.noiseTexture = new DataTexture(data, width, height, RedFormat, FloatType);
 	this.noiseTexture.wrapS = RepeatWrapping;
 	this.noiseTexture.wrapT = RepeatWrapping;
 	this.noiseTexture.needsUpdate = true;
@@ -265,7 +265,7 @@ SSAONOHPass.prototype.render = function(renderer, writeBuffer, readBuffer, delta
 	this.ssaoMaterial.uniforms["cameraNear"].value = camera.near;
 	this.ssaoMaterial.uniforms["cameraFar"].value = camera.far;
 	this.ssaoMaterial.uniforms["cameraProjectionMatrix"].value.copy(camera.projectionMatrix);
-	this.ssaoMaterial.uniforms["cameraInverseProjectionMatrix"].value.getInverse(camera.projectionMatrix); 
+	this.ssaoMaterial.uniforms["cameraInverseProjectionMatrix"].value.copy(camera.projectionMatrix).invert(); 
 	this.renderPass(renderer, this.ssaoMaterial, this.ssaoRenderTarget);
 
 	// Render blur
