@@ -1144,11 +1144,12 @@ SceneEditor.prototype.render = function()
 		}
 	});
 
-	// Dynamic near-plane: scale near with camera height so close-up map doesn't clip
+	// Dynamic near/far planes: scale with camera height to prevent Z-fighting
 	if (hasTileset && camera.isPerspectiveCamera)
 	{
-		var height = Math.abs(camera.position.y);
-		camera.near = Math.max(height * 0.001, 0.0001);
+		var height = Math.max(Math.abs(camera.position.y), 1);
+		camera.near = Math.max(height * 0.001, 0.01);
+		camera.far = Math.max(height * 100, 1000);
 		camera.updateProjectionMatrix();
 	}
 
@@ -1180,6 +1181,9 @@ SceneEditor.prototype.render = function()
 	{
 		renderer.render(this.scene, this.camera);
 	}
+
+	// Capture render info after main scene render, before helper overlays reset it
+	var sceneInfo = {calls: renderer.info.render.calls, triangles: renderer.info.render.triangles};
 
 	if (this.canvas.cssRenderer !== null)
 	{
@@ -1278,8 +1282,7 @@ SceneEditor.prototype.render = function()
 			this._statsFrames = 0;
 			this._statsTime = now;
 		}
-		var info = renderer.info;
-		this.statsElement.textContent = this._statsFps + " FPS\n" + info.render.calls + " draws\n" + info.render.triangles + " tris";
+		this.statsElement.textContent = this._statsFps + " FPS\n" + sceneInfo.calls + " draws\n" + sceneInfo.triangles + " tris";
 	}
 	else
 	{

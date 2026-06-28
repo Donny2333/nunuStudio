@@ -2,7 +2,8 @@ import {Object3D, Vector3} from "three";
 import {TilesRenderer} from "3d-tiles-renderer";
 import {GeneratedSurfacePlugin, XYZTilesOverlay, UpdateOnChangePlugin} from "3d-tiles-renderer/plugins";
 
-var DEFAULT_URL = "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}";
+var SATELLITE_URL = "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}";
+var HYBRID_URL = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}";
 
 /**
  * Loads an image via <img> element (bypasses CORS fetch restriction),
@@ -81,13 +82,22 @@ function TilesetObject(url)
 	instance.type = "TilesetObject";
 	instance.name = "tileset";
 
-	instance.url = url || DEFAULT_URL;
+	instance.url = url || SATELLITE_URL;
 	instance.centerLat = 39.9;
 	instance.centerLon = 116.4;
 	instance.zoom = 19;
 	instance.minZoom = 1;
 	instance.maxZoom = 19;
 	instance.errorTarget = 1;
+
+	/**
+	 * Whether label overlay is enabled on the map tiles.
+	 *
+	 * @property labelsEnabled
+	 * @type {boolean}
+	 * @default true
+	 */
+	instance.labelsEnabled = false;
 
 	instance._tiles = null;
 
@@ -99,12 +109,21 @@ function TilesetObject(url)
 TilesetObject.prototype = Object.create(Object3D.prototype);
 TilesetObject.prototype.constructor = TilesetObject;
 
+TilesetObject.prototype._getEffectiveUrl = function()
+{
+	if (this.url !== SATELLITE_URL && this.url !== HYBRID_URL)
+	{
+		return this.url;
+	}
+	return this.labelsEnabled ? HYBRID_URL : SATELLITE_URL;
+};
+
 TilesetObject.prototype._initTiles = function()
 {
 	var self = this;
 
 	var overlay = new XYZTilesOverlay({
-		url: this.url,
+		url: this._getEffectiveUrl(),
 		levels: 20,
 		tileDimension: 256
 	});
@@ -163,6 +182,12 @@ TilesetObject.prototype._updatePosition = function()
 	// Set group position to move Beijing to parent origin
 	var scale = 500;
 	this._tiles.group.position.set(-posX * scale, 0, posY * scale);
+};
+
+TilesetObject.prototype.setLabelsEnabled = function(enabled)
+{
+	this.labelsEnabled = enabled;
+	this.loadTiles();
 };
 
 TilesetObject.prototype.updateFromCamera = function(camera, renderer)
@@ -278,6 +303,7 @@ TilesetObject.prototype.toJSON = function(meta)
 	data.object.centerLon = this.centerLon;
 	data.object.zoom = this.zoom;
 	data.object.errorTarget = this.errorTarget;
+	data.object.labelsEnabled = this.labelsEnabled;
 
 	return data;
 };

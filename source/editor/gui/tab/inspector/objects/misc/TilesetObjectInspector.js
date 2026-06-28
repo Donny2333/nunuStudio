@@ -3,6 +3,7 @@ import {Editor} from "../../../../../Editor.js";
 import {TextBox} from "../../../../../components/input/TextBox.js";
 import {NumberBox} from "../../../../../components/input/NumberBox.js";
 import {Slider} from "../../../../../components/input/Slider.js";
+import {CheckBox} from "../../../../../components/input/CheckBox.js";
 import {ButtonText} from "../../../../../components/buttons/ButtonText.js";
 import {ObjectInspector} from "../ObjectInspector.js";
 import {SceneEditor} from "../../../scene-editor/SceneEditor.js";
@@ -80,6 +81,19 @@ function TilesetObjectInspector(parent, object)
 	this.form.add(this.errorTarget);
 	this.form.nextRow();
 
+	// Labels overlay
+	this.form.addText("Labels");
+	this.labelsEnabled = new CheckBox(this.form);
+	this.labelsEnabled.size.set(18, 18);
+	this.labelsEnabled.setOnChange(function()
+	{
+		var enabled = self.labelsEnabled.getValue();
+		Editor.addAction(new ChangeAction(self.object, "labelsEnabled", enabled));
+		self.object.loadTiles();
+	});
+	this.form.add(this.labelsEnabled);
+	this.form.nextRow();
+
 	// Load button
 	this.load = new ButtonText(this.form);
 	this.load.setText("Load Tiles");
@@ -106,7 +120,7 @@ function TilesetObjectInspector(parent, object)
 				self.object.getWorldPosition(controls.tempVector);
 				controls.center.copy(controls.tempVector);
 				controls.distance = TilesetObjectInspector.zoomToDistance(self.object.zoom);
-				controls.orientation.set(0, 1.2);
+				controls.orientation.set(0, Math.PI / 2);
 				controls.updateControls();
 				break;
 			}
@@ -132,6 +146,7 @@ TilesetObjectInspector.prototype.updateInspector = function()
 	this.lon.setValue(this.object.centerLon);
 	this.zoom.setValue(this.object.zoom);
 	this.errorTarget.setValue(this.object.errorTarget);
+	this.labelsEnabled.setValue(this.object.labelsEnabled);
 };
 
 export {TilesetObjectInspector};

@@ -64,6 +64,10 @@ function SkyInspector(parent, object)
 
 	// Clouds
 	this.form.addText("Clouds");
+	this.form.nextRow();
+
+	// Enable
+	this.form.addText("Enable");
 	this.cloudsEnabled = new CheckBox(this.form);
 	this.cloudsEnabled.size.set(18, 18);
 	this.cloudsEnabled.setOnChange(function()
@@ -84,6 +88,30 @@ function SkyInspector(parent, object)
 		Editor.addAction(new ChangeAction(self.object, "coverage", self.coverage.getValue()));
 	});
 	this.form.add(this.coverage);
+	this.form.nextRow();
+
+	// Cloud animate
+	this.form.addText("Animate");
+	this.cloudsAnimate = new CheckBox(this.form);
+	this.cloudsAnimate.size.set(18, 18);
+	this.cloudsAnimate.setOnChange(function()
+	{
+		Editor.addAction(new ChangeAction(self.object, "cloudsAnimate", self.cloudsAnimate.getValue()));
+	});
+	this.form.add(this.cloudsAnimate);
+	this.form.nextRow();
+
+	// Cloud animate speed
+	this.form.addText("Speed");
+	this.cloudsAnimateSpeed = new Slider(this.form);
+	this.cloudsAnimateSpeed.size.set(160, 18);
+	this.cloudsAnimateSpeed.setStep(0.001);
+	this.cloudsAnimateSpeed.setRange(-0.05, 0.05);
+	this.cloudsAnimateSpeed.setOnChange(function()
+	{
+		Editor.addAction(new ChangeAction(self.object, "cloudsAnimateSpeed", self.cloudsAnimateSpeed.getValue()));
+	});
+	this.form.add(this.cloudsAnimateSpeed);
 	this.form.nextRow();
 
 	// Day time animation
@@ -248,6 +276,8 @@ SkyInspector.prototype.updateInspector = function()
 
 	this.cloudsEnabled.setValue(this.object.cloudsEnabled);
 	this.coverage.setValue(this.object.coverage);
+	this.cloudsAnimate.setValue(this.object.cloudsAnimate);
+	this.cloudsAnimateSpeed.setValue(this.object.cloudsAnimateSpeed);
 
 	this.autoUpdate.setValue(this.object.autoUpdate);
 	this.dayTime.setValue(this.object.dayTime);

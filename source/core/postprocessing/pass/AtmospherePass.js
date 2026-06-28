@@ -1,9 +1,22 @@
-import {HalfFloatType, Vector2, Vector3, Matrix4} from "three";
-import {EffectComposer as PPEffectComposer, EffectPass as PPEffectPass, RenderPass as PPRenderPass} from "postprocessing";
+import {HalfFloatType, NoToneMapping, Uniform, Vector2, Vector3, Matrix4} from "three";
+import {Effect, EffectComposer as PPEffectComposer, EffectPass as PPEffectPass, NormalPass as PPNormalPass, RenderPass as PPRenderPass, ToneMappingEffect, ToneMappingMode} from "postprocessing";
 import {AerialPerspectiveEffect} from "@takram/three-atmosphere";
 import {CloudsEffect, LocalWeather, CloudShape, CloudShapeDetail, Turbulence} from "@takram/three-clouds";
 import {STBNLoader, DEFAULT_STBN_URL} from "@takram/three-geospatial";
 import {Pass} from "../Pass.js";
+
+var exposureCompensationShader = "uniform float compensation;\nvoid mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {\n\toutputColor = vec4(inputColor.rgb * compensation, inputColor.a);\n}";
+
+function ExposureCompensationEffect(compensation)
+{
+	var instance = Reflect.construct(Effect, ["ExposureCompensation", exposureCompensationShader, {
+		uniforms: new Map([["compensation", new Uniform(compensation)]])
+	}], ExposureCompensationEffect);
+	return instance;
+}
+
+ExposureCompensationEffect.prototype = Object.create(Effect.prototype);
+ExposureCompensationEffect.prototype.constructor = ExposureCompensationEffect;
 
 /**
  * Atmosphere post-processing pass that applies aerial perspective scattering
@@ -27,6 +40,8 @@ function AtmospherePass()
 
 	this.cloudsEnabled = false;
 	this.coverage = 0.5;
+	this.cloudsAnimate = true;
+	this.cloudsAnimateSpeed = 0.001;
 	this.cloudLayers = null;
 
 	this._effect = null;
@@ -64,6 +79,8 @@ AtmospherePass.prototype.render = function(renderer, writeBuffer, readBuffer, de
 	// Update scene and camera on internal render pass each frame
 	this._renderPass.mainScene = scene;
 	this._renderPass.mainCamera = camera;
+	this._normalPass.mainScene = scene;
+	this._normalPass.mainCamera = camera;
 
 	// Sync from Sky object in scene
 	if (scene)
@@ -87,6 +104,15 @@ AtmospherePass.prototype.render = function(renderer, writeBuffer, readBuffer, de
 			this._cloudsEffect.worldToECEFMatrix.copy(this.worldToECEFMatrix);
 			this._cloudsEffect.mainCamera = camera;
 			this._cloudsEffect.coverage = this.coverage;
+
+			if (this.cloudsAnimate)
+			{
+				this._cloudsEffect.localWeatherVelocity.set(this.cloudsAnimateSpeed, 0);
+			}
+			else
+			{
+				this._cloudsEffect.localWeatherVelocity.set(0, 0);
+			}
 
 			if (this.cloudLayers)
 			{
@@ -140,7 +166,55 @@ AtmospherePass.prototype.render = function(renderer, writeBuffer, readBuffer, de
 		}
 	}
 
-	this._ppComposer.render(delta);
+	// Disable renderer tone mapping — handled by our ToneMappingEffect pass
+	var prevToneMapping = renderer.toneMapping;
+	var prevExposure = renderer.toneMappingExposure;
+	renderer.toneMapping = NoToneMapping;
+	renderer.toneMappingExposure = 10;
+
+	// Hide Sky mesh — AerialPerspectiveEffect renders its own HDR sky
+	var hiddenMeshes = [];
+	if (scene)
+	{
+		scene.traverse(function(child)
+		{
+			if (child.type === "Sky")
+			{
+				child._skyMesh.visible = false;
+				hiddenMeshes.push(child._skyMesh);
+			}
+		});
+	}
+
+	// Save scene render stats before PPEffectComposer resets renderer.info
+	var savedCalls = renderer.info.render.calls;
+	var savedTriangles = renderer.info.render.triangles;
+	var prevAutoReset = renderer.info.autoReset;
+	renderer.info.autoReset = false;
+
+	try
+	{
+		this._ppComposer.render(delta);
+	}
+	finally
+	{
+		renderer.info.autoReset = prevAutoReset;
+
+		// Ensure saved pre-PPComposer stats are included in totals
+		if (renderer.info.render.calls < savedCalls)
+		{
+			renderer.info.render.calls += savedCalls;
+			renderer.info.render.triangles += savedTriangles;
+		}
+
+		for (var i = 0; i < hiddenMeshes.length; i++)
+		{
+			hiddenMeshes[i].visible = true;
+		}
+
+		renderer.toneMapping = prevToneMapping;
+		renderer.toneMappingExposure = prevExposure;
+	}
 };
 
 AtmospherePass.prototype._syncFromScene = function(scene)
@@ -154,6 +228,8 @@ AtmospherePass.prototype._syncFromScene = function(scene)
 			self.worldToECEFMatrix.copy(child._skyMaterial.uniforms.worldToECEFMatrix.value);
 			self.cloudsEnabled = child.cloudsEnabled;
 			self.coverage = child.coverage;
+			self.cloudsAnimate = child.cloudsAnimate;
+			self.cloudsAnimateSpeed = child.cloudsAnimateSpeed;
 			self.cloudLayers = child.cloudLayers;
 		}
 	});
@@ -167,16 +243,21 @@ AtmospherePass.prototype._initEffect = function(renderer, scene, camera)
 	this._effect = new AerialPerspectiveEffect(camera, {
 		transmittance: this.transmittance,
 		inscatter: this.inscatter,
-		correctAltitude: false,
-		sky: false
+		correctAltitude: true,
+		sky: true,
+		sunLight: false,
+		skyLight: false,
+		albedoScale: 2 / Math.PI
 	});
 
 	// Clouds effect
-	this._cloudsEffect = new CloudsEffect(camera, {resolutionScale: 0.5});
+	this._cloudsEffect = new CloudsEffect(camera, {resolutionScale: 1});
 	this._cloudsEffect.skipRendering = false;
-	this._cloudsEffect.correctAltitude = false;
+	this._cloudsEffect.correctAltitude = true;
 	this._cloudsEffect.coverage = this.coverage;
-	this._cloudsEffect.qualityPreset = "medium";
+	this._cloudsEffect.qualityPreset = "high";
+	this._cloudsEffect.lightShafts = true;
+	this._cloudsEffect.shadowFarScale = 0.25;
 	this._cloudsEffect.localWeatherTexture = new LocalWeather();
 	this._cloudsEffect.shapeTexture = new CloudShape();
 	this._cloudsEffect.shapeDetailTexture = new CloudShapeDetail();
@@ -217,6 +298,16 @@ AtmospherePass.prototype._initEffect = function(renderer, scene, camera)
 	this._renderPass = new PPRenderPass(scene, camera);
 	this._ppComposer.addPass(this._renderPass);
 
+	this._normalPass = new PPNormalPass(scene, camera);
+	this._ppComposer.addPass(this._normalPass);
+	this._effect.normalBuffer = this._normalPass.texture;
+
+	// Pre-divide scene by exposure so after ToneMappingEffect multiplies by exposure,
+	// terrain returns to original brightness while HDR clouds get the full boost
+	this._compensationEffect = new ExposureCompensationEffect(1.0 / 10.0);
+	this._compensationPass = new PPEffectPass(camera, this._compensationEffect);
+	this._ppComposer.addPass(this._compensationPass);
+
 	this._cloudsEffectPass = new PPEffectPass(camera, this._cloudsEffect);
 	this._cloudsEffectPass.enabled = this.cloudsEnabled && this._stbnReady;
 	this._ppComposer.addPass(this._cloudsEffectPass);
@@ -224,6 +315,9 @@ AtmospherePass.prototype._initEffect = function(renderer, scene, camera)
 	this._atmosphereEffectPass = new PPEffectPass(camera, this._effect);
 	this._atmosphereEffectPass.enabled = this._texturesReady;
 	this._ppComposer.addPass(this._atmosphereEffectPass);
+
+	this._toneMappingPass = new PPEffectPass(camera, new ToneMappingEffect({mode: ToneMappingMode.AGX}));
+	this._ppComposer.addPass(this._toneMappingPass);
 
 	this._initialized = true;
 };
@@ -268,6 +362,8 @@ AtmospherePass.prototype.toJSON = function()
 	data.inscatter = this.inscatter;
 	data.cloudsEnabled = this.cloudsEnabled;
 	data.coverage = this.coverage;
+	data.cloudsAnimate = this.cloudsAnimate;
+	data.cloudsAnimateSpeed = this.cloudsAnimateSpeed;
 	data.cloudLayers = this.cloudLayers;
 
 	return data;

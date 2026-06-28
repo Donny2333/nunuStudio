@@ -591,6 +591,14 @@ ObjectLoader.prototype.parseObject = function(data)
 			{
 				object.coverage = data.coverage;
 			}
+			if (data.cloudsAnimate !== undefined)
+			{
+				object.cloudsAnimate = data.cloudsAnimate;
+			}
+			if (data.cloudsAnimateSpeed !== undefined)
+			{
+				object.cloudsAnimateSpeed = data.cloudsAnimateSpeed;
+			}
 			if (data.cloudLayers !== undefined)
 			{
 				object.cloudLayers = data.cloudLayers;
@@ -853,6 +861,7 @@ ObjectLoader.prototype.parseObject = function(data)
 			if (data.centerLat !== undefined) { object.centerLat = data.centerLat; }
 			if (data.centerLon !== undefined) { object.centerLon = data.centerLon; }
 			if (data.zoom !== undefined) { object.zoom = data.zoom; }
+			if (data.labelsEnabled !== undefined) { object.setLabelsEnabled(data.labelsEnabled); }
 			break;
 
 		case "LightProbe":

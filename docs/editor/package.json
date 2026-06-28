@@ -10,6 +10,7 @@
 		"doc": "docs"
 	},
 	"scripts": {
+		"postinstall": "patch-package",
 		"start-page": "cd ./source/page && npm run start",
 		"start": "webpack-dev-server --hot --config webpack.dev.js",
 		"start-https": "webpack-dev-server --hot --inline --host 0.0.0.0 --https --config webpack.dev.js",
@@ -46,6 +47,8 @@
 		"@as-com/pson": "3.0.1",
 		"@esotericsoftware/spine-core": "4.0.14",
 		"@esotericsoftware/spine-threejs": "4.0.14",
+		"@takram/three-atmosphere": "^0.19.1",
+		"@takram/three-clouds": "^0.7.6",
 		"@takram/three-geospatial": "^0.9.1",
 		"@tweenjs/tween.js": "18.6.4",
 		"3d-tiles-renderer": "^0.4.28",
@@ -60,6 +63,7 @@
 		"jshint": "2.12.0",
 		"jszip": "3.7.1",
 		"math-ds": "1.2.1",
+		"postprocessing": "^6.39.1",
 		"sparse-octree": "6.1.0",
 		"tern": "0.24.3",
 		"three": "^0.170.0",
@@ -90,6 +94,7 @@
 		"http-server": "14.1.1",
 		"jsdoc": "3.6.6",
 		"nwjs-builder-phoenix": "1.15.0",
+		"patch-package": "^8.0.1",
 		"raw-loader": "4.0.2",
 		"style-loader": "3.3.2",
 		"uglifyjs-webpack-plugin": "2.2.0",

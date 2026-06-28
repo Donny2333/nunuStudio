@@ -98,7 +98,7 @@ function Sky(autoUpdate, dayTime, time)
 	 * @type {boolean}
 	 * @default false
 	 */
-	instance.cloudsEnabled = true;
+	instance.cloudsEnabled = false;
 
 	/**
 	 * Cloud coverage amount (0 = clear sky, 1 = overcast).
@@ -107,7 +107,25 @@ function Sky(autoUpdate, dayTime, time)
 	 * @type {number}
 	 * @default 0.5
 	 */
-	instance.coverage = 0.5;
+	instance.coverage = 0.35;
+
+	/**
+	 * Whether cloud animation (wind movement) is enabled.
+	 *
+	 * @property cloudsAnimate
+	 * @type {boolean}
+	 * @default true
+	 */
+	instance.cloudsAnimate = true;
+
+	/**
+	 * Cloud animation speed multiplier (-0.5 to 0.5).
+	 *
+	 * @property cloudsAnimateSpeed
+	 * @type {number}
+	 * @default 0.001
+	 */
+	instance.cloudsAnimateSpeed = 0.001;
 
 	/**
 	 * Cloud layer configurations. Array of 4 layers mapped to RGBA texture channels.
@@ -491,6 +509,8 @@ Sky.prototype.toJSON = function(meta)
 
 	data.object.cloudsEnabled = this.cloudsEnabled;
 	data.object.coverage = this.coverage;
+	data.object.cloudsAnimate = this.cloudsAnimate;
+	data.object.cloudsAnimateSpeed = this.cloudsAnimateSpeed;
 	data.object.cloudLayers = this.cloudLayers;
 
 	return data;
