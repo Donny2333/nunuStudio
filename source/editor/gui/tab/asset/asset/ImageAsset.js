@@ -1,5 +1,5 @@
 import {Locale} from "../../../../locale/LocaleManager.js";
-import {Nunu} from "../../../../../core/Nunu.js";
+import {IStudio} from "../../../../../core/IStudio.js";
 import {FileSystem} from "../../../../../core/FileSystem.js";
 import {RemoveResourceAction} from "../../../../history/action/resources/RemoveResourceAction.js";
 import {ChangeAction} from "../../../../history/action/ChangeAction.js";
@@ -54,7 +54,7 @@ function ImageAsset(parent)
 
 		context.addOption(Locale.export, function()
 		{
-			if (Nunu.runningOnDesktop())
+			if (IStudio.runningOnDesktop())
 			{
 				FileSystem.chooseFile(function(files)
 				{

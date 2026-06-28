@@ -262,7 +262,7 @@ RendererConfiguration.prototype.createRenderer = function(canvas)
 		}
 		catch (e)
 		{
-			console.warn("nunuStudio: Failed to create WebGL2 context", e);
+			console.warn("iStudio: Failed to create WebGL2 context", e);
 		}
 	}
 

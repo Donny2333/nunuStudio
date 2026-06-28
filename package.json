@@ -1,11 +1,11 @@
 {
-	"name": "nunu-studio",
-	"description": "nunuStudio is a web based game engine for 3D and 2D game development with support for VR and AR",
+	"name": "istudio",
+	"description": "iStudio is a web based game engine for 3D and 2D game development with support for VR and AR",
 	"main": "index.html",
 	"version": "0.98.47",
 	"author": "Tentone",
 	"license": "MIT",
-	"homepage": "https://www.nunustudio.org",
+	"homepage": "",
 	"directories": {
 		"doc": "docs"
 	},
@@ -30,7 +30,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/tentone/nunuStudio.git"
+		"url": ""
 	},
 	"keywords": [
 		"webgl",
@@ -40,7 +40,7 @@
 		"webxr"
 	],
 	"bugs": {
-		"url": "https://github.com/tentone/nunuStudio/issues"
+		"url": ""
 	},
 	"dependencies": {
 		"@as-com/pson": "3.0.1",
@@ -119,7 +119,7 @@
 	},
 	"build": {
 		"nwVersion": "0.51.2",
-		"appId": "io.tentone.nunustudio",
+		"appId": "io.tentone.istudio",
 		"output": "./build/desktop/",
 		"outputPattern": "${NAME}_${VERSION}_${PLATFORM}_${ARCH}",
 		"ffmpegIntegration": false,
@@ -139,15 +139,15 @@
 			"build"
 		],
 		"win": {
-			"productName": "nunuStudio",
+			"productName": "iStudio",
 			"companyName": "tentone",
 			"copyright": "MIT",
 			"icon": "files/icon.ico",
 			"versionStrings": {}
 		},
 		"mac": {
-			"name": "nunuStudio",
-			"displayName": "nunuStudio",
+			"name": "iStudio",
+			"displayName": "iStudio",
 			"companyName": "tentone",
 			"copyright": "MIT"
 		}

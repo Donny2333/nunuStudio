@@ -6,7 +6,7 @@ import {CubeTexture} from "../../../../core/texture/CubeTexture.js";
 import {CanvasTexture} from "../../../../core/texture/CanvasTexture.js";
 import {TextFile} from "../../../../core/resources/TextFile.js";
 import {Image} from "../../../../core/resources/Image.js";
-import {Nunu} from "../../../../core/Nunu.js";
+import {IStudio} from "../../../../core/IStudio.js";
 import {FileSystem} from "../../../../core/FileSystem.js";
 import {Loaders} from "../../../Loaders.js";
 import {AddResourceAction} from "../../../history/action/resources/AddResourceAction.js";
@@ -78,7 +78,7 @@ function AssetExplorerMenu(parent)
 	}, Global.FILE_PATH + "icons/misc/audio.png");
 	
 	// Spine Animation
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		menu.addOption(Locale.spineAnimation, function()
 		{

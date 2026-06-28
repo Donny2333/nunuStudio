@@ -5,7 +5,7 @@ import * as CANNON from "cannon-es";
 import {Scene} from "../Scene.js";
 import {Program} from "../Program.js";
 import {FileSystem} from "../../FileSystem.js";
-import * as NUNU from "../../Main.js";
+import * as ISTUDIO from "../../Main.js";
 
 /**
  * Script objects are used to control other objects present in the scene.
@@ -410,7 +410,7 @@ Script.prototype.compileCode = function(code, onReady)
 
 			code += "\nfunction include(name)\
 			{\
-				console.warn(\"nunuStudio: Script running in append mode, \" + name + \" cannot be included in runtime.\");\
+				console.warn(\"iStudio: Script running in append mode, \" + name + \" cannot be included in runtime.\");\
 			}";
 		}
 		// Declare include method
@@ -428,7 +428,7 @@ Script.prototype.compileCode = function(code, onReady)
 					}\
 					else\
 					{\
-						console.warn(\"nunuStudio: Javascript file \" + name + \" not found.\");\
+						console.warn(\"iStudio: Javascript file \" + name + \" not found.\");\
 					}\
 				}\
 				else\
@@ -512,7 +512,7 @@ Script.prototype.compileCode = function(code, onReady)
 		catch (e)
 		{
 			this.script = {};
-			console.warn("nunuStudio: Error initializing script code", e);
+			console.warn("iStudio: Error initializing script code", e);
 			throw new Error("Error initializing script code");
 		}
 
@@ -524,7 +524,7 @@ Script.prototype.compileCode = function(code, onReady)
 	catch (e)
 	{
 		this.script = {};
-		console.warn("nunuStudio: Error compiling script code", e);
+		console.warn("iStudio: Error compiling script code", e);
 		throw new Error("Error compiling script code");
 	}
 };
@@ -543,7 +543,7 @@ Script.prototype.createContextObject = function()
 
 	Object.assign(context, CANNON);
 	Object.assign(context, THREE);
-	Object.assign(context, NUNU);
+	Object.assign(context, ISTUDIO);
 
 	var mathProps = ["E", "LN2", "LN10", "LOG2E", "LOG10E", "PI", "SQRT1_2", "SQRT2", "abs", "acos", "acosh", "asin", "asinh", "atan", "atan2", "atanh", "cbrt", "ceil", "clz32", "cos", "cosh", "exp", "expm1", "floor", "fround", "hypot", "imul", "log", "log1p", "log2", "log10", "max", "min", "pow", "random", "round", "sign", "sin", "sinh", "sqrt", "tan", "tanh", "trunc"];
 	var math = {};

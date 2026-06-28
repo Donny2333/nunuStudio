@@ -41,7 +41,7 @@ ProjectExporters.exportCordovaProject = function(dir)
 	FileSystem.makeDirectory(dir);
 	FileSystem.copyFile(Global.RUNTIME_PATH + "logo.png", dir + "/logo.png");
 	FileSystem.copyFile(Global.RUNTIME_PATH + "cordova.html", dir + "/index.html");
-	FileSystem.copyFile(Global.RUNTIME_PATH + "nunu.min.js", dir + "/nunu.min.js");
+	FileSystem.copyFile(Global.RUNTIME_PATH + "istudio.min.js", dir + "/istudio.min.js");
 	Editor.saveProgram(dir + "/app.nsp", true, true, true);
 };
 
@@ -62,7 +62,7 @@ ProjectExporters.exportWebProject = function(dir)
 	FileSystem.copyFile(Global.RUNTIME_PATH + "fullscreen.png", dir + "/fullscreen.png");
 	FileSystem.copyFile(Global.RUNTIME_PATH + "logo.png", dir + "/logo.png");
 	FileSystem.copyFile(Global.RUNTIME_PATH + "index.html", dir + "/index.html");
-	FileSystem.copyFile(Global.RUNTIME_PATH + "nunu.min.js", dir + "/nunu.min.js");
+	FileSystem.copyFile(Global.RUNTIME_PATH + "istudio.min.js", dir + "/istudio.min.js");
 	Editor.saveProgram(dir + "/app.nsp", true, true, true);
 };
 
@@ -79,7 +79,7 @@ ProjectExporters.exportWebProjectZip = function(fname)
 {
 	var zip = new JSZip();
 	zip.file("index.html", FileSystem.readFile(Global.RUNTIME_PATH + "index.html"));
-	zip.file("nunu.min.js", FileSystem.readFile(Global.RUNTIME_PATH + "nunu.min.js"));
+	zip.file("istudio.min.js", FileSystem.readFile(Global.RUNTIME_PATH + "istudio.min.js"));
 
 	var pson = new StaticPair();
 	var data = pson.toArrayBuffer(Editor.program.toJSON());
@@ -228,7 +228,7 @@ ProjectExporters.exportAndroid = function(mode, outputPath)
 	var output = system.execSync("cordova create temp " + packageName + " " + name).toString();
 	if (output.indexOf("Creating") === -1)
 	{
-		console.error("nunuStudio: Failed to create cordova project.");
+		console.error("iStudio: Failed to create cordova project.");
 	}
 
 	ProjectExporters.exportCordovaProject(ProjectExporters.TEMP + "/www");
@@ -239,7 +239,7 @@ ProjectExporters.exportAndroid = function(mode, outputPath)
 		var output = system.execSync("cordova platform add android", {cwd: ProjectExporters.TEMP}).toString();
 		if (output.indexOf("Android project created") === -1)
 		{
-			console.error("nunuStudio: Failed to create cordova android project.");
+			console.error("iStudio: Failed to create cordova android project.");
 		}
 
 		// Check requirements
@@ -248,14 +248,14 @@ ProjectExporters.exportAndroid = function(mode, outputPath)
 		if (output.indexOf("Java JDK: installed") === -1)
 		{
 			Editor.alert("Missing java JDK (get it at http:// www.oracle.com/technetwork/java/javase/downloads/index.html)");
-			console.error("nunuStudio: Missing java JDK (get it at http:// www.oracle.com/technetwork/java/javase/downloads/index.html)");
+			console.error("iStudio: Missing java JDK (get it at http:// www.oracle.com/technetwork/java/javase/downloads/index.html)");
 			clenanUp();
 			return;
 		}
 		if (output.indexOf("Android SDK: installed true") === -1)
 		{
 			Editor.alert("Missing Android SDK (get it at https:// developer.android.com/studio/)");
-			console.error("nunuStudio: Missing Android SDK (get it at https:// developer.android.com/studio/)");
+			console.error("iStudio: Missing Android SDK (get it at https:// developer.android.com/studio/)");
 			clenanUp();
 			return;
 		}
@@ -277,7 +277,7 @@ ProjectExporters.exportAndroid = function(mode, outputPath)
 			output = system.execSync("cordova build android", {cwd: ProjectExporters.TEMP}).toString();
 			if (output.indexOf("SUCCESSFUL") === -1)
 			{
-				console.error("nunuStudio: Failed to build android project.");
+				console.error("iStudio: Failed to build android project.");
 				clenanUp();
 				return;
 			}
@@ -286,7 +286,7 @@ ProjectExporters.exportAndroid = function(mode, outputPath)
 			output = system.execSync("cordova run android", {cwd: ProjectExporters.TEMP}).toString();
 			if (output.indexOf("SUCCESS") === -1)
 			{
-				console.error("nunuStudio: Failed to launch android application on device.");
+				console.error("iStudio: Failed to launch android application on device.");
 				clenanUp();
 				return;
 			}
@@ -297,7 +297,7 @@ ProjectExporters.exportAndroid = function(mode, outputPath)
 			output = system.execSync("cordova build android", {cwd: ProjectExporters.TEMP}).toString();
 			if (output.indexOf("SUCCESSFUL") === -1)
 			{
-				console.error("nunuStudio: Failed to build android project.");
+				console.error("iStudio: Failed to build android project.");
 				clenanUp();
 				return;
 			}
@@ -310,7 +310,7 @@ ProjectExporters.exportAndroid = function(mode, outputPath)
 			output = system.execSync("cordova build android --release -- --keystore=\"..\\android.keystore\" --storePassword=android --alias=mykey", {cwd: ProjectExporters.TEMP}).toString();
 			if (output.indexOf("SUCCESSFUL") === -1)
 			{
-				console.error("nunuStudio: Failed to build android project.");
+				console.error("iStudio: Failed to build android project.");
 				clenanUp();
 				return;
 			}

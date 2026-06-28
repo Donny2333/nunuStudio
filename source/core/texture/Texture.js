@@ -91,7 +91,7 @@ Texture.prototype.updateSource = function()
 		};
 		this.image.onerror = function()
 		{
-			console.log("nunuStudio: Failed to load image " + self.imageResource.uuid + " data.");
+			console.log("iStudio: Failed to load image " + self.imageResource.uuid + " data.");
 			self.imageResource.createSolidColor();
 			self.image.src = self.imageResource.data;
 			self.needsUpdate = true;
@@ -99,7 +99,7 @@ Texture.prototype.updateSource = function()
 	}
 	else
 	{
-		console.warn("nunuStudio: Texture imageResource is null.");
+		console.warn("iStudio: Texture imageResource is null.");
 	}
 };
 
@@ -117,7 +117,7 @@ Texture.prototype.dispose = function()
 
 /**
  * Create JSON description for texture, serializes image used in the texture
- * Texture serialization is different inside nunuStudio, the Texture class does not serialize any image data.
+ * Texture serialization is different inside iStudio, the Texture class does not serialize any image data.
  *
  * @param {Object} meta
  * @method toJSON

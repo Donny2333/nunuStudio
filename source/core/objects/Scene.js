@@ -317,7 +317,7 @@ Scene.prototype.toJSON = function(meta)
 {
 	if (!this.parent || this.parent.type !== "Program")
 	{
-		console.warn("nunuStudio: Scene is not on top level serializing as Group.");
+		console.warn("iStudio: Scene is not on top level serializing as Group.");
 
 		this.type = "Group";
 		return Object3D.prototype.toJSON.call(this, meta);

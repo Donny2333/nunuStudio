@@ -14,7 +14,7 @@
 	<script src="../assets/js/api-search.js"></script>
 	<script src="../assets/js/api-docs.js"></script>
 
-	<title>nunuStudio TwistModifier</title>
+	<title>iStudio TwistModifier</title>
 </head>
 <body class="yui3-skin-sam">
 	<div id="doc">
@@ -89,6 +89,7 @@
 									<li><a href="../classes/Image.html">Image</a></li>
 									<li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
 									<li><a href="../classes/InstancedMesh.html">InstancedMesh</a></li>
+									<li><a href="../classes/IStudio.html">IStudio</a></li>
 									<li><a href="../classes/Key.html">Key</a></li>
 									<li><a href="../classes/Keyboard.html">Keyboard</a></li>
 									<li><a href="../classes/LegacyGeometryLoader.html">LegacyGeometryLoader</a></li>
@@ -103,7 +104,6 @@
 									<li><a href="../classes/Model.html">Model</a></li>
 									<li><a href="../classes/Mouse.html">Mouse</a></li>
 									<li><a href="../classes/NodeScript.html">NodeScript</a></li>
-									<li><a href="../classes/Nunu.html">Nunu</a></li>
 									<li><a href="../classes/Object3D.html">Object3D</a></li>
 									<li><a href="../classes/ObjectLoader.html">ObjectLoader</a></li>
 									<li><a href="../classes/ObjectUtils.html">ObjectUtils</a></li>
@@ -279,9 +279,6 @@
 															<a href="#attr_angle">angle</a>
 														</li>
 														<li class="index-item attr">
-															<a href="#attr_bufferGeometry">bufferGeometry</a>
-														</li>
-														<li class="index-item attr">
 															<a href="#attr_direction">direction</a>
 														</li>
 														<li class="index-item attr">
@@ -307,7 +304,7 @@
 														</div>
 												
 														<span class="returns-inline">
-															<span class="type">Geometry | BufferGeometry</span>
+															<span class="type">BufferGeometry</span>
 														</span>
 												
 												
@@ -335,7 +332,7 @@
 															<ul class="params-list">
 																<li class="param">
 																		<code class="param-name">geometry</code>
-																		<span class="type">Geometry | BufferGeometry</span>
+																		<span class="type">BufferGeometry</span>
 												
 												
 																	<div class="param-description">
@@ -351,7 +348,7 @@
 															<h4>Returns:</h4>
 												
 															<div class="returns-description">
-																		<span class="type">Geometry | BufferGeometry</span>:
+																		<span class="type">BufferGeometry</span>:
 																	<p>Result geometry after applying the modifier.</p>
 												
 															</div>
@@ -385,33 +382,6 @@
 												
 													<div class="description">
 														<p>Twist angle of rotation, applied from the start to the end of rotation.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_bufferGeometry" class="attr item">
-													<a name="config_bufferGeometry"></a> 
-													<h3 class="name"><code>bufferGeometry</code></h3>
-													<span class="type">Boolean</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Indicates if the output should be a buffer geometry or a regular geometry.</p>
 												
 													</div>
 												
@@ -466,7 +436,6 @@
 												
 													<div class="description">
 														<p>Start height of the twist rotation.</p>
-												<p>This values is in geometry coordinate space.</p>
 												
 													</div>
 												

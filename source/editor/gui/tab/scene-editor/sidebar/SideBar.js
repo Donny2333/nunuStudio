@@ -589,7 +589,7 @@ return target.set(x, y, z);`;
 	{
 		effects.addOption(Global.FILE_PATH + "icons/platform/web.png", function()
 		{
-			Editor.addObject(new HTMLView("http://localhost/nunu-html/demo/index.html"), self.editor.scene);
+			Editor.addObject(new HTMLView("http://localhost/istudio-html/demo/index.html"), self.editor.scene);
 		}, Locale.htmlView);
 	}
 

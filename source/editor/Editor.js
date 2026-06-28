@@ -11,7 +11,7 @@ import {Scene} from "../core/objects/Scene.js";
 import {Program} from "../core/objects/Program.js";
 import {Sky} from "../core/objects/misc/Sky.js";
 import {Mesh} from "../core/objects/mesh/Mesh.js";
-import {Nunu} from "../core/Nunu.js";
+import {IStudio} from "../core/IStudio.js";
 import {ObjectLoader} from "../core/loaders/ObjectLoader.js";
 import {Keyboard} from "../core/input/Keyboard.js";
 import {FileSystem} from "../core/FileSystem.js";
@@ -57,7 +57,7 @@ function Editor() {}
 Editor.initialize = function()
 {
 	// Check WebGL Support
-	if (!Nunu.webGLAvailable())
+	if (!IStudio.webGLAvailable())
 	{
 		Editor.alert(Locale.webglNotSupported);
 		Editor.exit();
@@ -91,7 +91,7 @@ Editor.initialize = function()
 		Editor.resize();
 	});
 
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		var gui = window.require("nw.gui");
 		Editor.clipboard = gui.Clipboard.get();
@@ -109,7 +109,7 @@ Editor.initialize = function()
 		// Try to update the editor
 		if (Editor.settings.general.autoUpdate)
 		{
-			Editor.updateNunu();
+			Editor.updateApp();
 		}
 	}
 	else
@@ -120,7 +120,7 @@ Editor.initialize = function()
 		// Arguments
 		Editor.args = [];
 
-		var parameters = Nunu.getQueryParameters();
+		var parameters = IStudio.getQueryParameters();
 		for (var i in parameters)
 		{
 			Editor.args.push(parameters[i]);
@@ -458,7 +458,7 @@ Editor.isSelected = function(object)
  */
 Editor.resize = function()
 {
-	if (!Nunu.isFullscreen())
+	if (!IStudio.isFullscreen())
 	{
 		Editor.gui.updateInterface();
 	}
@@ -692,7 +692,7 @@ Editor.deleteObject = function(object)
 		// Unknown
 		else
 		{
-			console.warn("nunuStudio: Cant delete type of object.");
+			console.warn("iStudio: Cant delete type of object.");
 		}
 	}
 
@@ -1078,7 +1078,7 @@ Editor.saveProgram = function(fname, binary, keepDirectory, suppressMessage)
 	catch (e)
 	{
 		Editor.alert(Locale.errorSavingFile + "\n(" + e + ")");
-		console.error("nunuStudio: Error saving file", e);
+		console.error("iStudio: Error saving file", e);
 	}
 };
 
@@ -1164,7 +1164,7 @@ Editor.loadProgram = function(file, binary)
 		catch (e)
 		{
 			Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-			console.error("nunuStudio: Error loading file", e);
+			console.error("iStudio: Error loading file", e);
 		}
 
 		modal.destroy();
@@ -1213,7 +1213,7 @@ Editor.setOpenFile = function(file)
 	{
 		if (file instanceof window.File)
 		{
-			if (Nunu.runningOnDesktop())
+			if (IStudio.runningOnDesktop())
 			{
 				Editor.openFile = file.path;
 			}
@@ -1227,12 +1227,12 @@ Editor.setOpenFile = function(file)
 			Editor.openFile = file;
 		}
 
-		document.title = Nunu.NAME + " " + VERSION + " (" + TIMESTAMP + ") (" + Editor.openFile + ")";
+		document.title = IStudio.NAME + " " + VERSION + " (" + TIMESTAMP + ") (" + Editor.openFile + ")";
 	}
 	else
 	{
 		Editor.openFile = null;
-		document.title = Nunu.NAME + " " + VERSION + " (" + TIMESTAMP + ")";
+		document.title = IStudio.NAME + " " + VERSION + " (" + TIMESTAMP + ")";
 	}
 };
 
@@ -1276,14 +1276,14 @@ Editor.prompt = function(message, defaultValue)
 };
 
 /**
- * Try to update nunuStudio editor version using build from github repo.
+ * Try to update iStudio editor version using build from github repo.
  *
  * The version timestamp (TIMESTAMP) is parsed compared to the local timestamp.
  *
  * @static
- * @method updateNunu
+ * @method updateApp
  */
-Editor.updateNunu = function(silent)
+Editor.updateApp = function(silent)
 {
 	if (silent === undefined)
 	{
@@ -1292,7 +1292,7 @@ Editor.updateNunu = function(silent)
 
 	try
 	{
-		var url = "https:// raw.githubusercontent.com/tentone/nunuStudio/master/build/nunu.editor.min.js";
+		var url = "https:// raw.githubusercontent.com/tentone/iStudio/master/build/istudio.editor.min.js";
 
 		FileSystem.readFile(url, false, function(data)
 		{
@@ -1302,7 +1302,7 @@ Editor.updateNunu = function(silent)
 
 			if (parseInt(timestamp) > parseInt(Editor.TIMESTAMP))
 			{
-				FileSystem.writeFile("nunu.min.js", data);
+				FileSystem.writeFile("istudio.min.js", data);
 				Editor.alert(Locale.updatedRestart);
 			}
 			else
@@ -1344,7 +1344,7 @@ Editor.getRendererConfig = function()
  */
 Editor.exit = function()
 {
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		Editor.settings.store();
 

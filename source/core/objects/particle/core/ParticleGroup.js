@@ -187,7 +187,7 @@ function ParticleGroup(options)
 
 	if (this.maxParticleCount === null)
 	{
-		console.warn("nunuStudio: No maxParticleCount specified. Adding emitters after rendering will probably cause errors.");
+		console.warn("iStudio: No maxParticleCount specified. Adding emitters after rendering will probably cause errors.");
 	}
 }
 
@@ -278,19 +278,19 @@ ParticleGroup.prototype.addEmitter = function(emitter)
 	// Ensure an actual emitter instance is passed here.
 	if (emitter instanceof ParticleEmitterControl === false)
 	{
-		console.error("nunuStudio: emitter argument must be instance of ParticleEmitterControl.", emitter);
+		console.error("iStudio: emitter argument must be instance of ParticleEmitterControl.", emitter);
 		return;
 	}
 	// If the emitter already exists as a member of this group, then stop here, we don't want to add it again.
 	else if (this.emitterIDs.indexOf(emitter.uuid) > -1)
 	{
-		console.error("nunuStudio: ParticleEmitterControl already exists in this group.");
+		console.error("iStudio: ParticleEmitterControl already exists in this group.");
 		return;
 	}
 	// And finally, if the emitter is a member of another group, don't add it to this group.
 	else if (emitter.group !== null)
 	{
-		console.error("nunuStudio: ParticleEmitterControl already belongs to another group.");
+		console.error("iStudio: ParticleEmitterControl already belongs to another group.");
 		return;
 	}
 
@@ -304,7 +304,7 @@ ParticleGroup.prototype.addEmitter = function(emitter)
 	// Emit a warning if the emitter being added will exceed the buffer sizes specified.
 	if (this.maxParticleCount !== null && this.particleCount > this.maxParticleCount)
 	{
-		console.warn("nunuStudio: ParticleGroup maxParticleCount exceeded. Requesting", this.particleCount, "particles, can support only", this.maxParticleCount);
+		console.warn("iStudio: ParticleGroup maxParticleCount exceeded. Requesting", this.particleCount, "particles, can support only", this.maxParticleCount);
 	}
 
 	// Set the particlesPerSecond value (PPS) on the emitter. It's used to determine how many particles to release on a per-frame basis.
@@ -382,14 +382,14 @@ ParticleGroup.prototype.removeEmitter = function(emitter)
 	// Ensure an actual emitter instance is passed here.
 	if (emitter instanceof ParticleEmitterControl === false)
 	{
-		console.error("nunuStudio: emitter argument must be instance of ParticleEmitterControl. Was provided with:", emitter);
+		console.error("iStudio: emitter argument must be instance of ParticleEmitterControl. Was provided with:", emitter);
 		return;
 	}
 
 	// Issue an error if the emitter isn't a member of this group.
 	else if (emitterIndex === -1)
 	{
-		console.error("nunuStudio: ParticleEmitterControl does not exist in this group. Will not remove.");
+		console.error("iStudio: ParticleEmitterControl does not exist in this group. Will not remove.");
 		return;
 	}
 
@@ -469,7 +469,7 @@ ParticleGroup.prototype.releaseIntoPool = function(emitter)
 {
 	if (emitter instanceof ParticleEmitterControl === false)
 	{
-		console.error("nunuStudio: Argument is not instanceof ParticleEmitterControl:", emitter);
+		console.error("iStudio: Argument is not instanceof ParticleEmitterControl:", emitter);
 		return;
 	}
 
@@ -532,7 +532,7 @@ ParticleGroup.prototype._triggerSingleEmitter = function(pos)
 
 	if (emitter === null)
 	{
-		console.log("nunuStudio: ParticleGroup pool ran out.");
+		console.log("iStudio: ParticleGroup pool ran out.");
 		return;
 	}
 

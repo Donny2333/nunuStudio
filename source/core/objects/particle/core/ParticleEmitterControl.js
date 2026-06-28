@@ -93,7 +93,7 @@ function ParticleEmitterControl(options)
 
 	if (options.onParticleSpawn)
 	{
-		console.warn("nunuStudio: onParticleSpawn has been removed. Please set properties directly to alter values at runtime.");
+		console.warn("iStudio: onParticleSpawn has been removed. Please set properties directly to alter values at runtime.");
 	}
 
 	this.uuid = TMath.generateUUID();
@@ -883,7 +883,7 @@ ParticleEmitterControl.prototype.remove = function()
 	}
 	else
 	{
-		console.error("nunuStudio: ParticleEmitterControl does not belong to a group, cannot remove.");
+		console.error("iStudio: ParticleEmitterControl does not belong to a group, cannot remove.");
 	}
 
 	return this;

@@ -224,7 +224,7 @@ AudioEmitter.prototype.initialize = function()
 	}
 	else
 	{
-		console.warn("nunuStudio: AudioEmitter audio is null.");
+		console.warn("iStudio: AudioEmitter audio is null.");
 	}
 
 	this.setVolume(this.volume);
@@ -263,13 +263,13 @@ AudioEmitter.prototype.play = function()
 {
 	if (this.buffer === null)
 	{
-		console.warn("nunuStudio: Audio buffer not ready, audio will not play.");
+		console.warn("iStudio: Audio buffer not ready, audio will not play.");
 		return;
 	}
 
 	if (this.isPlaying)
 	{
-		console.warn("nunuStudio: Audio is already playing, its only possible to control the last playing instance.");
+		console.warn("iStudio: Audio is already playing, its only possible to control the last playing instance.");
 	}
 
 	var source = this.context.createBufferSource();

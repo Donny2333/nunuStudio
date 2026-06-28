@@ -306,7 +306,7 @@ var ShaderUtils =
 		}
 		else
 		{
-			console.warn("nunuStudio: Invalid argument types, or argument types do not match.", start, end);
+			console.warn("iStudio: Invalid argument types, or argument types do not match.", start, end);
 		}
 	},
 

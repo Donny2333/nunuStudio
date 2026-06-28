@@ -1,7 +1,7 @@
 import {Locale} from "../../../locale/LocaleManager.js";
 import {Program} from "../../../../core/objects/Program.js";
 import {PerspectiveCamera} from "../../../../core/objects/cameras/PerspectiveCamera.js";
-import {Nunu} from "../../../../core/Nunu.js";
+import {IStudio} from "../../../../core/IStudio.js";
 import {Global} from "../../../Global.js";
 import {Editor} from "../../../Editor.js";
 import {TabComponent} from "../../../components/tabs/TabComponent.js";
@@ -175,7 +175,7 @@ RunProject.prototype.setFullscreen = function(fullscreen)
 {
 	if (fullscreen)
 	{
-		Nunu.setFullscreen(true, this.element);
+		IStudio.setFullscreen(true, this.element);
 
 		this.position.set(0, 0);
 		this.size.set(window.screen.width, window.screen.height);
@@ -183,7 +183,7 @@ RunProject.prototype.setFullscreen = function(fullscreen)
 	}
 	else
 	{
-		Nunu.setFullscreen(false);
+		IStudio.setFullscreen(false);
 		Editor.gui.updateInterface();
 	}
 };
@@ -279,7 +279,7 @@ RunProject.prototype.runProgram = function()
 	catch (error)
 	{
 		Editor.alert(Locale.errorRunInitialize + "\n(" + error + ")");
-		console.warn("nunuStudio: Error while initializing program.", error);
+		console.warn("iStudio: Error while initializing program.", error);
 		this.close();
 		return;
 	}
@@ -340,7 +340,7 @@ RunProject.prototype.runProgram = function()
 		catch (error)
 		{
 			Editor.alert(Locale.errorRunRender + "\n(" + error + ")");
-			console.warn("nunuStudio: Error while running program.", error);
+			console.warn("iStudio: Error while running program.", error);
 			self.close();
 			return;
 		}
@@ -352,7 +352,7 @@ RunProject.prototype.runProgram = function()
 		catch (error)
 		{
 			Editor.alert(Locale.errorRunRender + "\n(" + error + ")");
-			console.warn("nunuStudio: Error while rendering program.", error);
+			console.warn("iStudio: Error while rendering program.", error);
 			self.close();
 			return;
 		}

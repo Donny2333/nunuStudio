@@ -167,7 +167,7 @@ this.code = {
 
 持久化方式：
 - **NW.js**：读写 `config.json` 文件
-- **浏览器**：`LocalStorage.set("nunuStudio-settings")`
+- **浏览器**：`LocalStorage.set("iStudio-settings")`
 
 ## 6. Global.js — 全局常量
 

@@ -1,5 +1,5 @@
 import {REVISION} from "three";
-import {Nunu} from "../../Nunu.js";
+import {IStudio} from "../../IStudio.js";
 
 // Serialization does not serialize any image data.
 THREE.Texture.prototype.toJSON = function(meta)

@@ -22,7 +22,7 @@ import {Loaders} from "../../../Loaders.js";
 import {Locale} from "../../../locale/LocaleManager.js";
 import {Model} from "../../../../core/resources/Model.js";
 import {Mouse} from "../../../../core/input/Mouse.js";
-import {Nunu} from "../../../../core/Nunu.js";
+import {IStudio} from "../../../../core/IStudio.js";
 import {ObjectIcons} from "../../../utils/ObjectIcons.js";
 import {OrthographicCamera} from "../../../../core/objects/cameras/OrthographicCamera.js";
 import {PerspectiveCamera} from "../../../../core/objects/cameras/PerspectiveCamera.js";
@@ -56,7 +56,7 @@ import {EditorFreeControls} from "./controls/EditorFreeControls.js";
 import {WireframeHelper} from "./helpers/WireframeHelper.js";
 
 /** 
- * The scene editor is the core of the nunuStudio editor.
+ * The scene editor is the core of the iStudio editor.
  *
  * It is used to edit the scenes and apply changes to the objects using helper objects.
  *
@@ -962,7 +962,7 @@ SceneEditor.prototype.update = function()
 		}
 
 		// Lock mouse when camera is moving
-		if (Editor.settings.editor.lockMouse && Nunu.runningOnDesktop())
+		if (Editor.settings.editor.lockMouse && IStudio.runningOnDesktop())
 		{
 			if (!isEditingObject && (this.mouse.buttonJustPressed(Mouse.LEFT) || this.mouse.buttonJustPressed(Mouse.RIGHT) || this.mouse.buttonJustPressed(Mouse.MIDDLE)))
 			{
@@ -1067,7 +1067,7 @@ SceneEditor.prototype.render = function()
 {
 	if (this.canvas.renderer === null)
 	{
-		console.warn("nunuStudio: SceneEditor renderer is null.", this);
+		console.warn("iStudio: SceneEditor renderer is null.", this);
 		return;
 	}
 

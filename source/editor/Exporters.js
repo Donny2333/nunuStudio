@@ -112,7 +112,7 @@ Exporters.exportDraco = function(object)
  */
 Exporters.exportCollada = function(object, version)
 {
-	console.warn("nunuStudio: Collada export is no longer supported (ColladaExporter removed from three.js).");
+	console.warn("iStudio: Collada export is no longer supported (ColladaExporter removed from three.js).");
 };
 
 /**

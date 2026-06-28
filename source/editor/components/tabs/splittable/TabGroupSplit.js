@@ -272,7 +272,7 @@ TabGroupSplit.prototype.split = function(direction)
 	}
 	else
 	{
-		console.warn("nunuStudio: Tab is not splitable.");
+		console.warn("iStudio: Tab is not splitable.");
 	}
 };
 
@@ -318,12 +318,12 @@ TabGroupSplit.prototype.collapse = function()
 		}
 		else
 		{
-			console.warn("nunuStudio: Tab cannot be collapsed (parent is not a dual container).");
+			console.warn("iStudio: Tab cannot be collapsed (parent is not a dual container).");
 		}
 	}
 	else
 	{
-		console.warn("nunuStudio: Tab is not collapsable.");
+		console.warn("iStudio: Tab is not collapsable.");
 	}
 };
 

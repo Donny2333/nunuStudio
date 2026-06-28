@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-nunuStudio is a web-based 3D/2D game engine and visual editor built on three.js. It supports VR/AR via WebXR, runs in browsers, and can be packaged as desktop apps (NW.js) or mobile apps (Cordova).
+iStudio is a web-based 3D/2D game engine and visual editor built on three.js. It supports VR/AR via WebXR, runs in browsers, and can be packaged as desktop apps (NW.js) or mobile apps (Cordova).
 
 ## Build & Development Commands
 
@@ -16,7 +16,7 @@ npm start
 npm run build
 
 # Build individual targets
-npm run build-runtime    # core engine → dist/nunu.min.js (UMD)
+npm run build-runtime    # core engine → dist/istudio.min.js (UMD)
 npm run build-editor     # visual editor → docs/editor/
 npm run build-page       # Angular website
 npm run build-nwjs       # Desktop apps (all platforms)
@@ -38,7 +38,6 @@ npm run start-nwjs       # Run in NW.js
 
 - **`source/core/`** — Runtime engine (~159 files). Entry: `Main.js`. Key classes: `App` (runtime controller), `Program` (project root/resource manager), `Scene` (scene graph).
 - **`source/editor/`** — Visual editor (~248 files). Entry: `Main.js`. Key classes: `Editor` (main controller), `Interface` (GUI), `Settings` (preferences).
-- **`source/page/`** — Angular 18 website for nunustudio.org.
 - **`source/files/`** — Static assets (icons, defaults, textures, WASM modules, Tern definitions).
 
 ### Core Engine Modules (`source/core/`)
@@ -71,7 +70,7 @@ npm run start-nwjs       # Run in NW.js
 - `webpack.config.js` — Base editor config (entry: `source/editor/Main.js` → `docs/editor/bundle.js`)
 - `webpack.dev.js` — Dev mode (source maps, HMR, git info injection)
 - `webpack.prod.js` — Production editor (minified, no source maps)
-- `webpack.runtime.js` — Standalone runtime library (entry: `source/core/Main.js` → `dist/nunu.min.js`)
+- `webpack.runtime.js` — Standalone runtime library (entry: `source/core/Main.js` → `dist/istudio.min.js`)
 
 ### Key Patterns
 

@@ -146,9 +146,9 @@ module.exports = [
 	merge(runtime[0], {
 		output: {
 			hashFunction: "sha256",
-			filename: "nunu.min.js",
+			filename: "istudio.min.js",
 			path: output + "/files/runtime",
-			library: "Nunu",
+			library: "IStudio",
 			libraryTarget: "umd"
 		}
 	})

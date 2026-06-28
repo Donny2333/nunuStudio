@@ -1,10 +1,10 @@
 import {BufferUtils} from "./utils/binary/BufferUtils.js";
 import {Base64Utils} from "./utils/binary/Base64Utils.js";
 import {ArraybufferUtils} from "./utils/binary/ArraybufferUtils.js";
-import {Nunu} from "./Nunu.js";
+import {IStudio} from "./IStudio.js";
 
 /**
- * FileSystem is used to read and write files using nunuStudio.
+ * FileSystem is used to read and write files using iStudio.
  * 
  * Its implements multiple solutions for each method depending on the platform (NodeJS, brower or cordova).
  *
@@ -467,7 +467,7 @@ FileSystem.writeFileArrayBuffer = function(fname, data, sync, onFinish)
  */
 FileSystem.chooseFileWrite = function(onLoad, filter)
 {
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		FileSystem.chooseFile(function(files)
 		{

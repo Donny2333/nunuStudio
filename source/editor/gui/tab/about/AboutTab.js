@@ -1,7 +1,7 @@
 import {REVISION} from "three";
 import * as CANNON from "cannon-es";
 import {Locale} from "../../../locale/LocaleManager.js";
-import {Nunu} from "../../../../core/Nunu.js";
+import {IStudio} from "../../../../core/IStudio.js";
 import {Global} from "../../../Global.js";
 import {Text} from "../../../components/Text.js";
 import {TabComponent} from "../../../components/tabs/TabComponent.js";
@@ -31,7 +31,7 @@ function AboutTab(parent, closeable, container, index)
 	this.name.element.style.width = "100%";
 	this.name.setTextSize(25);
 	this.name.setAlignment(Text.CENTER);
-	this.name.setText(Nunu.NAME + " " + VERSION + " Build " + TIMESTAMP);
+	this.name.setText(IStudio.NAME + " " + VERSION + " Build " + TIMESTAMP);
 
 
 	// Libraries
@@ -40,7 +40,7 @@ function AboutTab(parent, closeable, container, index)
 	libs.push("CodeMirror V" + CodeMirror.version);
 	// libs.push("CannonJS V" + CANNON.version);
 	libs.push("TernJS V" + tern.version);
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		libs.push("NWJS V" + process.versions['node-webkit']);
 	}

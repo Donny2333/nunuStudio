@@ -1,8 +1,8 @@
-# nunuStudio 项目架构总览
+# iStudio 项目架构总览
 
 ## 一、系统定位
 
-nunuStudio 是一个基于 Three.js 的 Web 3D/2D 游戏引擎 + 可视化编辑器。支持浏览器运行、NW.js 桌面端打包、Cordova 移动端打包。
+iStudio 是一个基于 Three.js 的 Web 3D/2D 游戏引擎 + 可视化编辑器。支持浏览器运行、NW.js 桌面端打包、Cordova 移动端打包。
 
 ## 二、顶层架构图
 
@@ -20,7 +20,7 @@ nunuStudio 是一个基于 Three.js 的 Web 3D/2D 游戏引擎 + 可视化编辑
 │  可视化编辑器      │─引用──▶  │   运行时引擎          │
 │  (~248 files)     │          │   (~159 files)       │
 │  入口: Main.js    │          │   入口: Main.js      │
-│  → Editor.init()  │          │   → UMD: nunu.min.js │
+│  → Editor.init()  │          │   → UMD: istudio.min.js │
 └───────────────────┘          └─────────────────────┘
         │                                │
         │  ┌─────────────────────────────┘
@@ -28,7 +28,7 @@ nunuStudio 是一个基于 Three.js 的 Web 3D/2D 游戏引擎 + 可视化编辑
 ┌───────────────────────────────────────────────────┐
 │                 Three.js (r167)                    │
 │  + source/core/three/ (15个 monkey-patch 文件)      │
-│  通过 Nunu.js 的 bare import 加载补丁               │
+│  通过 IStudio.js 的 bare import 加载补丁               │
 └───────────────────────────────────────────────────┘
 ```
 
@@ -80,7 +80,7 @@ nunuStudio 是一个基于 Three.js 的 Web 3D/2D 游戏引擎 + 可视化编辑
 │  │ 工具     │  │ Three补丁│  │ 平台抽象 │              │
 │  │ utils/   │  │ three/   │  │FileSystem│              │
 │  │ Physics  │  │ 15 patch │  │ App.js   │              │
-│  │ BSP      │  │ toJSON   │  │ Nunu.js  │              │
+│  │ BSP      │  │ toJSON   │  │ IStudio.js  │              │
 │  │ Timer    │  │ raycast  │  │          │              │
 │  └──────────┘  └──────────┘  └──────────┘              │
 └─────────────────────────────────────────────────────────┘
@@ -111,7 +111,7 @@ THREE.Object3D (ES6 class)
  └── UICanvas / UIImage
 
 THREE.Texture (ES6 class)
- ├── Texture (nunuStudio 封装，含 imageResource 属性)
+ ├── Texture (iStudio 封装，含 imageResource 属性)
  │    ├── CanvasTexture
  │    ├── VideoTexture / WebcamTexture
  │    ├── SpriteSheetTexture
@@ -169,14 +169,14 @@ Editor.runProject()
 |---------|------|------|------|
 | `npm start` | `source/editor/Main.js` | dev-server:8080 | 开发调试 |
 | `npm run build-editor` | `source/editor/Main.js` | `docs/editor/bundle.js` | 编辑器发布 |
-| `npm run build-runtime` | `source/core/Main.js` | `dist/nunu.min.js` (UMD) | 嵌入式运行时 |
+| `npm run build-runtime` | `source/core/Main.js` | `dist/istudio.min.js` (UMD) | 嵌入式运行时 |
 | `npm run build-nwjs` | 同 editor | NW.js 桌面包 | 桌面应用 |
 
 ## 七、关键技术约束
 
 1. **ES5 代码风格**：全项目使用 `function` + `prototype`，不用 ES6 class/箭头函数
 2. **Reflect.construct 继承**：~50 个文件使用此模式继承 Three.js ES6 class
-3. **Monkey-patch 补丁**：15 个文件通过 `Nunu.js` bare import 覆盖 Three.js 原型方法（主要是 toJSON）
+3. **Monkey-patch 补丁**：15 个文件通过 `IStudio.js` bare import 覆盖 Three.js 原型方法（主要是 toJSON）
 4. **全局 THREE**：webpack ProvidePlugin 注入 `THREE` 和 `window.THREE`
 5. **无测试套件**：仅依赖 ESLint + 手动测试
 

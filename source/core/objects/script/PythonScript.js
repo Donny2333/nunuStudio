@@ -242,7 +242,7 @@ PythonScript.prototype.compileCode = function(code)
 	catch (e)
 	{
 		this.script = {};
-		console.warn("nunuStudio: Error initializing script code", e);
+		console.warn("iStudio: Error initializing script code", e);
 		throw new Error("Error initializing script code");
 	}
 };

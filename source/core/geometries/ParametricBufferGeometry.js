@@ -47,7 +47,7 @@ ParametricBufferGeometry.prototype.compile = function(code)
 	}
 	catch (e)
 	{
-		console.error("nunuStudio: Error occured while compiling ParametricBufferGeometry code.", e);
+		console.error("iStudio: Error occured while compiling ParametricBufferGeometry code.", e);
 	}
 
 	return function(u, v, target)

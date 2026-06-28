@@ -1,21 +1,21 @@
 # 01 核心引擎架构 (source/core/)
 
-核心引擎是 nunuStudio 的运行时基础，可独立打包为 `dist/nunu.min.js` (UMD) 嵌入任意网页。
+核心引擎是 iStudio 的运行时基础，可独立打包为 `dist/istudio.min.js` (UMD) 嵌入任意网页。
 
 ## 1. 入口与初始化
 
 ### Main.js — 模块导出注册
 
-`source/core/Main.js` 不执行逻辑，纯粹 re-export 所有公开类。这是 `webpack.runtime.js` 的入口。外部使用 `import {App, Program, Scene} from "nunu"` 即可访问引擎全部能力。
+`source/core/Main.js` 不执行逻辑，纯粹 re-export 所有公开类。这是 `webpack.runtime.js` 的入口。外部使用 `import {App, Program, Scene} from "istudio"` 即可访问引擎全部能力。
 
-### Nunu.js — Three.js 补丁加载 + 环境检测
+### IStudio.js — Three.js 补丁加载 + 环境检测
 
-`source/core/Nunu.js:1-15` 通过 15 行 bare import 加载所有 Three.js monkey-patch 文件（副作用 import，无导出值）。这些补丁在模块加载阶段覆盖 Three.js prototype 方法。
+`source/core/IStudio.js:1-15` 通过 15 行 bare import 加载所有 Three.js monkey-patch 文件（副作用 import，无导出值）。这些补丁在模块加载阶段覆盖 Three.js prototype 方法。
 
-Nunu 类本身提供静态工具方法：
-- `Nunu.webGLAvailable()` — WebGL 支持检测
-- `Nunu.runningOnDesktop()` — NW.js 环境判断
-- `Nunu.getQueryParameters()` — URL 参数解析
+IStudio 类本身提供静态工具方法：
+- `IStudio.webGLAvailable()` — WebGL 支持检测
+- `IStudio.runningOnDesktop()` — NW.js 环境判断
+- `IStudio.getQueryParameters()` — URL 参数解析
 
 ### App.js — 运行时容器
 
@@ -208,7 +208,7 @@ images, videos, audio, fonts, materials, textures, geometries, resources(TextFil
 | `CompressedTexture` | THREE.CompressedTexture | GPU 压缩纹理 (DDS/PVR/KTX) |
 | `SpriteSheetTexture` | Texture | 精灵表动画纹理 |
 
-注意 nunuStudio 的 `Texture.imageResource`（原名 `.source`，r167 升级后重命名以避免与 THREE.Texture.source 冲突）。
+注意 iStudio 的 `Texture.imageResource`（原名 `.source`，r167 升级后重命名以避免与 THREE.Texture.source 冲突）。
 
 ## 6. 后处理系统 (postprocessing/)
 
@@ -253,11 +253,11 @@ images, videos, audio, fonts, materials, textures, geometries, resources(TextFil
 
 ## 8. Three.js 补丁层 (three/)
 
-15 个文件通过 `Nunu.js` 加载，直接覆写 Three.js 原型方法：
+15 个文件通过 `IStudio.js` 加载，直接覆写 Three.js 原型方法：
 
 | 文件 | 覆写内容 | 目的 |
 |------|---------|------|
-| `core/Object3D.js` | `toJSON` | 增加 nunuStudio 自定义字段序列化 |
+| `core/Object3D.js` | `toJSON` | 增加 iStudio 自定义字段序列化 |
 | `materials/Material.js` | `toJSON` | 增加材质自定义属性序列化 |
 | `textures/Texture.js` | `toJSON` | 跳过图片数据，仅序列化元数据 |
 | `core/BufferAttribute.js` | `toJSON` | 自定义缓冲区序列化 |
@@ -266,7 +266,7 @@ images, videos, audio, fonts, materials, textures, geometries, resources(TextFil
 | `lights/LightShadow.js` | `toJSON` + `fromJSON` | 阴影参数持久化 |
 | `cameras/Camera.js` | helper render | 相机辅助渲染 |
 | `objects/Points.js` | `raycast` | 增强点云射线检测 |
-| `loaders/BufferGeometryLoader.js` | `parse` | 兼容 nunuStudio 格式 |
+| `loaders/BufferGeometryLoader.js` | `parse` | 兼容 iStudio 格式 |
 | 其余 5 个 | 各种 toJSON | 补充序列化细节 |
 
 ## 9. 平台抽象

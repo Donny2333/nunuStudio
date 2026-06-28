@@ -174,7 +174,7 @@ function Mouse(domElement, dontInitialize)
 	// Move
 	this.events.add(this.domElement, "mousemove", function(event)
 	{
-		// console.log("nunuStudio: Mouse move event", event.offsetX, event.offsetY);
+		// console.log("iStudio: Mouse move event", event.offsetX, event.offsetY);
 
 		self.updatePosition(event.clientX, event.clientY, event.movementX, event.movementY);
 	});

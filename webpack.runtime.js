@@ -49,16 +49,16 @@ module.exports = [
 	Object.assign({
 		output: {
 			hashFunction: "sha256",
-			filename: "nunu.min.js",
+			filename: "istudio.min.js",
 			path: output,
-			library: "Nunu",
+			library: "IStudio",
 			libraryTarget: "umd"
 		}
 	}, config),
 	Object.assign({
 		output: {
 			hashFunction: "sha256",
-			filename: "nunu.module.min.js",
+			filename: "istudio.module.min.js",
 			path: output,
 			libraryTarget: "umd"
 		}

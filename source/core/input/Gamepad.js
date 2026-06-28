@@ -62,7 +62,7 @@ function Gamepad()
 	
 	if (this.gamepad === null)
 	{
-		console.warn("nunuStudio: No gamepad found");
+		console.warn("iStudio: No gamepad found");
 	}
 }
 
@@ -98,7 +98,7 @@ Gamepad.prototype.setGamepad = function(gamepad)
 	}
 	else
 	{
-		console.warn("nunuStudio: No gamepad found");
+		console.warn("iStudio: No gamepad found");
 		this.disconnect();
 	}
 };

@@ -1,5 +1,5 @@
 import {Locale} from "../../../locale/LocaleManager.js";
-import {Nunu} from "../../../../core/Nunu.js";
+import {IStudio} from "../../../../core/IStudio.js";
 import {ThemeManager} from "../../../theme/ThemeManager.js";
 import {Global} from "../../../Global.js";
 import {Editor} from "../../../Editor.js";
@@ -89,7 +89,7 @@ function GeneralSettingsTab(parent, closeable, container, index)
 	this.form.nextRow();
 
 	// Auto update
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		this.form.addText(Locale.autoUpdate).setAltText("If checked the editor will auto-update to the latest version.");
 		this.autoUpdate = new CheckBox(this.form);
@@ -100,7 +100,7 @@ function GeneralSettingsTab(parent, closeable, container, index)
 
 			if (Editor.settings.general.autoUpdate)
 			{
-				Editor.updateNunu();
+				Editor.updateApp();
 			}
 		});
 		this.form.add(this.autoUpdate);

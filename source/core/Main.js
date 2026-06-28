@@ -1,4 +1,4 @@
-export {Nunu} from "./Nunu.js";
+export {IStudio} from "./IStudio.js";
 export {App} from "./App.js";
 export {FileSystem} from "./FileSystem.js";
 export {ARHandler} from "./xr/ARHandler.js";

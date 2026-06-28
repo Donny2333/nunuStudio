@@ -2,7 +2,7 @@
 
 ## 1. 序列化格式
 
-nunuStudio 项目支持两种文件格式：
+iStudio 项目支持两种文件格式：
 
 | 格式 | 扩展名 | 特点 |
 |------|--------|------|
@@ -115,7 +115,7 @@ ObjectLoader 通过 import 注册所有可序列化类型，`parseObjects` 中�
 
 ### 4.2 阴影数据恢复
 
-`ObjectLoader.applyShadowData(shadow, data)`：由于 Three.js r167 移除了 `LightShadow.fromJSON`，nunuStudio 自行实现阴影数据恢复逻辑，手动设置 bias/radius/mapSize/camera 参数。
+`ObjectLoader.applyShadowData(shadow, data)`：由于 Three.js r167 移除了 `LightShadow.fromJSON`，iStudio 自行实现阴影数据恢复逻辑，手动设置 bias/radius/mapSize/camera 参数。
 
 ### 4.3 EffectComposer 反序列化
 
@@ -133,13 +133,13 @@ Camera 的后处理 Pass 链在 JSON 中存储为 passes 数组，每个 Pass �
 
 `source/core/three/materials/Material.js`
 
-扩展材质序列化，增加 nunuStudio 特有字段。移除了已废弃的 skinning/morphTargets/morphNormals 字段（r152+ 不再存在）。
+扩展材质序列化，增加 iStudio 特有字段。移除了已废弃的 skinning/morphTargets/morphNormals 字段（r152+ 不再存在）。
 
 ### 5.3 Object3D.toJSON 补丁
 
 `source/core/three/core/Object3D.js`
 
-扩展对象序列化，支持 nunuStudio 的自定义回调参数。修复了 `object.isObject3D` 检查（从错误的 `object.isTHREE.Object3D` 修正）。
+扩展对象序列化，支持 iStudio 的自定义回调参数。修复了 `object.isObject3D` 检查（从错误的 `object.isTHREE.Object3D` 修正）。
 
 ## 6. 各类型 Loader
 

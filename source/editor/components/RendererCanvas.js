@@ -240,7 +240,7 @@ RendererCanvas.prototype.forceContextLoss = function()
 	catch (e)
 	{
 		this.renderer = null;
-		console.log("nunuStudio: Failed to destroy WebGL context.");
+		console.log("iStudio: Failed to destroy WebGL context.");
 	}
 };
 

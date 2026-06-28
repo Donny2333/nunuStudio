@@ -57,7 +57,7 @@ BabylonLoader.prototype =
 			{
 				for (var i = 0, l = json.multiMaterials.length; i < l; i ++)
 				{
-					console.warn("nunuStudio: BabylonLoader Multi materials not supported.");
+					console.warn("iStudio: BabylonLoader Multi materials not supported.");
 					var data = json.multiMaterials[i];
 					materials[data.id] = new MeshPhongMaterial();
 				}

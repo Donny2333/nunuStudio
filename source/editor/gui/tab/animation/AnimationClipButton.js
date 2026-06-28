@@ -106,7 +106,7 @@ function AnimationClipButton(parent, editor, animation)
 			}
 			else
 			{
-				console.warn("nunuStudio: Attribute it no animable", value);
+				console.warn("iStudio: Attribute it no animable", value);
 				Editor.alert("Attribute is not animable");
 				return;
 			}

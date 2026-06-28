@@ -1,7 +1,7 @@
-# nunuStudio 架构文档
+# iStudio 架构文档
 
 ## 项目总体架构
-nunuStudio 是一个基于 Three.js 和 WebGL 的网页端 3D 游戏引擎和场景编辑器。项目支持运行态(Runtime)和编辑态(Editor)分离，并且可以通过 nw.js 等工具打包成跨平台应用。
+iStudio 是一个基于 Three.js 和 WebGL 的网页端 3D 游戏引擎和场景编辑器。项目支持运行态(Runtime)和编辑态(Editor)分离，并且可以通过 nw.js 等工具打包成跨平台应用。
 
 整体分为三大部分：
 1. **Core (运行引擎核心, `source/core/`)**

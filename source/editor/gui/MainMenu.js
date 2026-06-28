@@ -5,7 +5,7 @@ import {SimplifyModifier} from "three/examples/jsm/modifiers/SimplifyModifier";
 import {Locale} from "../locale/LocaleManager.js";
 import {UnitConverter} from "../../core/utils/UnitConverter.js";
 import {Mesh} from "../../core/objects/mesh/Mesh.js";
-import {Nunu} from "../../core/Nunu.js";
+import {IStudio} from "../../core/IStudio.js";
 import {ObjectLoader} from "../../core/loaders/ObjectLoader.js";
 import {TwistModifier} from "../../core/geometries/modifiers/TwistModifier.js";
 import {FileSystem} from "../../core/FileSystem.js";
@@ -134,7 +134,7 @@ function MainMenu(parent)
 	// Publish
 	var publish = fileMenu.addMenu(Locale.publish, Global.FILE_PATH + "icons/misc/publish.png");
 
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		// Publish web
 		publish.addOption("Web", function()
@@ -166,7 +166,7 @@ function MainMenu(parent)
 				}
 				catch (e)
 				{
-					console.error("nunuStudio: Error exporting android project.", e);
+					console.error("iStudio: Error exporting android project.", e);
 					Editor.alert(Locale.errorExportingProject + "\n(" + e + ")");
 				}
 			});
@@ -181,14 +181,14 @@ function MainMenu(parent)
 					}
 					catch (e)
 					{
-						console.error("nunuStudio: Error exporting android project.", e);
+						console.error("iStudio: Error exporting android project.", e);
 						Editor.alert(Locale.errorExportingProject + "\n(" + e + ")");
 					}
 				}, ".apk", Editor.program.name);
 			});
 		}
 
-		if (Nunu.runningOnDesktop())
+		if (IStudio.runningOnDesktop())
 		{
 			// Publish windows
 			publish.addOption("Windows", function()
@@ -202,7 +202,7 @@ function MainMenu(parent)
 					}
 					catch (e)
 					{
-						console.error("nunuStudio: Error exporting windows project.", e);
+						console.error("iStudio: Error exporting windows project.", e);
 						Editor.alert(Locale.errorExportingProject + "\n(" + e + ")");
 					}
 				}, "", Editor.program.name);
@@ -220,7 +220,7 @@ function MainMenu(parent)
 					}
 					catch (e)
 					{
-						console.error("nunuStudio: Error exporting linux project.", e);
+						console.error("iStudio: Error exporting linux project.", e);
 						Editor.alert(Locale.errorExportingProject + "\n(" + e + ")");
 					}
 				}, "", Editor.program.name);
@@ -239,7 +239,7 @@ function MainMenu(parent)
 					}
 					catch (e)
 					{
-						console.error("nunuStudio: Error exporting macOS project.", e);
+						console.error("iStudio: Error exporting macOS project.", e);
 						Editor.alert(Locale.errorExportingProject + "\n(" + e + ")");
 					}
 				}, "", Editor.program.name);
@@ -260,7 +260,7 @@ function MainMenu(parent)
 				}
 				catch (e)
 				{
-					console.error("nunuStudio: Error exporting web project.", e);
+					console.error("iStudio: Error exporting web project.", e);
 					Editor.alert(Locale.errorExportingProject + "\n(" + e + ")");
 				}
 			}, ".zip");
@@ -386,7 +386,7 @@ function MainMenu(parent)
 	}, Global.FILE_PATH + "icons/misc/scene.png");
 
 	// Exit
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		fileMenu.addOption(Locale.exit, function()
 		{
@@ -557,7 +557,7 @@ function MainMenu(parent)
 
 	modifiers.addOption(Locale.subdivide, function()
 	{
-		console.warn("nunuStudio: Subdivision modifier is no longer supported.");
+		console.warn("iStudio: Subdivision modifier is no longer supported.");
 		Editor.alert("Subdivision modifier is no longer available.");
 	}, Global.FILE_PATH + "icons/misc/subdivide.png");
 

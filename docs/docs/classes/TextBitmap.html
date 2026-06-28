@@ -14,7 +14,7 @@
 	<script src="../assets/js/api-search.js"></script>
 	<script src="../assets/js/api-docs.js"></script>
 
-	<title>nunuStudio TextBitmap</title>
+	<title>iStudio TextBitmap</title>
 </head>
 <body class="yui3-skin-sam">
 	<div id="doc">
@@ -89,6 +89,7 @@
 									<li><a href="../classes/Image.html">Image</a></li>
 									<li><a href="../classes/ImageLoader.html">ImageLoader</a></li>
 									<li><a href="../classes/InstancedMesh.html">InstancedMesh</a></li>
+									<li><a href="../classes/IStudio.html">IStudio</a></li>
 									<li><a href="../classes/Key.html">Key</a></li>
 									<li><a href="../classes/Keyboard.html">Keyboard</a></li>
 									<li><a href="../classes/LegacyGeometryLoader.html">LegacyGeometryLoader</a></li>
@@ -103,7 +104,6 @@
 									<li><a href="../classes/Model.html">Model</a></li>
 									<li><a href="../classes/Mouse.html">Mouse</a></li>
 									<li><a href="../classes/NodeScript.html">NodeScript</a></li>
-									<li><a href="../classes/Nunu.html">Nunu</a></li>
 									<li><a href="../classes/Object3D.html">Object3D</a></li>
 									<li><a href="../classes/ObjectLoader.html">ObjectLoader</a></li>
 									<li><a href="../classes/ObjectUtils.html">ObjectUtils</a></li>
@@ -293,34 +293,13 @@
 							
 												<ul class="index-list attrs extends">
 														<li class="index-item attr">
-															<a href="#attr_align">align</a>
-														</li>
-														<li class="index-item attr">
 															<a href="#attr_BITMAP">BITMAP</a>
 														</li>
 														<li class="index-item attr">
 															<a href="#attr_CENTER">CENTER</a>
 														</li>
 														<li class="index-item attr">
-															<a href="#attr_color">color</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_config">config</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_font">font</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_fontScale">fontScale</a>
-														</li>
-														<li class="index-item attr">
 															<a href="#attr_LEFT">LEFT</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_letterSpacing">letterSpacing</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_lineHeight">lineHeight</a>
 														</li>
 														<li class="index-item attr">
 															<a href="#attr_MSDF">MSDF</a>
@@ -330,27 +309,6 @@
 														</li>
 														<li class="index-item attr">
 															<a href="#attr_SDF">SDF</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_shader">shader</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_smoothing">smoothing</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_text">text</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_texture">texture</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_threshold">threshold</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_uniforms">uniforms</a>
-														</li>
-														<li class="index-item attr">
-															<a href="#attr_width">width</a>
 														</li>
 												</ul>
 											</div>
@@ -473,38 +431,6 @@
 										<div id="attrs" class="api-class-tabpanel">
 											<h2 class="off-left">Attributes</h2>
 							
-												<div id="attr_align" class="attr item">
-													<a name="config_align"></a> 
-													<h3 class="name"><code>align</code></h3>
-													<span class="type">String</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Horizontal text alignment can be</p>
-												<ul>
-												<li>TextBitmap.LEFT</li>
-												<li>TextBitmap.RIGHT</li>
-												<li>TextBitmap.CENTER</li>
-												</ul>
-												
-													</div>
-												
-												
-												
-												</div>
 												<div id="attr_BITMAP" class="attr item">
 													<a name="config_BITMAP"></a> 
 													<h3 class="name"><code>BITMAP</code></h3>
@@ -561,129 +487,6 @@
 												
 												
 												</div>
-												<div id="attr_color" class="attr item">
-													<a name="config_color"></a> 
-													<h3 class="name"><code>color</code></h3>
-													<span class="type">Color</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Color of the text, only applied for SDF and MSDF modes.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_config" class="attr item">
-													<a name="config_config"></a> 
-													<h3 class="name"><code>config</code></h3>
-													<span class="type">Object</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>BMFont text configuration object.</p>
-												<p>Passed to the BMFont text geometry generator. It is a object with the format.</p>
-												<p>{
-												font: (Object) Font data should be parsed from (.json, .fnt, etc) file,
-												text: (String),
-												width: (Number) Width of the text area,
-												align: (String) Side to align the text,
-												lineHeight: (Number) Line height/font size,
-												letterSpacing: (Number) Spacing between characters,
-												mode: (String) a mode for word-wrapper; can be 'pre' (maintain spacing), or 'nowrap' (collapse whitespace but only break on newline characters), otherwise assumes normal word-wrap behaviour (collapse whitespace, break at width or newlines)
-												tabSize: (Number) the number of spaces to use in a single tab (default 4)
-												start: (Number) the starting index into the text to layout (default 0)
-												end: (Number) the ending index (exclusive) into the text to layout (default text.length)
-												}</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_font" class="attr item">
-													<a name="config_font"></a> 
-													<h3 class="name"><code>font</code></h3>
-													<span class="type">Object</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>BMFont text font data, contains the data about all characters available, and their position in the atlas.</p>
-												<p>Font data should be parsed from (.json, .fnt, etc) file.</p>
-												<p>Passed to the BMFont text geometry generator.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_fontScale" class="attr item">
-													<a name="config_fontScale"></a> 
-													<h3 class="name"><code>fontScale</code></h3>
-													<span class="type">Number</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Scale applied to the generated text geometry.</p>
-												
-													</div>
-												
-												
-												
-												</div>
 												<div id="attr_LEFT" class="attr item">
 													<a name="config_LEFT"></a> 
 													<h3 class="name"><code>LEFT</code></h3>
@@ -706,60 +509,6 @@
 												
 													<div class="description">
 														<p>Align text to the left side.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_letterSpacing" class="attr item">
-													<a name="config_letterSpacing"></a> 
-													<h3 class="name"><code>letterSpacing</code></h3>
-													<span class="type">Number</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Spacing between each letter.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_lineHeight" class="attr item">
-													<a name="config_lineHeight"></a> 
-													<h3 class="name"><code>lineHeight</code></h3>
-													<span class="type">Number</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Space between each text line.</p>
 												
 													</div>
 												
@@ -844,201 +593,6 @@
 												
 													<div class="description">
 														<p>Single channel signed distance field font atlas.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_shader" class="attr item">
-													<a name="config_shader"></a> 
-													<h3 class="name"><code>shader</code></h3>
-													<span class="type">Number</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Text bitmap rendering shader, can be:</p>
-												<ul>
-												<li>TextBitmap.BITMAP</li>
-												<li>TextBitmap.SDF</li>
-												<li>TextBitmap.MSDF</li>
-												</ul>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_smoothing" class="attr item">
-													<a name="config_smoothing"></a> 
-													<h3 class="name"><code>smoothing</code></h3>
-													<span class="type">Number</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Smoothing of the text borders.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_text" class="attr item">
-													<a name="config_text"></a> 
-													<h3 class="name"><code>text</code></h3>
-													<span class="type">String</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Text displayed on the object.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_texture" class="attr item">
-													<a name="config_texture"></a> 
-													<h3 class="name"><code>texture</code></h3>
-													<span class="type"><a href="../classes/Texture.html" class="crosslink">Texture</a></span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Texture containing the bitmap characters.</p>
-												<p>Data specifiyng the position of each character in the texture should be placed in the font.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_threshold" class="attr item">
-													<a name="config_threshold"></a> 
-													<h3 class="name"><code>threshold</code></h3>
-													<span class="type">Number</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>SDF distance alpha threshold.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_uniforms" class="attr item">
-													<a name="config_uniforms"></a> 
-													<h3 class="name"><code>uniforms</code></h3>
-													<span class="type">Object</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Uniforms passed to the text rendering shaders.</p>
-												
-													</div>
-												
-												
-												
-												</div>
-												<div id="attr_width" class="attr item">
-													<a name="config_width"></a> 
-													<h3 class="name"><code>width</code></h3>
-													<span class="type">Number</span>
-												
-												
-												
-												
-												
-												
-												
-												
-													<div class="meta">
-																<p>
-														</p>
-												
-												
-													</div>
-												
-													<div class="description">
-														<p>Width of the text box.</p>
 												
 													</div>
 												

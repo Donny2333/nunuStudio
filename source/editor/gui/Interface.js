@@ -1,5 +1,5 @@
 import {Locale} from "../locale/LocaleManager.js";
-import {Nunu} from "../../core/Nunu.js";
+import {IStudio} from "../../core/IStudio.js";
 import {FileSystem} from "../../core/FileSystem.js";
 import {Editor} from "../Editor.js";
 import {TabGroup} from "../components/tabs/TabGroup.js";
@@ -70,7 +70,7 @@ function Interface()
  */
 Interface.prototype.saveProgram = function()
 {
-	if (Nunu.runningOnDesktop())
+	if (IStudio.runningOnDesktop())
 	{
 		FileSystem.chooseFile(function(files)
 		{

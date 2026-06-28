@@ -85,7 +85,7 @@ VRHandler.enterVR = function(renderer, onSuccess)
 			}
 		}).catch(function(error)
 		{
-			console.warn("nunuStudio: Failed to start VR WebXR session.", error);
+			console.warn("iStudio: Failed to start VR WebXR session.", error);
 		});
 	}
 	else if (VRHandler.webVRAvailable)
@@ -110,12 +110,12 @@ VRHandler.enterVR = function(renderer, onSuccess)
 			}
 		}).catch(function(error)
 		{
-			console.warn("nunuStudio: Failed to start VR WebVR session.", error);
+			console.warn("iStudio: Failed to start VR WebVR session.", error);
 		});
 	}
 	else
 	{
-		console.warn("nunuStudio: VR support is not available.");
+		console.warn("iStudio: VR support is not available.");
 	}
 };
 

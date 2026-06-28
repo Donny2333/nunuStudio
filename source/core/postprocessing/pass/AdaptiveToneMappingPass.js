@@ -64,7 +64,7 @@ function AdaptiveToneMappingPass(adaptive, resolution)
 
 	if (ToneMapShader === undefined)
 	{
-		console.error("nunuStudio: AdaptiveToneMappingPass relies on ToneMapShader");
+		console.error("iStudio: AdaptiveToneMappingPass relies on ToneMapShader");
 	}
 
 	this.materialToneMap = new ShaderMaterial(

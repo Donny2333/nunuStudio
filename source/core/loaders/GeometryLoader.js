@@ -110,7 +110,7 @@ GeometryLoader.prototype.parse = function(data)
 		}
 		catch (e)
 		{
-			console.warn("nunuStudio: Failed to parse geometry", data.type, data.uuid, e);
+			console.warn("iStudio: Failed to parse geometry", data.type, data.uuid, e);
 
 			geometry = new BufferGeometry();
 		}

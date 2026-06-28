@@ -2,7 +2,7 @@
 
 **文件位置：** `source/editor/components/`
 
-nunuStudio 编辑器使用自研的纯 DOM UI 组件库，不依赖任何 UI 框架（React/Vue 等）。所有组件直接操作 DOM 元素。
+iStudio 编辑器使用自研的纯 DOM UI 组件库，不依赖任何 UI 框架（React/Vue 等）。所有组件直接操作 DOM 元素。
 
 ## 1. Component 基类
 

@@ -218,7 +218,7 @@ SpineAnimation.prototype.setAnimation = function(track, animation, loop)
 	{
 		this.animation = null;
 
-		console.warn("nunuStudio: Error setting spine animation " + name + " on track " + track);
+		console.warn("iStudio: Error setting spine animation " + name + " on track " + track);
 	}
 };
 
@@ -249,7 +249,7 @@ SpineAnimation.prototype.setSkin = function(name)
 	catch (e)
 	{
 		this.skin = null;
-		console.warn("nunuStudio: Error setting spine skin " + name);
+		console.warn("iStudio: Error setting spine skin " + name);
 	}
 };
 

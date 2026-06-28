@@ -109,7 +109,7 @@ WebcamTexture.prototype.connect = function()
 		})
 			.catch(function(error)
 			{
-				console.warn("nunuStudio: No webcam available");
+				console.warn("iStudio: No webcam available");
 			});				
 	}
 	else if (navigator.getUserMedia)
@@ -121,7 +121,7 @@ WebcamTexture.prototype.connect = function()
 		},
 		function(error)
 		{
-			console.warn("nunuStudio: No webcam available");
+			console.warn("iStudio: No webcam available");
 		});		
 	}
 };

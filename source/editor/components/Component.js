@@ -345,7 +345,7 @@ Component.prototype.attachTo = function(parent)
 	}
 	else
 	{
-		console.warn("nunuStudio: Parent is not a Component.", this);
+		console.warn("iStudio: Parent is not a Component.", this);
 		this.parent.appendChild(this.element);
 	}
 };
@@ -395,7 +395,7 @@ Component.prototype.destroy = function()
 		}
 		else
 		{
-			console.warn("nunuStudio: Parent is not a Component.", this);
+			console.warn("iStudio: Parent is not a Component.", this);
 			if (this.parent.contains(this.element))
 			{
 				this.parent.removeChild(this.element);

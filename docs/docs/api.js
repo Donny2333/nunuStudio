@@ -49,6 +49,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "HTMLView",
         "HemisphereLight",
         "HueSaturationPass",
+        "IStudio",
         "Image",
         "ImageLoader",
         "InstancedMesh",
@@ -66,7 +67,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "Model",
         "Mouse",
         "NodeScript",
-        "Nunu",
         "Object3D",
         "ObjectLoader",
         "ObjectUtils",
@@ -204,7 +204,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Files",
             "name": "Files",
-            "description": "FileSystem is used to read and write files using nunuStudio.\n\nIts implements multiple solutions for each method depending on the platform (NodeJS, brower or cordova).\n\nSome operations are platform specific and might not work everywhere."
+            "description": "FileSystem is used to read and write files using iStudio.\n\nIts implements multiple solutions for each method depending on the platform (NodeJS, brower or cordova).\n\nSome operations are platform specific and might not work everywhere."
         },
         {
             "displayName": "Input",
@@ -254,7 +254,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Runtime",
             "name": "Runtime",
-            "description": "nunuStudio core main file.\n\nStore development version, timestamp and contains global method to check browser feature support."
+            "description": "iStudio core main file.\n\nStore development version, timestamp and contains global method to check browser feature support."
         },
         {
             "displayName": "Script",

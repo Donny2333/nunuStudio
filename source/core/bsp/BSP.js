@@ -26,7 +26,7 @@ function BSP(geometry)
 	}
 	else
 	{
-		throw new Error("nunuStudio: Given geometry is unsupported");
+		throw new Error("iStudio: Given geometry is unsupported");
 	}
 
 	this.tree = new BSPNode(polygons);

@@ -94,7 +94,7 @@ DualContainer.prototype.attach = function(element)
 		return;
 	}
 	
-	console.warn("nunuStudio: Cannot attach more elements.");
+	console.warn("iStudio: Cannot attach more elements.");
 };
 
 DualContainer.prototype.attachA = function(element)
@@ -115,7 +115,7 @@ DualContainer.prototype.updateSize = function()
 
 	if (this.elementA === null || this.elementB === null)
 	{
-		console.log("nunuStudio: Dual container elements are null", this, this.elementA, this.elementB);
+		console.log("iStudio: Dual container elements are null", this, this.elementA, this.elementB);
 		return;
 	}
 

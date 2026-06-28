@@ -32,7 +32,7 @@ LightProbe.prototype.generate = function()
 	var scene = this.getScene();
 	if (scene === null)
 	{
-		console.warn("nunuStudio: LightProbe cannot generate, no scene.", this);
+		console.warn("iStudio: LightProbe cannot generate, no scene.", this);
 		return;
 	}
 

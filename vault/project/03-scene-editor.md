@@ -1,6 +1,6 @@
 # 03 场景编辑器 (SceneEditor)
 
-场景编辑器是 nunuStudio 编辑器的核心视图，提供 3D 视口编辑功能。
+场景编辑器是 iStudio 编辑器的核心视图，提供 3D 视口编辑功能。
 
 **文件位置：** `source/editor/gui/tab/scene-editor/`
 

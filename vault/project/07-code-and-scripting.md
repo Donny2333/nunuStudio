@@ -92,7 +92,7 @@ CodeEditor 持有一个 Script 对象引用，代码变更时：
 项目运行 (Program.initialize)
   → Script.initialize()
     → 编译代码: new Function(code)
-    → 建立上下文: self, scene, program, Keyboard, Mouse, THREE, CANNON, NUNU
+    → 建立上下文: self, scene, program, Keyboard, Mouse, THREE, CANNON, ISTUDIO
     → 调用 initialize() 回调
 
 每帧 (Program.update)
@@ -122,7 +122,7 @@ CodeEditor 持有一个 Script 对象引用，代码变更时：
 | `Mouse` | Mouse | 鼠标输入 |
 | `THREE` | module | Three.js 完整命名空间 |
 | `CANNON` | module | cannon-es 物理引擎 |
-| `NUNU` | module | nunuStudio 核心 API |
+| `ISTUDIO` | module | iStudio 核心 API |
 
 脚本可用的辅助方法：
 - `include(path)` — 导入 TextFile 资源中的 JS 脚本
@@ -140,12 +140,12 @@ var context = {
   Mouse: this.program.mouse,
   THREE: THREE,
   CANNON: CANNON,
-  NUNU: NUNU,
+  ISTUDIO: ISTUDIO,
   include: function(path) { ... }
 };
 
 var func = new Function("self", "scene", "program", "Keyboard", "Mouse",
-  "THREE", "CANNON", "NUNU", "include",
+  "THREE", "CANNON", "ISTUDIO", "include",
   userCode);
 
 func.call(this, context.self, context.scene, ...);

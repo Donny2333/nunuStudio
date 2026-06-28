@@ -15,7 +15,7 @@ function LegacyGeometryLoader(manager)
 
 LegacyGeometryLoader.prototype.load = function(url, onLoad, onProgress, onError)
 {
-	console.warn("nunuStudio: LegacyGeometryLoader is no longer supported. Legacy geometry format cannot be loaded.");
+	console.warn("iStudio: LegacyGeometryLoader is no longer supported. Legacy geometry format cannot be loaded.");
 	if (onLoad)
 	{
 		onLoad(new BufferGeometry(), []);
@@ -42,7 +42,7 @@ LegacyGeometryLoader.prototype.setCrossOrigin = function(value)
 
 LegacyGeometryLoader.prototype.parse = function(json, path)
 {
-	console.warn("nunuStudio: LegacyGeometryLoader.parse is no longer supported.");
+	console.warn("iStudio: LegacyGeometryLoader.parse is no longer supported.");
 	return {geometry: new BufferGeometry(), materials: []};
 };
 

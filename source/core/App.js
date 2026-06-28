@@ -3,7 +3,7 @@ import {Component} from "../editor/components/Component.js";
 import {EventManager} from "./utils/EventManager.js";
 import {Program} from "./objects/Program.js";
 import {PerspectiveCamera} from "./objects/cameras/PerspectiveCamera.js";
-import {Nunu} from "./Nunu.js";
+import {IStudio} from "./IStudio.js";
 import {ObjectLoader} from "./loaders/ObjectLoader.js";
 import {FileSystem} from "./FileSystem.js";
 
@@ -103,7 +103,7 @@ App.loadApp = function(url, canvas)
 
 	window.addEventListener("resize", function()
 	{
-		if (Nunu.isFullscreen())
+		if (IStudio.isFullscreen())
 		{
 			app.canvas.width = window.innerWidth;
 			app.canvas.height = window.innerHeight;
@@ -130,7 +130,7 @@ App.prototype.run = function()
 {
 	if (this.program === null)
 	{
-		console.warn("nunuStudio: no program is loaded [app.loadPogram(fname)]");
+		console.warn("iStudio: no program is loaded [app.loadPogram(fname)]");
 		return;
 	}
 
@@ -480,7 +480,7 @@ App.prototype.toggleVR = function()
 	}
 	else
 	{
-		console.warn("nunuStudio: Loaded program is not VR enabled.");
+		console.warn("iStudio: Loaded program is not VR enabled.");
 	}
 };
 
@@ -515,7 +515,7 @@ App.prototype.toggleAR = function()
 	}
 	else
 	{
-		console.warn("nunuStudio: Loaded program is not AR enabled.");
+		console.warn("iStudio: Loaded program is not AR enabled.");
 	}
 };
 
@@ -527,14 +527,14 @@ App.prototype.toggleAR = function()
  */
 App.prototype.toggleFullscreen = function(element)
 {
-	var fullscreen = Nunu.isFullscreen();
+	var fullscreen = IStudio.isFullscreen();
 
 	if (element === undefined)
 	{
 		element = this.canvas;
 	}
 
-	Nunu.setFullscreen(!fullscreen, element);
+	IStudio.setFullscreen(!fullscreen, element);
 };
 
 export {App};

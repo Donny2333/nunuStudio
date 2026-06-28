@@ -291,7 +291,7 @@ export {TilesetObject};
 **已完成：**
 - 核心模式：`Reflect.construct(ParentClass, [args], new.target || ChildClass)` + `return instance;`
 - 修复 ~50 个继承 Three.js 类的文件（批量脚本 + 手动处理复杂 case）
-- `Texture.source` 属性冲突：nunuStudio 的 `.source`（Image 资源）重命名为 `.imageResource`，避免覆盖 r167 的 `.source`（Source 对象）
+- `Texture.source` 属性冲突：iStudio 的 `.source`（Image 资源）重命名为 `.imageResource`，避免覆盖 r167 的 `.source`（Source 对象）
 - `getInverse()` 全部替换为 `.copy(x).invert()` 或 `.invert()`（21 处）
 - GridHelper.js：Reflect.construct 修复
 - EditorOrbitControls / EditorFreeControls：修复 `EditorControls.call(this)` 子类继承链

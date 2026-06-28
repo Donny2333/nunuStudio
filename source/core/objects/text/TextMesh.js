@@ -171,7 +171,7 @@ TextMesh.prototype.updateGeometry = function()
 
 		if (this.font.isFont !== true)
 		{
-			console.warn("nunuStudio: Font parameter is not an instance of Font.");
+			console.warn("iStudio: Font parameter is not an instance of Font.");
 			this.geometry = TextMesh.EMPTY_GEOMETRY;
 			return;
 		}

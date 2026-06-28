@@ -22,7 +22,7 @@ import {SVGLoader} from "three/examples/jsm/loaders/SVGLoader";
 import {VOXLoader} from "three/examples/jsm/loaders/VOXLoader";
 import {InstancedMesh} from "../core/objects/mesh/InstancedMesh.js";
 import {FileSystem} from "../core/FileSystem.js";
-import {Nunu} from "../core/Nunu.js";
+import {IStudio} from "../core/IStudio.js";
 import {Group} from "../core/objects/misc/Group.js";
 import {SpineAnimation} from "../core/objects/spine/SpineAnimation.js";
 import {Audio} from "../core/resources/Audio.js";
@@ -144,7 +144,7 @@ Loaders.loadTexture = function(file, onLoad)
 		}
 		else if (extension === "basis")
 		{
-			console.warn("nunuStudio: Basis texture loading is no longer supported.");
+			console.warn("iStudio: Basis texture loading is no longer supported.");
 		}
 		else
 		{
@@ -286,7 +286,7 @@ Loaders.loadSpineAnimation = function(file)
 		if (atlasFile === null)
 		{
 			Editor.alert(Locale.failedLoadSpine);
-			console.warn("nunuStudio: No atlas file found in the directory.");
+			console.warn("iStudio: No atlas file found in the directory.");
 			return;
 		}
 
@@ -365,7 +365,7 @@ Loaders.loadModel = function(file, parent)
 			var materials = null;
 			
 			// Look for MTL file
-			if (Nunu.runningOnDesktop())
+			if (IStudio.runningOnDesktop())
 			{
 				try
 				{
@@ -373,7 +373,7 @@ Loaders.loadModel = function(file, parent)
 
 					if (FileSystem.fileExists(mtl))
 					{
-						console.log("nunuStudio: MTL file found.", path);
+						console.log("iStudio: MTL file found.", path);
 						var mtlLoader = new MTLLoader();
 						mtlLoader.setPath(path);
 						materials = mtlLoader.parse(FileSystem.readFile(mtl), path);
@@ -382,7 +382,7 @@ Loaders.loadModel = function(file, parent)
 				catch (f)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + f + ")");
-					console.error("nunuStudio: Error loading file", f);
+					console.error("iStudio: Error loading file", f);
 				}
 			}
 
@@ -406,7 +406,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 
@@ -430,7 +430,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -483,7 +483,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -505,7 +505,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -526,7 +526,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -534,7 +534,7 @@ Loaders.loadModel = function(file, parent)
 		// Assimp
 		else if (extension === "assimp")
 		{
-			console.warn("nunuStudio: Assimp loading is no longer supported.");
+			console.warn("iStudio: Assimp loading is no longer supported.");
 			modal.destroy();
 		}
 		// Babylon
@@ -562,7 +562,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsText(file);
@@ -587,7 +587,7 @@ Loaders.loadModel = function(file, parent)
 		// 		catch (e)
 		// 		{
 		// 			Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-		// 			console.error("nunuStudio: Error loading file", e);
+		// 			console.error("iStudio: Error loading file", e);
 		// 		}
 		// 	};
 		// 	reader.readAsArrayBuffer(file);
@@ -609,7 +609,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -645,7 +645,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsText(file);
@@ -682,7 +682,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -728,7 +728,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -755,7 +755,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsText(file);
@@ -781,7 +781,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -789,7 +789,7 @@ Loaders.loadModel = function(file, parent)
 		// PRWM
 		else if (extension === "prwm")
 		{
-			console.warn("nunuStudio: PRWM loading is no longer supported.");
+			console.warn("iStudio: PRWM loading is no longer supported.");
 			modal.destroy();
 		}
 		// VRML
@@ -813,7 +813,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsText(file);
@@ -846,7 +846,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -854,7 +854,7 @@ Loaders.loadModel = function(file, parent)
 		// X
 		else if (extension === "x")
 		{
-			console.warn("nunuStudio: X file loading is no longer supported.");
+			console.warn("iStudio: X file loading is no longer supported.");
 			modal.destroy();
 		}
 		// PCD
@@ -875,7 +875,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -916,7 +916,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsText(file);
@@ -941,7 +941,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsArrayBuffer(file);
@@ -963,7 +963,7 @@ Loaders.loadModel = function(file, parent)
 				catch (e)
 				{
 					Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-					console.error("nunuStudio: Error loading file", e);
+					console.error("iStudio: Error loading file", e);
 				}
 			};
 			reader.readAsText(file);
@@ -972,14 +972,14 @@ Loaders.loadModel = function(file, parent)
 		{
 			modal.destroy();
 			Editor.alert(Locale.unknownFileFormat);
-			console.warn("nunuStudio: Unknown file format");
+			console.warn("iStudio: Unknown file format");
 		}
 	}
 	catch (e)
 	{
 		modal.destroy();
 		Editor.alert(Locale.errorLoadingFile + "\n(" + e + ")");
-		console.error("nunuStudio: Error loading file", e);
+		console.error("iStudio: Error loading file", e);
 	}
 };
 
