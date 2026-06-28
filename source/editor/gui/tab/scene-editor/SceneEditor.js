@@ -38,6 +38,7 @@ import {VideoTexture} from "../../../../core/texture/VideoTexture.js";
 import {Viewport} from "../../../../core/objects/cameras/Viewport.js";
 import {TilesetObject} from "../../../../core/objects/misc/TilesetObject.js";
 import {Sky} from "../../../../core/objects/misc/Sky.js";
+import {AtmospherePass} from "../../../../core/postprocessing/pass/AtmospherePass.js";
 import {TransformControls} from "./transform/TransformControls.js";
 import {ToolBar} from "./toolbar/ToolBar.js";
 import {SkeletonHelper} from "./helpers/SkeletonHelper.js";
@@ -652,6 +653,25 @@ function SceneEditor(parent, closeable, container, index)
 	this.toolBar = new ToolBar(this);
 	this.toolBar.setMode(Component.BOTTOM_LEFT);
 
+	// Performance stats overlay
+	this.statsElement = document.createElement("div");
+	this.statsElement.style.position = "absolute";
+	this.statsElement.style.bottom = "5px";
+	this.statsElement.style.left = "45px";
+	this.statsElement.style.color = "#fff";
+	this.statsElement.style.fontFamily = "monospace";
+	this.statsElement.style.fontSize = "11px";
+	this.statsElement.style.lineHeight = "14px";
+	this.statsElement.style.textShadow = "0 0 3px #000";
+	this.statsElement.style.whiteSpace = "pre";
+	this.statsElement.style.pointerEvents = "none";
+	this.statsElement.style.zIndex = "100";
+	this.statsElement.style.display = "none";
+	this.element.appendChild(this.statsElement);
+	this._statsFrames = 0;
+	this._statsTime = performance.now();
+	this._statsFps = 0;
+
 	/**
 	 * Event manager to handley keyboard shortcuts.
 	 *
@@ -849,6 +869,13 @@ SceneEditor.prototype.destroy = function()
 
 	this.mouse.setLock(false);
 
+	if (this._atmospherePass)
+	{
+		this._atmospherePass.dispose();
+		this._atmospherePass = null;
+		this._atmospherePassRenderer = null;
+	}
+
 	this.canvas.forceContextLoss();
 };
 
@@ -856,6 +883,12 @@ SceneEditor.prototype.attach = function(scene)
 {
 	this.scene = scene;
 	this.updateMetadata();
+
+	if (this._atmospherePass)
+	{
+		this._atmospherePass.dispose();
+		this._atmospherePass = null;
+	}
 
 	if (this.camera !== null)
 	{
@@ -1088,6 +1121,7 @@ SceneEditor.prototype.render = function()
 	var camera = this.camera;
 	var sceneRenderer = renderer;
 	var hasTileset = false;
+	var cloudSky = null;
 	this.scene.traverse(function(child)
 	{
 		if (child instanceof TilesetObject)
@@ -1097,9 +1131,16 @@ SceneEditor.prototype.render = function()
 		}
 		else if (child instanceof Sky)
 		{
-			child.sky.position.copy(camera.position);
-			child.sky.updateMatrix();
-			child.sky.updateMatrixWorld(true);
+			child.ensureTextures(sceneRenderer);
+			child._skyMesh.position.copy(camera.position);
+			child._skyMesh.updateMatrix();
+			child._skyMesh.updateMatrixWorld(true);
+
+			if (child.cloudsEnabled)
+			{
+				child.updateSky();
+				cloudSky = child;
+			}
 		}
 	});
 
@@ -1111,8 +1152,34 @@ SceneEditor.prototype.render = function()
 		camera.updateProjectionMatrix();
 	}
 
-	// Render scene
-	renderer.render(this.scene, this.camera);
+	// Render scene (use AtmospherePass pipeline when clouds are enabled)
+	if (cloudSky)
+	{
+		if (!this._atmospherePass || this._atmospherePassRenderer !== renderer)
+		{
+			if (this._atmospherePass)
+			{
+				this._atmospherePass.dispose();
+			}
+			this._atmospherePass = new AtmospherePass();
+			this._atmospherePassRenderer = renderer;
+		}
+
+		if (cloudSky._texturesReady)
+		{
+			this._atmospherePass.setTextures({
+				irradianceTexture: cloudSky._skyMaterial.irradianceTexture,
+				scatteringTexture: cloudSky._skyMaterial.scatteringTexture,
+				transmittanceTexture: cloudSky._skyMaterial.transmittanceTexture
+			});
+		}
+
+		this._atmospherePass.render(renderer, null, null, 0.016, false, this.scene, this.camera);
+	}
+	else
+	{
+		renderer.render(this.scene, this.camera);
+	}
 
 	if (this.canvas.cssRenderer !== null)
 	{
@@ -1198,6 +1265,26 @@ SceneEditor.prototype.render = function()
 	}
 
 	renderer.setScissorTest(false);
+
+	// Update performance stats overlay
+	if (Editor.settings.general.showStats)
+	{
+		this.statsElement.style.display = "block";
+		this._statsFrames++;
+		var now = performance.now();
+		if (now - this._statsTime >= 1000)
+		{
+			this._statsFps = Math.round(this._statsFrames * 1000 / (now - this._statsTime));
+			this._statsFrames = 0;
+			this._statsTime = now;
+		}
+		var info = renderer.info;
+		this.statsElement.textContent = this._statsFps + " FPS\n" + info.render.calls + " draws\n" + info.render.triangles + " tris";
+	}
+	else
+	{
+		this.statsElement.style.display = "none";
+	}
 };
 
 /**

@@ -1,4 +1,4 @@
-import {DefaultLoadingManager, FileLoader} from "three";
+import {DefaultLoadingManager, FileLoader, Texture as TTexture} from "three";
 import {WebcamTexture} from "../texture/WebcamTexture.js";
 import {VideoTexture} from "../texture/VideoTexture.js";
 import {Texture} from "../texture/Texture.js";
@@ -255,29 +255,47 @@ TextureLoader.prototype.parse = function(json, onLoad)
 	// Texture
 	else
 	{
-		if (json.image === undefined)
+		// Inline base64 image data (e.g. from FBX embedded textures)
+		if (typeof json.image === "string" && json.image.indexOf("data:") === 0)
 		{
-			console.warn("iStudio: TextureLoader, no image specified for", json.uuid);
+			var img = document.createElement("img");
+			img.src = json.image;
+			texture = new TTexture(img);
+			texture.colorSpace = "srgb";
+			img.onload = function() { texture.needsUpdate = true; };
 		}
-
-		if (this.images[json.image] === undefined)
+		// Inline data texture object
+		else if (json.image !== undefined && json.image !== null && typeof json.image === "object" && json.image.data !== undefined)
 		{
-			console.warn("iStudio: TextureLoader, undefined image", json.image);
+			var data = new Float32Array(json.image.data);
+			texture = new DataTexture(data, json.image.width, json.image.height);
 		}
-
-		// SpriteSheet texture
-		if (category === "SpriteSheet")
-		{
-			texture = new SpriteSheetTexture(this.images[json.image], json.framesHorizontal, json.framesVertical, json.totalFrames);
-			texture.loop = json.loop;
-			texture.animationSpeed = json.animationSpeed;
-			texture.beginFrame = json.beginFrame;
-			texture.endFrame = json.endFrame;
-		}
-		// Texture
 		else
 		{
-			texture = new Texture(this.images[json.image]);
+			if (json.image === undefined)
+			{
+				console.warn("iStudio: TextureLoader, no image specified for", json.uuid);
+			}
+
+			if (this.images[json.image] === undefined)
+			{
+				console.warn("iStudio: TextureLoader, undefined image", json.image);
+			}
+
+			// SpriteSheet texture
+			if (category === "SpriteSheet")
+			{
+				texture = new SpriteSheetTexture(this.images[json.image], json.framesHorizontal, json.framesVertical, json.totalFrames);
+				texture.loop = json.loop;
+				texture.animationSpeed = json.animationSpeed;
+				texture.beginFrame = json.beginFrame;
+				texture.endFrame = json.endFrame;
+			}
+			// Texture
+			else
+			{
+				texture = new Texture(this.images[json.image]);
+			}
 		}
 	}
 

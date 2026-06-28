@@ -6,8 +6,6 @@ import {Editor} from "../../../../../Editor.js";
 import {Slider} from "../../../../../components/input/Slider.js";
 import {NumberBox} from "../../../../../components/input/NumberBox.js";
 import {DropdownList} from "../../../../../components/input/DropdownList.js";
-import {ColorGradientChooser} from "../../../../../components/input/ColorGradientChooser.js";
-import {ColorChooser} from "../../../../../components/input/ColorChooser.js";
 import {CheckBox} from "../../../../../components/input/CheckBox.js";
 
 function SkyInspector(parent, object)
@@ -16,74 +14,80 @@ function SkyInspector(parent, object)
 
 	var self = this;
 
-	// Sky color
-	this.form.addText(Locale.skyColor);
-	this.form.nextRow();
-
 	function updateSky()
 	{
 		self.object.updateSky();
 	}
 
-	// Top color
-	this.form.addText("Top color");
-	this.colorTop = new ColorGradientChooser(this.form);
-	this.colorTop.size.set(190, 18);
-	this.colorTop.setOnChange(function(color, index)
-	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.object.colorTop, index, color.clone()), updateSky));
-	});
-	this.form.add(this.colorTop);
+	// Atmosphere
+	this.form.addText("Atmosphere");
 	this.form.nextRow();
 
-	// Bottom color
-	this.form.addText("Bottom color");
-	this.colorBottom = new ColorGradientChooser(this.form);
-	this.colorBottom.size.set(190, 18);
-	this.colorBottom.setOnChange(function(color, index)
+	// Longitude
+	this.form.addText("Longitude");
+	this.longitude = new NumberBox(this.form);
+	this.longitude.size.set(80, 18);
+	this.longitude.setStep(0.1);
+	this.longitude.setRange(-180, 180);
+	this.longitude.setOnChange(function()
 	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.object.colorBottom, index, color.clone()), updateSky));
+		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "longitude", self.longitude.getValue()), updateSky));
 	});
-	this.form.add(this.colorBottom);
+	this.form.add(this.longitude);
 	this.form.nextRow();
 
-	// Sun color
-	this.form.addText("Sun Color");
-	this.sunColor = new ColorChooser(this.form);
-	this.sunColor.size.set(80, 18);
-	this.sunColor.setOnChange(function()
+	// Latitude
+	this.form.addText("Latitude");
+	this.latitude = new NumberBox(this.form);
+	this.latitude.size.set(80, 18);
+	this.latitude.setStep(0.1);
+	this.latitude.setRange(-90, 90);
+	this.latitude.setOnChange(function()
 	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "sunColor", self.sunColor.getValueHex()), updateSky));
+		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "latitude", self.latitude.getValue()), updateSky));
 	});
-	this.form.add(this.sunColor);
+	this.form.add(this.latitude);
 	this.form.nextRow();
 
-	// Moon color
-	this.form.addText("Moon Color");
-	this.moonColor = new ColorChooser(this.form);
-	this.moonColor.size.set(80, 18);
-	this.moonColor.setOnChange(function()
-	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "moonColor", self.moonColor.getValueHex()), updateSky));
-	});
-	this.form.add(this.moonColor);
-	this.form.nextRow();
-
-	// Intensity
+	// Sun intensity
 	this.form.addText(Locale.intensity);
 	this.intensity = new Slider(this.form);
 	this.intensity.size.set(160, 18);
-	this.intensity.setStep(0.01);
-	this.intensity.setRange(0, 1);
+	this.intensity.setStep(0.1);
+	this.intensity.setRange(0, 20);
 	this.intensity.setOnChange(function()
 	{
-		Editor.addAction(new ChangeAction(self.object, "intensity", self.intensity.getValue()));
+		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "intensity", self.intensity.getValue()), updateSky));
 	});
 	this.form.add(this.intensity);
 	this.form.nextRow();
 
-	// Day time
-	this.form.addText("Day time");
+	// Clouds
+	this.form.addText("Clouds");
+	this.cloudsEnabled = new CheckBox(this.form);
+	this.cloudsEnabled.size.set(18, 18);
+	this.cloudsEnabled.setOnChange(function()
+	{
+		Editor.addAction(new ChangeAction(self.object, "cloudsEnabled", self.cloudsEnabled.getValue()));
+	});
+	this.form.add(this.cloudsEnabled);
+	this.form.nextRow();
+
+	// Cloud coverage
+	this.form.addText("Coverage");
+	this.coverage = new Slider(this.form);
+	this.coverage.size.set(160, 18);
+	this.coverage.setStep(0.01);
+	this.coverage.setRange(0, 1);
+	this.coverage.setOnChange(function()
+	{
+		Editor.addAction(new ChangeAction(self.object, "coverage", self.coverage.getValue()));
+	});
+	this.form.add(this.coverage);
+	this.form.nextRow();
+
+	// Day time animation
+	this.form.addText("Day Time");
 	this.form.nextRow();
 
 	// Auto update
@@ -97,14 +101,13 @@ function SkyInspector(parent, object)
 	this.form.add(this.autoUpdate);
 	this.form.nextRow();
 
-	// Day time
+	// Day duration
 	this.form.addText("Day duration");
 	this.dayTime = new NumberBox(this.form);
 	this.dayTime.size.set(60, 18);
 	this.dayTime.setStep(0.1);
 	this.dayTime.setOnChange(function()
 	{
-		// Check and set day time
 		var dayTime = self.dayTime.getValue();
 		if (dayTime < 0)
 		{
@@ -113,7 +116,6 @@ function SkyInspector(parent, object)
 		}
 		Editor.addAction(new ChangeAction(self.object, "dayTime", dayTime));
 
-		// Check actual time
 		if (self.object.time > dayTime)
 		{
 			Editor.addAction(new ChangeAction(self.object, "time", dayTime));
@@ -127,7 +129,7 @@ function SkyInspector(parent, object)
 	this.form.addText("s", true);
 	this.form.nextRow();
 
-	// Actual time 
+	// Current time
 	this.form.addText(Locale.time);
 	this.time = new NumberBox(this.form);
 	this.time.size.set(60, 18);
@@ -154,18 +156,6 @@ function SkyInspector(parent, object)
 	this.form.addText("s", true);
 	this.form.nextRow();
 
-	// Sun distance
-	this.form.addText(Locale.sunDistance);
-	this.sunDistance = new NumberBox(this.form);
-	this.sunDistance.size.set(60, 18);
-	this.sunDistance.setStep(10);
-	this.sunDistance.setOnChange(function()
-	{
-		Editor.addAction(new CallbackAction(new ChangeAction(self.object, "sunDistance", self.sunDistance.getValue()), updateSky));
-	});
-	this.form.add(this.sunDistance);
-	this.form.nextRow();
-
 	// Shadow map
 	this.form.addText(Locale.shadows);
 	this.form.nextRow();
@@ -174,8 +164,6 @@ function SkyInspector(parent, object)
 	this.castShadow = new CheckBox(this.form);
 	this.form.addText(Locale.castShadows);
 	this.castShadow.size.set(18, 18);
-	this.castShadow.position.set(5, 85);
-	this.castShadow.updateInterface();
 	this.castShadow.setOnChange(function()
 	{
 		Editor.addAction(new ChangeAction(self.object.sun, "castShadow", self.castShadow.getValue()));
@@ -190,7 +178,7 @@ function SkyInspector(parent, object)
 	this.shadowWidth.setOnChange(function()
 	{
 		Editor.addAction(new ChangeAction(self.object.sun.shadow.mapSize, "width", self.shadowWidth.getValue()));
-		self.object.sun.updateShadowMap();
+		SkyInspector.updateShadowMap(self.object.sun);
 	});
 	this.form.add(this.shadowWidth);
 	this.form.addText("x", true);
@@ -199,7 +187,7 @@ function SkyInspector(parent, object)
 	this.shadowHeight.setOnChange(function()
 	{
 		Editor.addAction(new ChangeAction(self.object.sun.shadow.mapSize, "height", self.shadowHeight.getValue()));
-		self.object.sun.updateShadowMap();
+		SkyInspector.updateShadowMap(self.object.sun);
 	});
 	this.form.add(this.shadowHeight);
 	this.form.nextRow();
@@ -211,7 +199,7 @@ function SkyInspector(parent, object)
 		this.shadowHeight.addValue(size.toString(), size);
 	}
 
-	// Shadowmap camera near
+	// Shadow camera near
 	this.form.addText(Locale.near);
 	this.shadowNear = new NumberBox(this.form);
 	this.shadowNear.size.set(60, 18);
@@ -219,12 +207,12 @@ function SkyInspector(parent, object)
 	this.shadowNear.setOnChange(function()
 	{
 		Editor.addAction(new ChangeAction(self.object.sun.shadow.camera, "near", self.shadowNear.getValue()));
-		self.object.sun.updateShadowMap();
+		SkyInspector.updateShadowMap(self.object.sun);
 	});
 	this.form.add(this.shadowNear);
 	this.form.nextRow();
-	
-	// Shadowmap camera far
+
+	// Shadow camera far
 	this.form.addText(Locale.far);
 	this.shadowFar = new NumberBox(this.form);
 	this.shadowFar.size.set(60, 18);
@@ -232,91 +220,44 @@ function SkyInspector(parent, object)
 	this.shadowFar.setOnChange(function()
 	{
 		Editor.addAction(new ChangeAction(self.object.sun.shadow.camera, "far", self.shadowFar.getValue()));
-		self.object.sun.updateShadowMap();
+		SkyInspector.updateShadowMap(self.object.sun);
 	});
 	this.form.add(this.shadowFar);
-	this.form.nextRow();
-
-	// Shadowmap camera left
-	this.form.addText(Locale.left);
-	this.shadowLeft = new NumberBox(this.form);
-	this.shadowLeft.size.set(60, 18);
-	this.shadowLeft.setStep(0.1);
-	this.shadowLeft.setOnChange(function()
-	{
-		self.object.sun.shadow.camera.left = self.shadowLeft.getValue();
-		self.object.sun.updateShadowMap();
-	});
-	this.form.add(this.shadowLeft);
-	this.form.nextRow();
-
-	// Shadowmap camera right
-	this.form.addText(Locale.right);
-	this.shadowRight = new NumberBox(this.form);
-	this.shadowRight.size.set(60, 18);
-	this.shadowRight.setStep(0.1);
-	this.shadowRight.setOnChange(function()
-	{
-		self.object.sun.shadow.camera.right = self.shadowRight.getValue();
-		self.object.sun.updateShadowMap();
-	});
-	this.form.add(this.shadowRight);
-	this.form.nextRow();
-
-	// Shadowmap camera top
-	this.form.addText(Locale.top);
-	this.shadowTop = new NumberBox(this.form);
-	this.shadowTop.size.set(60, 18);
-	this.shadowTop.setStep(0.1);
-	this.shadowTop.setOnChange(function()
-	{
-		self.object.sun.shadow.camera.top = self.shadowTop.getValue();
-		self.object.sun.updateShadowMap();
-	});
-	this.form.add(this.shadowTop);
-	this.form.nextRow();
-
-	// Shadowmap camera bottom
-	this.form.addText(Locale.bottom);
-	this.shadowBottom = new NumberBox(this.form);
-	this.shadowBottom.size.set(60, 18);
-	this.shadowBottom.setStep(0.1);
-	this.shadowBottom.setOnChange(function()
-	{
-		self.object.sun.shadow.camera.bottom = self.shadowBottom.getValue();
-		self.object.sun.updateShadowMap();
-	});
-	this.form.add(this.shadowBottom);
 	this.form.nextRow();
 }
 
 SkyInspector.prototype = Object.create(ObjectInspector.prototype);
 
+SkyInspector.updateShadowMap = function(light)
+{
+	if (light.shadow.map)
+	{
+		light.shadow.map.dispose();
+		light.shadow.map = null;
+	}
+	light.shadow.camera.updateProjectionMatrix();
+};
+
 SkyInspector.prototype.updateInspector = function()
 {
 	ObjectInspector.prototype.updateInspector.call(this);
-	
-	this.colorTop.setValue(this.object.colorTop);
-	this.colorBottom.setValue(this.object.colorBottom);
-	
-	this.sunColor.setValueHex(this.object.sunColor);
-	this.moonColor.setValueHex(this.object.moonColor);
+
+	this.longitude.setValue(this.object.longitude);
+	this.latitude.setValue(this.object.latitude);
 	this.intensity.setValue(this.object.intensity);
+
+	this.cloudsEnabled.setValue(this.object.cloudsEnabled);
+	this.coverage.setValue(this.object.coverage);
 
 	this.autoUpdate.setValue(this.object.autoUpdate);
 	this.dayTime.setValue(this.object.dayTime);
 	this.time.setValue(this.object.time);
-	this.sunDistance.setValue(this.object.sunDistance);
 
 	this.castShadow.setValue(this.object.sun.castShadow);
 	this.shadowWidth.setValue(this.object.sun.shadow.mapSize.width);
 	this.shadowHeight.setValue(this.object.sun.shadow.mapSize.height);
 	this.shadowNear.setValue(this.object.sun.shadow.camera.near);
 	this.shadowFar.setValue(this.object.sun.shadow.camera.far);
-	this.shadowLeft.setValue(this.object.sun.shadow.camera.left);
-	this.shadowRight.setValue(this.object.sun.shadow.camera.right);
-	this.shadowTop.setValue(this.object.sun.shadow.camera.top);
-	this.shadowBottom.setValue(this.object.sun.shadow.camera.bottom);
 };
 
 export {SkyInspector};

@@ -21,6 +21,7 @@ import {BloomPass} from "./pass/BloomPass.js";
 import {FXAAPass} from "./pass/antialiasing/FXAAPass.js";
 import {AfterimagePass} from "./pass/AfterimagePass.js";
 import {AdaptiveToneMappingPass} from "./pass/AdaptiveToneMappingPass.js";
+import {AtmospherePass} from "./pass/AtmospherePass.js";
 
 /**
  * The effect composer is used to organize multiple post-processing passes.
@@ -448,6 +449,15 @@ EffectComposer.fromJSON = function(json)
 		{
 			pass = new AfterimagePass();
 			pass.damp = data.damp;
+		}
+		else if (data.type === "Atmosphere")
+		{
+			pass = new AtmospherePass();
+			pass.transmittance = data.transmittance !== undefined ? data.transmittance : true;
+			pass.inscatter = data.inscatter !== undefined ? data.inscatter : true;
+			pass.cloudsEnabled = data.cloudsEnabled !== undefined ? data.cloudsEnabled : false;
+			pass.coverage = data.coverage !== undefined ? data.coverage : 0.5;
+			pass.cloudLayers = data.cloudLayers !== undefined ? data.cloudLayers : null;
 		}
 		else
 		{

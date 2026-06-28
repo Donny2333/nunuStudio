@@ -1,7 +1,8 @@
 import {REVISION} from "three";
 import {IStudio} from "../../IStudio.js";
 
-// Serialization does not serialize any image data.
+// Serialization handles image data via imageResource when available,
+// falls back to encoding texture.image as base64 data URL.
 THREE.Texture.prototype.toJSON = function(meta)
 {
 	// Check if this texture was already serialized
@@ -22,7 +23,7 @@ THREE.Texture.prototype.toJSON = function(meta)
 		uuid: this.uuid,
 		name: this.name,
 		category: this.category,
-		
+
 		mapping: this.mapping,
 
 		repeat: [this.repeat.x, this.repeat.y],
@@ -41,12 +42,30 @@ THREE.Texture.prototype.toJSON = function(meta)
 		anisotropy: this.anisotropy,
 
 		flipY: this.flipY,
-		
+
 		premultiplyAlpha: this.premultiplyAlpha,
 		unpackAlignment: this.unpackAlignment
 	};
 
+	// Serialize image data when no imageResource exists (e.g. FBX embedded textures)
+	if (!this.imageResource && this.image)
+	{
+		if (this.image instanceof HTMLImageElement || this.image instanceof HTMLCanvasElement)
+		{
+			var canvas = document.createElement("canvas");
+			canvas.width = this.image.width || this.image.naturalWidth;
+			canvas.height = this.image.height || this.image.naturalHeight;
+			var ctx = canvas.getContext("2d");
+			ctx.drawImage(this.image, 0, 0);
+			data.image = canvas.toDataURL("image/png");
+		}
+		else if (this.image.data)
+		{
+			data.image = {data: Array.from(this.image.data), width: this.image.width, height: this.image.height};
+		}
+	}
+
 	meta.textures[this.uuid] = data;
-	
+
 	return data;
 };

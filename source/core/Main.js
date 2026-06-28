@@ -41,6 +41,7 @@ export {ColorifyPass} from "./postprocessing/pass/ColorifyPass.js";
 export {TechnicolorPass} from "./postprocessing/pass/TechnicolorPass.js";
 export {HueSaturationPass} from "./postprocessing/pass/HueSaturationPass.js";
 export {AdaptiveToneMappingPass} from "./postprocessing/pass/AdaptiveToneMappingPass.js";
+export {AtmospherePass} from "./postprocessing/pass/AtmospherePass.js";
 
 export {SSAOShader} from "./postprocessing/shaders/SSAOShader.js";
 

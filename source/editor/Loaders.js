@@ -828,9 +828,9 @@ Loaders.loadModel = function(file, parent)
 				{
 					var loader = new FBXLoader();
 					var object = loader.parse(reader.result, path);
-					
+
 					if (object.animations !== undefined && object.animations.length > 0)
-					{					
+					{
 						object.traverse(function(child)
 						{
 							if (child instanceof SkinnedMesh)

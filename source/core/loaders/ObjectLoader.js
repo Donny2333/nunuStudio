@@ -554,7 +554,24 @@ ObjectLoader.prototype.parseObject = function(data)
 			break;
 
 		case "Sky":
-			object = new Sky(data.autoUpdate, data.dayTime, data.sunDistance, data.time);
+			object = new Sky(data.autoUpdate, data.dayTime, data.time);
+
+			if (data.date !== undefined)
+			{
+				object.date = new Date(data.date);
+			}
+			if (data.longitude !== undefined)
+			{
+				object.longitude = data.longitude;
+			}
+			if (data.latitude !== undefined)
+			{
+				object.latitude = data.latitude;
+			}
+			if (data.intensity !== undefined)
+			{
+				object.intensity = data.intensity;
+			}
 
 			if (data.sun !== undefined)
 			{
@@ -566,33 +583,17 @@ ObjectLoader.prototype.parseObject = function(data)
 				}
 			}
 
-			if (data.colorTop !== undefined)
+			if (data.cloudsEnabled !== undefined)
 			{
-				object.colorTop = [];
-				for (var i = 0; i < data.colorTop.length; i++)
-				{
-					object.colorTop.push(new Color(data.colorTop[i]));
-				}
+				object.cloudsEnabled = data.cloudsEnabled;
 			}
-			if (data.colorBottom !== undefined)
+			if (data.coverage !== undefined)
 			{
-				object.colorBottom = [];
-				for (var i = 0; i < data.colorBottom.length; i++)
-				{
-					object.colorBottom.push(new Color(data.colorBottom[i]));
-				}
+				object.coverage = data.coverage;
 			}
-			if (data.sunColor !== undefined)
+			if (data.cloudLayers !== undefined)
 			{
-				object.sunColor = data.sunColor;
-			}
-			if (data.moonColor !== undefined)
-			{
-				object.moonColor = data.moonColor;
-			}
-			if (data.intensity !== undefined)
-			{
-				object.intensity = data.intensity;
+				object.cloudLayers = data.cloudLayers;
 			}
 
 			break;

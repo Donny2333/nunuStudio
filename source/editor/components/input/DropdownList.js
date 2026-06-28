@@ -17,9 +17,9 @@ function DropdownList(parent)
 	this.select.style.borderRadius = "4px";
 	this.select.style.outline = "none";
 	this.select.style.cursor = "pointer";
-	this.select.style.MozAppearance = "textfield";
-	this.select.style.webkitAppearance = "caret";
-	this.select.style.appearance = "textfield";
+	this.select.style.MozAppearance = "none";
+	this.select.style.webkitAppearance = "none";
+	this.select.style.appearance = "none";
 	this.element.appendChild(this.select);
 
 	// Arrow
