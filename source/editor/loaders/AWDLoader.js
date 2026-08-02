@@ -73,7 +73,7 @@ var AWDLoader = (function()
 	};
 	var AWDLoader = function(manager)
 	{
-		this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+		this.manager = manager !== undefined ? manager : DefaultLoadingManager;
 		this.crossOrigin = 'anonymous';
 		this.withCredentials = false;
 		this.path = '';

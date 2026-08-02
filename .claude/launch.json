@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "editor-dev",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["webpack-dev-server", "--hot", "--config", "webpack.dev.js"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start"],
       "port": 8080
     },
     {

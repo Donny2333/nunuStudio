@@ -1,12 +1,11 @@
-var createLayout = require("layout-bmfont-text");
-var createIndices = require("quad-indices");
-
-var vertices = require("../../../node_modules/three-bmfont-text/lib/vertices");
-var utils = require("../../../node_modules/three-bmfont-text/lib/utils");
+import createLayout from "layout-bmfont-text";
+import createIndices from "quad-indices";
+import vertices from "three-bmfont-text/lib/vertices";
+import utils from "three-bmfont-text/lib/utils";
 
 var Base = THREE.BufferGeometry;
 
-module.exports = function createTextGeometry(opt)
+export default function createTextGeometry(opt)
 {
 	return new TextGeometry(opt);
 };

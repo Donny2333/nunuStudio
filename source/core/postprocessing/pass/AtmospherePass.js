@@ -9,9 +9,7 @@ var exposureCompensationShader = "uniform float compensation;\nvoid mainImage(co
 
 function ExposureCompensationEffect(compensation)
 {
-	var instance = Reflect.construct(Effect, ["ExposureCompensation", exposureCompensationShader, {
-		uniforms: new Map([["compensation", new Uniform(compensation)]])
-	}], ExposureCompensationEffect);
+	var instance = Reflect.construct(Effect, ["ExposureCompensation", exposureCompensationShader, {uniforms: new Map([["compensation", new Uniform(compensation)]])}], ExposureCompensationEffect);
 	return instance;
 }
 

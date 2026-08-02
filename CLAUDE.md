@@ -9,16 +9,15 @@ iStudio is a web-based 3D/2D game engine and visual editor built on three.js. It
 ## Build & Development Commands
 
 ```bash
-# Development server (hot reload)
+# Development server (hot reload, http://localhost:8080)
 npm start
 
-# Build everything (runtime + editor + page)
+# Build everything (runtime + editor)
 npm run build
 
 # Build individual targets
-npm run build-runtime    # core engine → dist/istudio.min.js (UMD)
-npm run build-editor     # visual editor → docs/editor/
-npm run build-page       # Angular website
+npm run build-runtime    # core engine → dist/istudio.min.js (UMD) + istudio.module.min.js (ES)
+npm run build-editor     # visual editor → docs/editor/ (also refreshes vendor + runtime)
 npm run build-nwjs       # Desktop apps (all platforms)
 
 # Linting
@@ -65,12 +64,13 @@ npm run start-nwjs       # Run in NW.js
 | `components/` | Base UI components (Canvas, Division, TableForm) |
 | `locale/` | Internationalization |
 
-### Webpack Configs
+### Vite Configs
 
-- `webpack.config.js` — Base editor config (entry: `source/editor/Main.js` → `docs/editor/bundle.js`)
-- `webpack.dev.js` — Dev mode (source maps, HMR, git info injection)
-- `webpack.prod.js` — Production editor (minified, no source maps)
-- `webpack.runtime.js` — Standalone runtime library (entry: `source/core/Main.js` → `dist/istudio.min.js`)
+- `vite.config.mjs` — Editor SPA (dev server on port 8080 + production build → `docs/editor/`). Entry: `source/editor/index.html`. Build output uses a relative base so it works at NW.js `file://`, subpaths, and domain root.
+- `vite.config.runtime.mjs` — Runtime engine as a UMD library (`dist/istudio.min.js`, global `IStudio`) + ES module (`dist/istudio.module.min.js`). Entry: `source/core/Main.js`.
+- `vite.shared.mjs` — Shared plugins and aliases used by both configs: `injectThree` (auto-imports `THREE` into source files that reference it, replacing webpack's ProvidePlugin), `injectGlobals` (build-time `VERSION`/`TIMESTAMP`/`DEVELOPMENT`/git info, scoped to source files), `glslRaw` (`.glsl` → raw string), `brythonGlobalShim`/`brythonUmdWrap` (brython handling), and `copyStatic` (copies `source/files/` → `files/`).
+- `scripts/build-vendor.js` — Concatenates vendored libraries (CodeMirror, Tern, acorn, JSHint, draco_encoder, brython) into `public/vendor/` as classic `<script>` globals; re-run after bumping those deps.
+- `scripts/sync-runtime.js` — After `build-runtime`, copies `dist/istudio.min.js` into `docs/editor/files/runtime/` and the root `package.json` into `docs/editor/` (the NW.js app manifest).
 
 ### Key Patterns
 
@@ -93,7 +93,7 @@ Defined in `CODESTYLE.md`. Key rules:
 
 ## Key Dependencies
 
-- **three.js** v0.119.0 — 3D rendering
+- **three.js** v0.170.0 — 3D rendering
 - **cannon-es** — Physics
 - **CodeMirror** v5.64 — In-editor code editing with Tern autocomplete
 - **spine** — 2D skeletal animation
