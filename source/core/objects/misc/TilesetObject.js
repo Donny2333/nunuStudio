@@ -296,7 +296,10 @@ TilesetObject.prototype.dispose = function()
 
 TilesetObject.prototype.toJSON = function(meta)
 {
+	var tilesGroup = this._tiles ? this._tiles.group : null;
+	if (tilesGroup !== null) { this.remove(tilesGroup); }
 	var data = Object3D.prototype.toJSON.call(this, meta);
+	if (tilesGroup !== null) { this.add(tilesGroup); }
 
 	data.object.url = this.url;
 	data.object.centerLat = this.centerLat;
