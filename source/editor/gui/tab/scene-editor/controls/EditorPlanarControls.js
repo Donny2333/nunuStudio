@@ -12,9 +12,14 @@ import {EditorOrbitControls} from "./EditorOrbitControls.js";
  */
 function EditorPlanarControls(mode)
 {
-	EditorOrbitControls.call(this);
+	// EditorOrbitControls uses Reflect.construct + return instance, so it cannot
+	// be chained via .call() (the constructed instance would be discarded and
+	// this left uninitialized, making setMode throw). Mirror that pattern instead.
+	var instance = Reflect.construct(EditorOrbitControls, [], new.target || EditorPlanarControls);
 
-	this.setMode(mode !== undefined ? mode : Settings.PLANAR_LEFT);
+	instance.setMode(mode !== undefined ? mode : Settings.PLANAR_LEFT);
+
+	return instance;
 }
 
 EditorPlanarControls.prototype = Object.create(EditorOrbitControls.prototype);
